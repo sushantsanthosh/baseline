@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SignalCheck — Your Mental Health Mirror</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #06080f; --surface: #0d1220;
+  --teal: #00e5c8; --violet: #a855f7; --blue: #3b82f6;
+  --green: #22c55e; --yellow: #f59e0b; --red: #ef4444;
+  --text: #e8eaf0; --muted: #6b7280;
+  --cb: rgba(255,255,255,0.03); --cbord: rgba(255,255,255,0.07);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;line-height:1.6;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:0.4;}
+
+/* ===== BLOBS ===== */
+.blob{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;animation:drift 20s ease-in-out infinite;}
+.blob-1{width:500px;height:500px;background:rgba(0,229,200,0.06);top:-100px;left:-100px;}
+.blob-2{width:400px;height:400px;background:rgba(168,85,247,0.07);bottom:200px;right:-100px;animation-delay:-7s;}
+.blob-3{width:300px;height:300px;background:rgba(59,130,246,0.05);top:50%;left:40%;animation-delay:-14s;}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(30px,-30px) scale(1.05);}66%{transform:translate(-20px,20px) scale(0.95);}}
+
+/* ===== NAV ===== */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.5rem 4rem;backdrop-filter:blur(20px);background:rgba(6,8,15,0.7);border-bottom:1px solid var(--cbord);}
+.nav-logo{font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--teal);letter-spacing:-0.02em;text-shadow:0 0 20px rgba(0,229,200,0.5);}
+.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.875rem;letter-spacing:0.05em;text-transform:uppercase;transition:color 0.3s;}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{background:transparent;border:1px solid var(--teal);color:var(--teal);padding:0.5rem 1.5rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.875rem;cursor:pointer;transition:all 0.3s;text-shadow:0 0 10px rgba(0,229,200,0.4);box-shadow:0 0 20px rgba(0,229,200,0.1);}
+.nav-cta:hover{background:rgba(0,229,200,0.1);box-shadow:0 0 30px rgba(0,229,200,0.25);}
+
+/* ===== SHARED BTNS ===== */
+section{position:relative;z-index:1;}
+.btn-primary{background:var(--teal);color:var(--bg);border:none;padding:0.85rem 2.5rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.95rem;cursor:pointer;transition:all 0.3s;box-shadow:0 0 40px rgba(0,229,200,0.3);}
+.btn-primary:hover{box-shadow:0 0 60px rgba(0,229,200,0.5);transform:translateY(-2px);}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--cbord);padding:0.85rem 2.5rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.95rem;cursor:pointer;transition:all 0.3s;}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.04);}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 6rem;}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:0.75rem;letter-spacing:0.2em;color:var(--teal);text-transform:uppercase;margin-bottom:2rem;opacity:0;animation:fadeUp 0.8s ease forwards 0.3s;}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(3.5rem,8vw,7rem);line-height:1.05;letter-spacing:-0.03em;margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.8s ease forwards 0.5s;}
+.hero h1 em{font-style:italic;color:var(--teal);text-shadow:0 0 40px rgba(0,229,200,0.4);}
+.hero-sub{font-size:clamp(1rem,2vw,1.25rem);color:var(--muted);max-width:560px;line-height:1.8;margin-bottom:3rem;opacity:0;animation:fadeUp 0.8s ease forwards 0.7s;}
+.hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp 0.8s ease forwards 0.9s;}
+.waveform{display:flex;align-items:center;justify-content:center;gap:3px;height:80px;}
+.bar{width:3px;background:var(--teal);border-radius:2px;opacity:0.6;animation:pulse var(--dur,1.5s) ease-in-out infinite;animation-delay:var(--delay,0s);}
+@keyframes pulse{0%,100%{height:var(--min,8px);opacity:0.3;}50%{height:var(--max,40px);opacity:0.9;}}
+.viz-label{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.15em;text-align:center;margin-top:1rem;}
+.signal-viz{width:100%;max-width:700px;margin:5rem auto 0;opacity:0;animation:fadeUp 1s ease forwards 1.1s;}
+.divider{width:1px;height:80px;background:linear-gradient(to bottom,transparent,var(--cbord),transparent);margin:0 auto;}
+
+/* ===== SECTIONS ===== */
+.section-pad{padding:7rem 4rem;}
+.section-tag{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--violet);margin-bottom:1rem;}
+.section-title{font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,3.5rem);letter-spacing:-0.02em;line-height:1.15;margin-bottom:1.5rem;}
+.section-desc{color:var(--muted);max-width:500px;font-size:1rem;line-height:1.8;}
+.steps-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5px;background:var(--cbord);margin-top:5rem;border:1px solid var(--cbord);border-radius:20px;overflow:hidden;}
+.step{background:var(--surface);padding:3rem;transition:background 0.3s;position:relative;overflow:hidden;}
+.step::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 0% 0%,var(--sg,transparent) 0%,transparent 60%);opacity:0;transition:opacity 0.4s;}
+.step:hover::before{opacity:1;}.step:hover{background:#111827;}
+.step:nth-child(1){--sg:rgba(0,229,200,0.07);}.step:nth-child(2){--sg:rgba(168,85,247,0.07);}.step:nth-child(3){--sg:rgba(59,130,246,0.07);}.step:nth-child(4){--sg:rgba(0,229,200,0.07);}
+.step-num{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:1.5rem;}
+.step-icon{font-size:2rem;margin-bottom:1.25rem;display:block;}
+.step h3{font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:0.75rem;letter-spacing:-0.01em;}
+.step p{color:var(--muted);font-size:0.9rem;line-height:1.7;}
+.signals-section{padding:7rem 4rem;background:linear-gradient(180deg,transparent,rgba(0,229,200,0.02),transparent);}
+.signals-header{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:end;margin-bottom:4rem;}
+.signals-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.signal-card{background:var(--cb);border:1px solid var(--cbord);border-radius:16px;padding:2rem;transition:all 0.3s;position:relative;overflow:hidden;}
+.signal-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--ac,var(--teal)),transparent);transform:scaleX(0);transition:transform 0.4s;}
+.signal-card:hover::after{transform:scaleX(1);}.signal-card:hover{border-color:rgba(255,255,255,0.12);transform:translateY(-3px);}
+.signal-card:nth-child(2){--ac:var(--violet);}.signal-card:nth-child(3){--ac:var(--blue);}.signal-card:nth-child(4){--ac:var(--violet);}.signal-card:nth-child(5){--ac:var(--blue);}
+.signal-emoji{font-size:1.5rem;margin-bottom:1rem;}
+.signal-card h4{font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:0.5rem;}
+.signal-card p{color:var(--muted);font-size:0.85rem;line-height:1.6;}
+.ethics-section{padding:7rem 4rem;}
+.ethics-inner{background:linear-gradient(135deg,rgba(0,229,200,0.04),rgba(168,85,247,0.04));border:1px solid var(--cbord);border-radius:24px;padding:5rem;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
+.ethics-title{font-family:'DM Serif Display',serif;font-size:clamp(2rem,3.5vw,3rem);line-height:1.15;letter-spacing:-0.02em;margin-bottom:1.5rem;}
+.ethics-title em{font-style:italic;color:var(--violet);text-shadow:0 0 30px rgba(168,85,247,0.4);}
+.ethics-desc{color:var(--muted);line-height:1.8;}
+.ethics-list{display:flex;flex-direction:column;gap:1rem;}
+.ethics-item{display:flex;align-items:flex-start;gap:1rem;padding:1.25rem 1.5rem;background:var(--cb);border:1px solid var(--cbord);border-radius:12px;transition:border-color 0.3s;}
+.ethics-item:hover{border-color:rgba(255,255,255,0.12);}
+.ethics-icon{font-size:1.1rem;flex-shrink:0;margin-top:0.1rem;}
+.ethics-item-text{font-size:0.9rem;color:var(--text);}
+.ethics-item-text span{display:block;font-size:0.78rem;color:var(--muted);margin-top:0.2rem;}
+.chart-section{padding:7rem 4rem;text-align:center;}
+.chart-container{max-width:800px;margin:4rem auto 0;background:var(--surface);border:1px solid var(--cbord);border-radius:24px;padding:3rem;position:relative;overflow:hidden;}
+.chart-container::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--teal),transparent);}
+.chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;text-align:left;}
+.chart-title{font-family:'DM Serif Display',serif;font-size:1.1rem;}
+.chart-period{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;}
+.chart-area{height:180px;position:relative;margin-bottom:1.5rem;}
+.chart-svg{width:100%;height:100%;overflow:visible;}
+.chart-insight{background:rgba(0,229,200,0.05);border:1px solid rgba(0,229,200,0.15);border-radius:10px;padding:1rem 1.5rem;font-size:0.875rem;color:var(--teal);text-align:left;font-family:'Space Mono',monospace;letter-spacing:0.02em;}
+.audience-section{padding:7rem 4rem;}
+.audience-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:4rem;}
+.audience-card{border-radius:20px;padding:2.5rem;position:relative;overflow:hidden;}
+.audience-card:nth-child(1){background:linear-gradient(135deg,rgba(0,229,200,0.08),rgba(0,229,200,0.02));border:1px solid rgba(0,229,200,0.15);}
+.audience-card:nth-child(2){background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(168,85,247,0.02));border:1px solid rgba(168,85,247,0.15);}
+.audience-card:nth-child(3){background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(59,130,246,0.02));border:1px solid rgba(59,130,246,0.15);}
+.audience-big{font-family:'DM Serif Display',serif;font-size:3rem;line-height:1;margin-bottom:0.5rem;}
+.audience-card:nth-child(1) .audience-big{color:var(--teal);}.audience-card:nth-child(2) .audience-big{color:var(--violet);}.audience-card:nth-child(3) .audience-big{color:var(--blue);}
+.audience-card h4{font-size:1rem;font-weight:500;margin-bottom:0.75rem;}
+.audience-card p{color:var(--muted);font-size:0.875rem;line-height:1.7;}
+.cta-section{padding:7rem 4rem;text-align:center;}
+.cta-inner{max-width:700px;margin:0 auto;}
+.cta-inner h2{font-family:'DM Serif Display',serif;font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:-0.03em;line-height:1.1;margin-bottom:1.5rem;}
+.cta-inner h2 em{font-style:italic;color:var(--teal);text-shadow:0 0 40px rgba(0,229,200,0.4);}
+.cta-inner p{color:var(--muted);max-width:450px;margin:0 auto 3rem;line-height:1.8;}
+footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-items:center;justify-content:space-between;}
+.footer-logo{font-family:'DM Serif Display',serif;color:var(--muted);font-size:1rem;}
+.footer-note{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;max-width:400px;text-align:right;line-height:1.6;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:none;}
+
+/* ===== FAST APP ===== */
+#fast-app{position:fixed;inset:0;z-index:500;background:var(--bg);overflow-y:auto;overflow-x:hidden;display:none;}
+#fast-app.open{display:block;animation:appIn 0.5s cubic-bezier(0.16,1,0.3,1) forwards;}
+@keyframes appIn{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:none;}}
+@keyframes appOut{from{opacity:1;transform:none;}to{opacity:0;transform:translateY(20px);}}
+
+.app-nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(6,8,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--cbord);}
+.app-nav-logo{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--teal);text-shadow:0 0 20px rgba(0,229,200,0.4);}
+.app-nav-sub{font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:0.05em;}
+.app-nav-right{display:flex;align-items:center;gap:0.75rem;}
+.app-nav-hist{background:none;border:1px solid var(--cbord);color:var(--muted);padding:0.32rem 0.9rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;transition:all 0.2s;}
+.app-nav-hist:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
+.app-badge{font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);background:var(--cb);border:1px solid var(--cbord);padding:0.28rem 0.7rem;border-radius:100px;}
+.app-back{display:flex;align-items:center;gap:0.4rem;color:var(--muted);font-size:0.82rem;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;transition:color 0.2s;}
+.app-back:hover{color:var(--text);}
+
+.app-screen{display:none;min-height:calc(100vh - 60px);}
+.app-screen.active{display:flex;}
+
+/* --- HOME screen --- */
+#screen-home{flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem;gap:0;}
+.fast-pill{display:inline-flex;align-items:center;gap:0.5rem;font-family:'Space Mono',monospace;font-size:0.67rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);background:rgba(0,229,200,0.07);border:1px solid rgba(0,229,200,0.2);padding:0.38rem 1rem;border-radius:100px;margin-bottom:1.75rem;}
+.fast-pill-dot{width:6px;height:6px;background:var(--teal);border-radius:50%;animation:blink 1.5s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
+.fast-title{font-family:'DM Serif Display',serif;font-size:clamp(2.8rem,7vw,5.5rem);letter-spacing:-0.03em;line-height:1.08;margin-bottom:1.25rem;}
+.fast-title em{font-style:italic;color:var(--teal);text-shadow:0 0 50px rgba(0,229,200,0.35);}
+.fast-sub{color:var(--muted);max-width:520px;font-size:1rem;line-height:1.8;margin-bottom:2.5rem;}
+.fast-start-btn{display:flex;align-items:center;gap:0.75rem;background:var(--teal);color:var(--bg);border:none;padding:1rem 2.75rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:1rem;cursor:pointer;transition:all 0.3s;box-shadow:0 0 50px rgba(0,229,200,0.35);margin-bottom:1.5rem;}
+.fast-start-btn:hover{box-shadow:0 0 70px rgba(0,229,200,0.55);transform:translateY(-2px);}
+.fast-disclaimer{font-family:'Space Mono',monospace;font-size:0.67rem;letter-spacing:0.04em;color:var(--muted);max-width:480px;line-height:1.7;padding:0.9rem 1.4rem;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15);border-radius:10px;margin-bottom:2.5rem;}
+.fast-disclaimer strong{color:rgba(239,68,68,0.8);}
+.what-is-fast{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:780px;width:100%;}
+.fsc{background:var(--cb);border:1px solid var(--cbord);border-radius:14px;padding:1.4rem;text-align:left;transition:border-color 0.3s;}
+.fsc:hover{border-color:rgba(255,255,255,0.12);}
+.fsc-num{font-family:'Space Mono',monospace;font-size:0.63rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:0.7rem;}
+.fsc-icon{font-size:1.5rem;margin-bottom:0.5rem;display:block;}
+.fsc-title{font-size:0.875rem;font-weight:500;margin-bottom:0.3rem;}
+.fsc-desc{font-size:0.77rem;color:var(--muted);line-height:1.5;}
+
+/* --- RECORD screen --- */
+#screen-record{flex-direction:column;align-items:center;padding:2rem;gap:1.5rem;}
+.record-layout{display:grid;grid-template-columns:1fr 340px;gap:1.75rem;width:100%;max-width:980px;}
+.camera-wrap{position:relative;border-radius:18px;overflow:hidden;background:#000;aspect-ratio:4/3;border:1px solid var(--cbord);}
+.camera-wrap video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
+.cam-overlay{position:absolute;inset:0;pointer-events:none;}
+.face-guide{position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);width:36%;aspect-ratio:3/4;border:2px solid rgba(0,229,200,0.45);border-radius:50% 50% 45% 45%;}
+.fgc{position:absolute;width:13px;height:13px;border-color:var(--teal);border-style:solid;}
+.fgc.tl{top:-1px;left:-1px;border-width:2px 0 0 2px;border-radius:3px 0 0 0;}
+.fgc.tr{top:-1px;right:-1px;border-width:2px 2px 0 0;border-radius:0 3px 0 0;}
+.fgc.bl{bottom:-1px;left:-1px;border-width:0 0 2px 2px;border-radius:0 0 0 3px;}
+.fgc.br{bottom:-1px;right:-1px;border-width:0 2px 2px 0;border-radius:0 0 3px 0;}
+.prompt-banner{position:absolute;top:1rem;left:50%;transform:translateX(-50%);background:rgba(6,8,15,0.85);backdrop-filter:blur(10px);border:1px solid var(--cbord);border-radius:100px;padding:0.45rem 1.2rem;font-family:'Space Mono',monospace;font-size:0.73rem;letter-spacing:0.07em;white-space:nowrap;transition:all 0.4s;}
+.prompt-banner.smile{color:var(--teal);border-color:rgba(0,229,200,0.3);}
+.prompt-banner.arms{color:var(--violet);border-color:rgba(168,85,247,0.3);}
+.prompt-banner.speak{color:var(--blue);border-color:rgba(59,130,246,0.3);}
+.rec-ind{position:absolute;top:1rem;right:1rem;display:flex;align-items:center;gap:0.4rem;font-family:'Space Mono',monospace;font-size:0.63rem;letter-spacing:0.1em;color:var(--red);opacity:0;transition:opacity 0.3s;}
+.rec-ind.on{opacity:1;}
+.rec-dot{width:7px;height:7px;background:var(--red);border-radius:50%;animation:blink 1s ease-in-out infinite;}
+.cam-tip{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:0.63rem;letter-spacing:0.07em;color:var(--muted);background:rgba(6,8,15,0.8);padding:0.32rem 0.85rem;border-radius:100px;white-space:nowrap;}
+
+.rec-panel{display:flex;flex-direction:column;gap:1.15rem;}
+.panel-box{background:var(--surface);border:1px solid var(--cbord);border-radius:15px;padding:1.4rem;}
+.pb-label{font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.tp-tasks{display:flex;flex-direction:column;gap:0.55rem;}
+.tp-task{display:flex;align-items:center;gap:0.7rem;padding:0.7rem 0.9rem;border-radius:9px;border:1px solid transparent;transition:all 0.3s;font-size:0.87rem;}
+.tp-task.pending{color:var(--muted);}
+.tp-task.active{background:rgba(0,229,200,0.06);border-color:rgba(0,229,200,0.2);color:var(--text);}
+.tp-task.done{color:var(--muted);text-decoration:line-through;}
+.tp-icon{font-size:1rem;width:22px;text-align:center;}
+.tp-info{flex:1;}
+.tp-name{font-weight:500;font-size:0.83rem;}
+.tp-dur{font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--muted);}
+.tp-chk{font-size:0.85rem;}
+
+.timer-inner{text-align:center;}
+.timer-svg{width:90px;height:90px;margin:0 auto 0.6rem;display:block;}
+.tr-bg{fill:none;stroke:rgba(255,255,255,0.05);stroke-width:6;}
+.tr-fill{fill:none;stroke:var(--teal);stroke-width:6;stroke-linecap:round;stroke-dasharray:251.3;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear,stroke 0.5s;}
+.timer-num{font-family:'DM Serif Display',serif;font-size:1.6rem;fill:var(--text);}
+.timer-lbl{font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+
+.bm-bar-wrap{height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;margin:0.45rem 0;}
+.bm-bar{height:100%;width:60%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:3px;transition:width 0.5s;}
+.bm-status{font-size:0.73rem;color:var(--teal);}
+
+.rec-controls{display:flex;flex-direction:column;gap:0.65rem;}
+.btn-rec-go{background:var(--teal);color:var(--bg);border:none;padding:0.85rem;border-radius:11px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.92rem;cursor:pointer;transition:all 0.3s;box-shadow:0 0 30px rgba(0,229,200,0.25);}
+.btn-rec-go:hover{box-shadow:0 0 50px rgba(0,229,200,0.45);transform:translateY(-1px);}
+.btn-rec-go:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+.btn-restart{background:transparent;border:1px solid var(--cbord);color:var(--muted);padding:0.65rem;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:0.83rem;cursor:pointer;transition:all 0.2s;}
+.btn-restart:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
+
+/* --- PROCESSING screen --- */
+#screen-processing{flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem;}
+.proc-orb{width:110px;height:110px;border-radius:50%;margin:0 auto 2.5rem;background:radial-gradient(circle,rgba(0,229,200,0.3),rgba(0,229,200,0.04));border:1px solid rgba(0,229,200,0.3);box-shadow:0 0 60px rgba(0,229,200,0.2);animation:orbP 2s ease-in-out infinite;display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
+@keyframes orbP{0%,100%{box-shadow:0 0 40px rgba(0,229,200,0.2);transform:scale(1);}50%{box-shadow:0 0 80px rgba(0,229,200,0.4);transform:scale(1.05);}}
+.proc-title{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,4vw,3rem);letter-spacing:-0.02em;margin-bottom:0.6rem;}
+.proc-sub{color:var(--muted);font-size:0.875rem;margin-bottom:2.5rem;}
+.proc-checks{display:flex;flex-direction:column;gap:0.7rem;max-width:360px;width:100%;}
+.pc{display:flex;align-items:center;gap:0.9rem;padding:0.85rem 1.2rem;background:var(--cb);border:1px solid var(--cbord);border-radius:12px;font-size:0.875rem;text-align:left;transition:all 0.5s;}
+.pc.running{border-color:rgba(0,229,200,0.25);background:rgba(0,229,200,0.04);}
+.pc.done{border-color:rgba(34,197,94,0.2);}
+.pc-icon{font-size:1.1rem;width:22px;text-align:center;}
+.pc-name{font-size:0.83rem;font-weight:500;}
+.pc-met{font-family:'Space Mono',monospace;font-size:0.66rem;color:var(--muted);margin-top:0.15rem;}
+.spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,0.1);border-top-color:var(--teal);border-radius:50%;animation:spin 0.8s linear infinite;display:inline-block;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* --- RESULTS screen --- */
+#screen-results{flex-direction:column;align-items:center;padding:2.5rem 2rem;gap:1.75rem;}
+.results-wrap{width:100%;max-width:920px;}
+.status-banner{border-radius:18px;padding:2.25rem 2.75rem;margin-bottom:1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;}
+.status-banner.green{background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(34,197,94,0.03));border:1px solid rgba(34,197,94,0.25);}
+.status-banner.yellow{background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(245,158,11,0.03));border:1px solid rgba(245,158,11,0.25);}
+.status-banner.red{background:linear-gradient(135deg,rgba(239,68,68,0.12),rgba(239,68,68,0.03));border:1px solid rgba(239,68,68,0.3);}
+.sb-left{display:flex;align-items:center;gap:1.25rem;}
+.sb-orb{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;}
+.status-banner.green .sb-orb{background:rgba(34,197,94,0.15);box-shadow:0 0 30px rgba(34,197,94,0.2);}
+.status-banner.yellow .sb-orb{background:rgba(245,158,11,0.15);box-shadow:0 0 30px rgba(245,158,11,0.2);}
+.status-banner.red .sb-orb{background:rgba(239,68,68,0.15);box-shadow:0 0 30px rgba(239,68,68,0.2);}
+.sb-info h2{font-family:'DM Serif Display',serif;font-size:1.65rem;letter-spacing:-0.02em;margin-bottom:0.2rem;}
+.status-banner.green .sb-info h2{color:var(--green);}
+.status-banner.yellow .sb-info h2{color:var(--yellow);}
+.status-banner.red .sb-info h2{color:var(--red);}
+.sb-info p{color:var(--muted);font-size:0.855rem;max-width:380px;line-height:1.6;}
+.sb-score-wrap{text-align:center;}
+.sb-score-lbl{font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem;}
+.sb-score{font-family:'DM Serif Display',serif;font-size:2.4rem;line-height:1;}
+.status-banner.green .sb-score{color:var(--green);}
+.status-banner.yellow .sb-score{color:var(--yellow);}
+.status-banner.red .sb-score{color:var(--red);}
+
+.metric-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.15rem;margin-bottom:1.75rem;}
+.mc{background:var(--surface);border:1px solid var(--cbord);border-radius:16px;padding:1.6rem;position:relative;overflow:hidden;}
+.mc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--mcc,var(--teal)),transparent);}
+.mc.face{--mcc:var(--teal);}.mc.arms{--mcc:var(--violet);}.mc.speech{--mcc:var(--blue);}
+.mc-hd{display:flex;align-items:center;gap:0.7rem;margin-bottom:1.1rem;}
+.mc-ico{font-size:1.25rem;}
+.mc-ttl{font-family:'DM Serif Display',serif;font-size:1.05rem;letter-spacing:-0.01em;}
+.mc-badge{margin-left:auto;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;padding:0.18rem 0.55rem;border-radius:100px;}
+.mc-badge.ok{background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2);}
+.mc-badge.warn{background:rgba(245,158,11,0.1);color:var(--yellow);border:1px solid rgba(245,158,11,0.2);}
+.mc-badge.alert{background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.2);}
+.mc-metric-lbl{font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem;}
+.mc-val{font-family:'DM Serif Display',serif;font-size:1.55rem;letter-spacing:-0.02em;line-height:1;}
+.mc-unit{font-size:0.72rem;color:var(--muted);font-family:'DM Sans',sans-serif;margin-left:0.2rem;}
+.mc-chart{height:46px;margin:0.7rem 0;}
+.mc-chart svg{width:100%;height:100%;}
+.mc-explain{font-size:0.78rem;color:var(--muted);line-height:1.6;padding-top:0.7rem;border-top:1px solid var(--cbord);}
+.mc-explain strong{color:var(--text);font-weight:500;}
+
+.previews-row{display:grid;grid-template-columns:1fr 1fr;gap:1.15rem;margin-bottom:1.75rem;}
+.preview-card{background:var(--surface);border:1px solid var(--cbord);border-radius:15px;padding:1.4rem;}
+.preview-title{font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.9rem;}
+.preview-canvas{aspect-ratio:16/9;background:#000;border-radius:9px;overflow:hidden;}
+.preview-canvas svg{width:100%;height:100%;}
+
+.action-panel{border-radius:16px;padding:1.75rem 2.25rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;}
+.action-panel.green{background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.15);}
+.action-panel.yellow{background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.2);}
+.action-panel.red{background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.25);}
+.act-text h4{font-family:'DM Serif Display',serif;font-size:1.15rem;margin-bottom:0.35rem;}
+.act-text p{color:var(--muted);font-size:0.83rem;line-height:1.6;max-width:440px;}
+.act-btns{display:flex;gap:0.7rem;flex-wrap:wrap;}
+.act-btn-p{padding:0.6rem 1.4rem;border-radius:100px;border:none;font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.83rem;cursor:pointer;transition:all 0.3s;}
+.action-panel.green .act-btn-p{background:var(--green);color:#000;}
+.action-panel.yellow .act-btn-p{background:var(--yellow);color:#000;}
+.action-panel.red .act-btn-p{background:var(--red);color:#fff;}
+.act-btn-s{padding:0.6rem 1.4rem;border-radius:100px;background:transparent;border:1px solid var(--cbord);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.83rem;cursor:pointer;transition:all 0.2s;}
+.act-btn-s:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
+
+/* --- HISTORY screen --- */
+#screen-history{flex-direction:column;align-items:center;padding:2.5rem 2rem;gap:1.75rem;}
+.history-wrap{width:100%;max-width:840px;}
+.hist-hd-title{font-family:'DM Serif Display',serif;font-size:1.9rem;letter-spacing:-0.02em;margin-bottom:0.4rem;}
+.hist-hd-sub{color:var(--muted);font-size:0.855rem;}
+.hcc{background:var(--surface);border:1px solid var(--cbord);border-radius:16px;padding:1.75rem;margin-bottom:1.4rem;position:relative;overflow:hidden;}
+.hcc::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--teal),transparent);}
+.hcc-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+.hcc-title{font-family:'DM Serif Display',serif;font-size:1.05rem;}
+.hcc-period{font-family:'Space Mono',monospace;font-size:0.63rem;color:var(--muted);letter-spacing:0.1em;}
+.hcc-area{height:150px;}
+.hcc-area svg{width:100%;height:100%;}
+.hist-entries{display:flex;flex-direction:column;gap:0.7rem;}
+.he{display:flex;align-items:center;gap:1.1rem;padding:0.95rem 1.4rem;background:var(--cb);border:1px solid var(--cbord);border-radius:13px;transition:border-color 0.2s;cursor:pointer;}
+.he:hover{border-color:rgba(255,255,255,0.12);}
+.he-date{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--muted);min-width:80px;}
+.he-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.he-dot.green{background:var(--green);box-shadow:0 0 8px rgba(34,197,94,0.5);}
+.he-dot.yellow{background:var(--yellow);box-shadow:0 0 8px rgba(245,158,11,0.5);}
+.he-dot.red{background:var(--red);box-shadow:0 0 8px rgba(239,68,68,0.5);}
+.he-scores{display:flex;gap:1.4rem;flex:1;}
+.he-sc{text-align:center;}
+.he-sc-lbl{font-family:'Space Mono',monospace;font-size:0.57rem;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);}
+.he-sc-v{font-family:'DM Serif Display',serif;font-size:1.05rem;}
+.he-lbl{font-size:0.78rem;font-weight:500;margin-left:auto;}
+.he-lbl.green{color:var(--green);}.he-lbl.yellow{color:var(--yellow);}.he-lbl.red{color:var(--red);}
+.hist-empty{text-align:center;padding:3.5rem;color:var(--muted);}
+.hist-empty h3{font-family:'DM Serif Display',serif;font-size:1.4rem;margin-bottom:0.4rem;color:var(--text);}
+
+/* ===== BASELINE STYLES ===== */
+.baseline-gate{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;}
+.baseline-needed-card{background:linear-gradient(135deg,rgba(0,229,200,0.06),rgba(168,85,247,0.04));border:1px solid rgba(0,229,200,0.18);border-radius:20px;padding:2.5rem 3rem;max-width:560px;width:100%;margin-bottom:2rem;}
+.baseline-needed-card h3{font-family:'DM Serif Display',serif;font-size:1.6rem;letter-spacing:-0.02em;margin-bottom:0.6rem;}
+.baseline-needed-card p{color:var(--muted);font-size:0.875rem;line-height:1.75;}
+.baseline-set-card{background:rgba(0,229,200,0.04);border:1px solid rgba(0,229,200,0.2);border-radius:16px;padding:1.5rem 2rem;max-width:560px;width:100%;margin-bottom:2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+.bsc-icon{font-size:2rem;flex-shrink:0;}
+.bsc-info{flex:1;}
+.bsc-title{font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:0.3rem;}
+.bsc-date{font-size:0.8rem;color:var(--muted);margin-bottom:0.75rem;}
+.bsc-scores{display:flex;gap:1.25rem;}
+.bsc-score{text-align:center;}
+.bsc-score-lbl{font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
+.bsc-score-v{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--teal);}
+.bsc-rerecord{background:none;border:1px solid var(--cbord);color:var(--muted);padding:0.3rem 0.85rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.75rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0;}
+.bsc-rerecord:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
+.fast-check-locked{display:flex;align-items:center;gap:0.6rem;color:var(--muted);font-size:0.8rem;font-family:'Space Mono',monospace;letter-spacing:0.06em;padding:0.75rem 1.5rem;border:1px solid var(--cbord);border-radius:100px;cursor:not-allowed;margin-bottom:1.5rem;}
+
+/* Baseline result banner */
+.status-banner.baseline{background:linear-gradient(135deg,rgba(0,229,200,0.1),rgba(0,229,200,0.03));border:1px solid rgba(0,229,200,0.3);}
+.status-banner.baseline .sb-info h2{color:var(--teal);}
+.status-banner.baseline .sb-score{color:var(--teal);}
+.status-banner.baseline .sb-orb{background:rgba(0,229,200,0.15);box-shadow:0 0 30px rgba(0,229,200,0.2);}
+
+/* Delta chips on metric cards */
+.delta-row{display:flex;align-items:center;gap:0.6rem;margin-top:0.6rem;padding-top:0.6rem;border-top:1px solid var(--cbord);flex-wrap:wrap;}
+.delta-lbl{font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
+.delta-chip{display:inline-flex;align-items:center;gap:0.25rem;font-family:'Space Mono',monospace;font-size:0.68rem;padding:0.15rem 0.55rem;border-radius:100px;font-weight:500;}
+.delta-chip.up{background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.2);}
+.delta-chip.down{background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2);}
+.delta-chip.flat{background:rgba(255,255,255,0.04);color:var(--muted);border:1px solid var(--cbord);}
+.delta-baseline-val{font-size:0.7rem;color:var(--muted);}
+
+/* History baseline pin */
+.he.baseline-entry{border-color:rgba(0,229,200,0.25);background:rgba(0,229,200,0.03);}
+.he-baseline-tag{font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);background:rgba(0,229,200,0.08);border:1px solid rgba(0,229,200,0.2);padding:0.18rem 0.55rem;border-radius:100px;white-space:nowrap;}
+
+/* Record screen baseline mode banner */
+.rec-mode-banner{text-align:center;padding:0.6rem 1.5rem;background:rgba(0,229,200,0.06);border:1px solid rgba(0,229,200,0.2);border-radius:10px;font-family:'Space Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:var(--teal);margin-bottom:1rem;}
+
+/* ===== SIGNAL QUALITY GATE ===== */
+.sq-panel{background:var(--surface);border:1px solid var(--cbord);border-radius:15px;padding:1.25rem 1.4rem;margin-top:0.75rem;}
+.sq-panel-lbl{font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.sq-rows{display:flex;flex-direction:column;gap:0.5rem;}
+.sq-row{display:flex;align-items:center;gap:0.65rem;font-size:0.8rem;}
+.sq-icon{width:18px;text-align:center;font-size:0.85rem;flex-shrink:0;}
+.sq-label{flex:1;font-size:0.78rem;color:var(--text);}
+.sq-status{font-family:'Space Mono',monospace;font-size:0.62rem;padding:0.12rem 0.45rem;border-radius:100px;white-space:nowrap;}
+.sq-status.good{background:rgba(34,197,94,0.12);color:var(--green);border:1px solid rgba(34,197,94,0.2);}
+.sq-status.warn{background:rgba(245,158,11,0.12);color:var(--yellow);border:1px solid rgba(245,158,11,0.2);}
+.sq-status.bad{background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.2);}
+.sq-tip{font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--muted);margin-top:0.25rem;line-height:1.5;padding-left:1.5rem;}
+
+/* Quality Gate Decision Overlay */
+.qg-overlay{position:fixed;inset:0;z-index:600;background:rgba(6,8,15,0.88);backdrop-filter:blur(18px);display:flex;align-items:center;justify-content:center;padding:2rem;animation:fadeUp 0.35s ease;}
+.qg-box{background:var(--surface);border:1px solid var(--cbord);border-radius:22px;padding:2.5rem 3rem;max-width:460px;width:100%;text-align:center;position:relative;}
+.qg-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--ac,var(--teal)),transparent);}
+.qg-icon{font-size:2.8rem;margin-bottom:1.25rem;}
+.qg-title{font-family:'DM Serif Display',serif;font-size:1.65rem;letter-spacing:-0.02em;margin-bottom:0.5rem;}
+.qg-desc{color:var(--muted);font-size:0.85rem;line-height:1.7;margin-bottom:1.5rem;}
+.qg-score-row{display:flex;justify-content:center;gap:1.5rem;margin-bottom:1.75rem;padding:1rem 1.5rem;background:var(--cb);border:1px solid var(--cbord);border-radius:12px;}
+.qg-score-item{text-align:center;}
+.qg-score-lbl{font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem;}
+.qg-score-v{font-family:'DM Serif Display',serif;font-size:1.2rem;}
+.qg-score-v.good{color:var(--green);}.qg-score-v.warn{color:var(--yellow);}.qg-score-v.bad{color:var(--red);}
+.qg-btns{display:flex;flex-direction:column;gap:0.65rem;}
+.qg-proceed{background:var(--teal);color:var(--bg);border:none;padding:0.75rem 2rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.875rem;cursor:pointer;transition:all 0.3s;}
+.qg-proceed:hover{box-shadow:0 0 30px rgba(0,229,200,0.35);}
+.qg-proceed.yellow{background:var(--yellow);}
+.qg-retake{background:transparent;border:1px solid var(--cbord);color:var(--muted);padding:0.75rem 2rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.875rem;cursor:pointer;transition:all 0.2s;}
+.qg-retake:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
+.qg-ethos{font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:0.06em;margin-top:1.25rem;line-height:1.6;padding:0.75rem 1rem;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--cbord);}
+
+/* ===== BASELINE CONFIDENCE METER ===== */
+.bc-pill{display:inline-flex;align-items:center;gap:0.5rem;font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.3rem 0.85rem;border-radius:100px;cursor:default;position:relative;transition:all 0.3s;}
+.bc-pill.low{background:rgba(245,158,11,0.1);color:var(--yellow);border:1px solid rgba(245,158,11,0.25);}
+.bc-pill.medium{background:rgba(249,115,22,0.1);color:#f97316;border:1px solid rgba(249,115,22,0.25);}
+.bc-pill.high{background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.25);}
+.bc-pill-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.bc-pill.low .bc-pill-dot{background:var(--yellow);}
+.bc-pill.medium .bc-pill-dot{background:#f97316;}
+.bc-pill.high .bc-pill-dot{background:var(--green);}
+.bc-tooltip{position:absolute;bottom:calc(100% + 8px);right:0;background:var(--surface);border:1px solid var(--cbord);border-radius:10px;padding:0.75rem 1rem;width:220px;font-size:0.72rem;color:var(--muted);line-height:1.5;pointer-events:none;opacity:0;transition:opacity 0.2s;z-index:50;text-transform:none;letter-spacing:0;}
+.bc-pill:hover .bc-tooltip{opacity:1;}
+.bc-msg{font-family:'Space Mono',monospace;font-size:0.67rem;color:var(--muted);letter-spacing:0.04em;margin-top:0.4rem;line-height:1.5;}
+
+/* Confidence banner on results */
+.conf-banner{display:flex;align-items:center;justify-content:space-between;padding:0.85rem 1.4rem;background:var(--cb);border:1px solid var(--cbord);border-radius:12px;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem;}
+.conf-banner-left{display:flex;align-items:center;gap:0.75rem;}
+.conf-banner-lbl{font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+.conf-banner-msg{font-size:0.8rem;color:var(--text);}
+
+@media(max-width:900px){
+  nav{padding:1.5rem 2rem;}.nav-links{display:none;}
+  .section-pad,.signals-section,.ethics-section,.chart-section,.audience-section,.cta-section{padding:5rem 1.5rem;}
+  .steps-grid,.signals-header,.ethics-inner,.audience-grid{grid-template-columns:1fr;}
+  .signals-grid{grid-template-columns:1fr 1fr;}
+  .ethics-inner{padding:3rem 2rem;gap:2.5rem;}
+  footer{flex-direction:column;gap:1.5rem;text-align:center;}.footer-note{text-align:center;}
+  .record-layout,.metric-cards,.previews-row,.what-is-fast{grid-template-columns:1fr;}
+  .status-banner,.action-panel{flex-direction:column;align-items:flex-start;}
+  .he-scores{gap:0.75rem;}
+  .app-nav{padding:0.9rem 1.25rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ LANDING PAGE ═══════════════════ -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<nav>
+  <div class="nav-logo">SignalCheck</div>
+  <ul class="nav-links">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#signals">Signals</a></li>
+    <li><a href="#ethics">Ethics</a></li>
+    <li><a href="#students">Students</a></li>
+  </ul>
+  <button class="nav-cta" onclick="openApp()">Early Access</button>
+</nav>
+
+<section class="hero">
+  <p class="hero-eyebrow">🧠 Preventative Mental Health Awareness</p>
+  <h1>Your voice<br>knows how you<br><em>really</em> feel.</h1>
+  <p class="hero-sub">SignalCheck listens to how you speak over time — not what you say — and reflects subtle emotional shifts back to you before burnout takes hold.</p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="openApp()">Start Free Check-In</button>
+    <button class="btn-ghost">See How It Works</button>
+  </div>
+  <div class="signal-viz">
+    <div class="waveform" id="waveform"></div>
+    <p class="viz-label">— Live speech signal analysis —</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="section-pad" id="how">
+  <div style="max-width:1100px;margin:0 auto">
+    <p class="section-tag reveal">Process</p>
+    <h2 class="section-title reveal">Four moments,<br>one honest picture.</h2>
+    <p class="section-desc reveal">No questionnaires. No labels. Just a daily 30-second check-in that builds your personal emotional baseline over time.</p>
+    <div class="steps-grid reveal">
+      <div class="step"><div class="step-num">01</div><span class="step-icon">🎙️</span><h3>Daily Video Check-In</h3><p>Answer a gentle, open-ended prompt in 30–60 seconds. "How did today feel?" — that's all it takes. No pressure, no disclosure required.</p></div>
+      <div class="step"><div class="step-num">02</div><span class="step-icon">🔬</span><h3>Speech Analysis</h3><p>AI extracts behavioral signals — pace, pauses, pitch variability, sentence rhythm — without ever analyzing the content of what you said.</p></div>
+      <div class="step"><div class="step-num">03</div><span class="step-icon">📊</span><h3>Your Personal Baseline</h3><p>You're compared only to yourself. A naturally quiet speaker isn't flagged. Alerts are based on deviations from your own patterns, not population averages.</p></div>
+      <div class="step"><div class="step-num">04</div><span class="step-icon">💡</span><h3>Gentle Awareness Nudges</h3><p>If patterns shift consistently, SignalCheck suggests a short reflection, a break, or a conversation — never with urgency, always framed as self-care.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="signals-section" id="signals">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="signals-header">
+      <div><p class="section-tag reveal">What We Measure</p><h2 class="section-title reveal" style="margin-bottom:0">The signals your voice quietly carries.</h2></div>
+      <p class="section-desc reveal">None of these features are analyzed individually. SignalCheck looks at trends over time — small, consistent shifts that might indicate your body or mind needs attention.</p>
+    </div>
+    <div class="signals-grid">
+      <div class="signal-card reveal"><div class="signal-emoji">⏱️</div><h4>Speaking Pace</h4><p>Words per minute over time. Slowing pace can correlate with fatigue or mental load — but only against your own normal rhythm.</p></div>
+      <div class="signal-card reveal"><div class="signal-emoji">〰️</div><h4>Pause Patterns</h4><p>Frequency and length of silences between phrases. More frequent pauses can indicate cognitive effort or emotional withdrawal.</p></div>
+      <div class="signal-card reveal"><div class="signal-emoji">🎵</div><h4>Pitch Variability</h4><p>A flatter pitch over time — less vocal expressiveness — can be an early indicator of emotional dampening or low energy states.</p></div>
+      <div class="signal-card reveal"><div class="signal-emoji">📝</div><h4>Language Complexity</h4><p>Shorter sentences and less varied vocabulary can reflect reduced cognitive bandwidth — a sign worth noticing, not judging.</p></div>
+      <div class="signal-card reveal"><div class="signal-emoji">🌊</div><h4>Emotional Variance</h4><p>A dynamic emotional tone one week vs flat affect the next — the delta between these states is more informative than either alone.</p></div>
+      <div class="signal-card reveal"><div class="signal-emoji">👁️</div><h4>Facial Energy</h4><p>Subtle changes in facial expressiveness across check-ins — microexpression variance that even you might not consciously notice.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="chart-section">
+  <div style="max-width:900px;margin:0 auto">
+    <p class="section-tag reveal">Visualization</p>
+    <h2 class="section-title reveal">Patterns, not diagnoses.</h2>
+    <p class="section-desc reveal" style="margin:0 auto">Your dashboard shows gentle trends. No scores. No alarms. Just information, in your hands.</p>
+    <div class="chart-container reveal">
+      <div class="chart-header"><div class="chart-title">Speech Energy Index — Past 14 Days</div><div class="chart-period">FEB 2025</div></div>
+      <div class="chart-area">
+        <svg class="chart-svg" viewBox="0 0 740 180" preserveAspectRatio="none">
+          <defs><linearGradient id="lg" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#00e5c8" stop-opacity="0.3"/><stop offset="100%" stop-color="#00e5c8" stop-opacity="0"/></linearGradient></defs>
+          <line x1="0" y1="45" x2="740" y2="45" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <line x1="0" y1="90" x2="740" y2="90" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <line x1="0" y1="135" x2="740" y2="135" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <path d="M0,80 C55,75 110,60 160,65 C210,70 260,85 310,90 C360,95 390,100 440,108 C490,115 530,120 580,118 C620,116 660,112 700,110 L700,180 L0,180 Z" fill="url(#lg)"/>
+          <line x1="0" y1="68" x2="740" y2="68" stroke="rgba(0,229,200,0.2)" stroke-width="1" stroke-dasharray="5,5"/>
+          <text x="710" y="63" fill="rgba(0,229,200,0.5)" font-size="10" font-family="Space Mono">baseline</text>
+          <path d="M0,80 C55,75 110,60 160,65 C210,70 260,85 310,90 C360,95 390,100 440,108 C490,115 530,120 580,118 C620,116 660,112 700,110" fill="none" stroke="#00e5c8" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="0" cy="80" r="4" fill="#00e5c8"/><circle cx="160" cy="65" r="4" fill="#00e5c8"/><circle cx="310" cy="90" r="4" fill="#00e5c8"/>
+          <circle cx="440" cy="108" r="5" fill="#00e5c8" filter="drop-shadow(0 0 6px #00e5c8)"/>
+          <circle cx="580" cy="118" r="4" fill="#00e5c8"/><circle cx="700" cy="110" r="4" fill="#00e5c8"/>
+          <text x="0" y="175" fill="#6b7280" font-size="11" font-family="Space Mono">Feb 5</text>
+          <text x="145" y="175" fill="#6b7280" font-size="11" font-family="Space Mono">Feb 8</text>
+          <text x="295" y="175" fill="#6b7280" font-size="11" font-family="Space Mono">Feb 11</text>
+          <text x="425" y="175" fill="#6b7280" font-size="11" font-family="Space Mono">Feb 14</text>
+          <text x="565" y="175" fill="#6b7280" font-size="11" font-family="Space Mono">Feb 17</text>
+          <text x="685" y="175" fill="#6b7280" font-size="11" font-family="Space Mono">Today</text>
+        </svg>
+      </div>
+      <div class="chart-insight">✦ &nbsp;"Your speech energy has been slightly lower than usual this week. This is just a pattern — worth noticing."</div>
+    </div>
+  </div>
+</section>
+
+<section class="ethics-section" id="ethics">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="ethics-inner reveal">
+      <div>
+        <p class="section-tag">Ethics First</p>
+        <h2 class="ethics-title">Built with<br><em>radical</em><br>responsibility.</h2>
+        <p class="ethics-desc">SignalCheck is not a healthcare product. It's an awareness tool — and that distinction shapes every design decision we make. Your data is yours. Always.</p>
+      </div>
+      <div class="ethics-list">
+        <div class="ethics-item"><div class="ethics-icon">🔒</div><div class="ethics-item-text">No diagnosis, ever<span>SignalCheck reflects patterns. It never labels, scores, or categorizes your mental health.</span></div></div>
+        <div class="ethics-item"><div class="ethics-icon">🚫</div><div class="ethics-item-text">Zero data sharing<span>Nothing is shared with schools, parents, or third parties. Full stop.</span></div></div>
+        <div class="ethics-item"><div class="ethics-icon">👤</div><div class="ethics-item-text">Compared only to yourself<span>Your baseline is yours. You're never measured against averages or other users.</span></div></div>
+        <div class="ethics-item"><div class="ethics-icon">🎛️</div><div class="ethics-item-text">Opt-in, user-controlled<span>You decide what to share, when to record, and when to delete everything.</span></div></div>
+        <div class="ethics-item"><div class="ethics-icon">🔍</div><div class="ethics-item-text">Full transparency<span>Every insight tells you exactly what signal it's based on and why it matters.</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="audience-section" id="students">
+  <div style="max-width:1100px;margin:0 auto">
+    <p class="section-tag reveal">Why Students</p>
+    <h2 class="section-title reveal">Burnout builds slowly.<br>Now you can see it coming.</h2>
+    <div class="audience-grid">
+      <div class="audience-card reveal"><div class="audience-big">73%</div><h4>Can't articulate stress</h4><p>Most teens struggle to verbalize emotional distress before it becomes a crisis. SignalCheck listens so they don't have to explain.</p></div>
+      <div class="audience-card reveal"><div class="audience-big">No</div><h4>Labels, ever</h4><p>By removing diagnostic framing entirely, SignalCheck strips away the stigma that keeps students from seeking awareness about their own wellbeing.</p></div>
+      <div class="audience-card reveal"><div class="audience-big">30s</div><h4>That's all it takes</h4><p>A 30-second voice check-in fits naturally into student life. No emotional vulnerability required — just a moment, once a day.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-inner">
+    <p class="section-tag reveal">Try It Now</p>
+    <h2 class="reveal">Be the first to<br>hear your own <em>signal.</em></h2>
+    <p class="reveal">Run the FAST neurological screening demo — a 15-second check-in that analyzes facial symmetry, arm drift, and speech clarity in your browser.</p>
+    <div class="hero-actions reveal">
+      <button class="btn-primary" onclick="openApp()">Start FAST Check →</button>
+      <button class="btn-ghost">Learn More</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">SignalCheck</div>
+  <p class="footer-note">Not a medical device. Not a diagnostic tool.<br>Just an early-warning mirror for your mind.</p>
+</footer>
+
+
+<!-- ═══════════════════ FAST CHECK APP ═══════════════════ -->
+<div id="fast-app">
+
+  <div class="app-nav">
+    <div class="app-nav-logo">SignalCheck <span class="app-nav-sub">/ FAST Check</span></div>
+    <div class="app-nav-right">
+      <button class="app-nav-hist" onclick="goHistory()">📈 History</button>
+      <span id="nav-bc-pill" class="bc-pill low">
+        <span class="bc-pill-dot"></span>
+        <span id="nav-bc-text">Baseline: Low Confidence</span>
+        <span class="bc-tooltip">Based on number and consistency of your past check-ins.</span>
+      </span>
+      <span class="app-badge">Beta Demo</span>
+      <button class="app-back" onclick="closeApp()">← Back</button>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN: HOME ══ -->
+  <div class="app-screen active" id="screen-home">
+    <!-- Content injected by updateHomeScreen() -->
+  </div>
+
+  <!-- ══ SCREEN: RECORD ══ -->
+  <div class="app-screen" id="screen-record">
+    <div class="record-layout">
+      <div>
+        <div class="camera-wrap">
+          <video id="cam-video" autoplay playsinline muted></video>
+          <div class="cam-overlay">
+            <div class="face-guide">
+              <div class="fgc tl"></div><div class="fgc tr"></div>
+              <div class="fgc bl"></div><div class="fgc br"></div>
+            </div>
+            <!-- Placeholder shown before camera starts -->
+            <div id="cam-placeholder" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(6,8,15,0.92);gap:0.75rem;">
+              <div style="font-size:2rem;animation:blink 1.2s ease-in-out infinite;">📷</div>
+              <div style="font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;color:var(--muted);text-align:center;">Starting camera preview…</div>
+            </div>
+            <div class="prompt-banner smile" id="prompt-banner">😊 &nbsp;SMILE — hold it naturally</div>
+            <div class="rec-ind" id="rec-ind"><span class="rec-dot"></span> REC</div>
+            <div class="cam-tip" id="cam-tip">Keep your face centered · Shoulders visible</div>
+          </div>
+        </div>
+      </div>
+      <div class="rec-panel">
+        <div id="rec-mode-banner" class="rec-mode-banner" style="display:none">📐 Baseline Recording</div>
+        <div class="panel-box">
+          <div class="pb-label">Task Sequence</div>
+          <div class="tp-tasks">
+            <div class="tp-task active" id="tp-smile"><div class="tp-icon">😊</div><div class="tp-info"><div class="tp-name">Smile</div><div class="tp-dur">3 seconds</div></div><div class="tp-chk" id="chk-smile">○</div></div>
+            <div class="tp-task pending" id="tp-arms"><div class="tp-icon">🙌</div><div class="tp-info"><div class="tp-name">Raise Both Arms</div><div class="tp-dur">5 seconds</div></div><div class="tp-chk" id="chk-arms">○</div></div>
+            <div class="tp-task pending" id="tp-speak"><div class="tp-icon">🗣️</div><div class="tp-info"><div class="tp-name">Say the Phrase</div><div class="tp-dur">5 seconds</div></div><div class="tp-chk" id="chk-speak">○</div></div>
+          </div>
+        </div>
+        <div class="panel-box">
+          <div class="timer-inner">
+            <svg class="timer-svg" viewBox="0 0 90 90">
+              <circle class="tr-bg" cx="45" cy="45" r="40"/>
+              <circle class="tr-fill" id="timer-ring" cx="45" cy="45" r="40" transform="rotate(-90 45 45)"/>
+              <text class="timer-num" x="45" y="52" text-anchor="middle" id="timer-num">—</text>
+            </svg>
+            <div class="timer-lbl" id="timer-lbl">Ready to begin</div>
+          </div>
+        </div>
+        <div class="sq-panel">
+          <div class="sq-panel-lbl">Signal Quality</div>
+          <div class="sq-rows">
+            <div>
+              <div class="sq-row">
+                <div class="sq-icon">💡</div>
+                <div class="sq-label">Lighting</div>
+                <div class="sq-status good" id="sq-lighting">✅ Good</div>
+              </div>
+              <div class="sq-tip" id="sq-lighting-tip"></div>
+            </div>
+            <div>
+              <div class="sq-row">
+                <div class="sq-icon">👤</div>
+                <div class="sq-label">Face Framing</div>
+                <div class="sq-status good" id="sq-face">✅ Good</div>
+              </div>
+              <div class="sq-tip" id="sq-face-tip"></div>
+            </div>
+            <div>
+              <div class="sq-row">
+                <div class="sq-icon">🦴</div>
+                <div class="sq-label">Body Visibility</div>
+                <div class="sq-status warn" id="sq-body">⚠️ Needs adjustment</div>
+              </div>
+              <div class="sq-tip" id="sq-body-tip">Step back so both shoulders and arms are visible.</div>
+            </div>
+            <div>
+              <div class="sq-row">
+                <div class="sq-icon">🎙️</div>
+                <div class="sq-label">Audio Clarity</div>
+                <div class="sq-status good" id="sq-audio">✅ Good</div>
+              </div>
+              <div class="sq-tip" id="sq-audio-tip"></div>
+            </div>
+          </div>
+        </div>
+        <div class="rec-controls">
+          <button class="btn-rec-go" id="btn-go" onclick="startRec()">▶ &nbsp;Start Recording</button>
+          <button class="btn-restart" onclick="resetRec()">↺ &nbsp;Restart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN: PROCESSING ══ -->
+  <div class="app-screen" id="screen-processing">
+    <div class="proc-orb">🧠</div>
+    <h2 class="proc-title">Analyzing your check-in…</h2>
+    <p class="proc-sub">Running three signal analyses. Just a moment.</p>
+    <div class="proc-checks">
+      <div class="pc" id="pc-face">
+        <div class="pc-icon">😊</div>
+        <div style="flex:1"><div class="pc-name">Facial Symmetry</div><div class="pc-met" id="pc-face-met">Measuring mouth corner alignment…</div></div>
+        <div id="pc-face-st"><span class="spinner"></span></div>
+      </div>
+      <div class="pc" id="pc-arms">
+        <div class="pc-icon">🙌</div>
+        <div style="flex:1"><div class="pc-name">Arm Drift Analysis</div><div class="pc-met" id="pc-arms-met">Tracking wrist position over time…</div></div>
+        <div id="pc-arms-st"><span class="spinner"></span></div>
+      </div>
+      <div class="pc" id="pc-speech">
+        <div class="pc-icon">🗣️</div>
+        <div style="flex:1"><div class="pc-name">Speech Clarity</div><div class="pc-met" id="pc-speech-met">Analyzing pace and pause ratio…</div></div>
+        <div id="pc-speech-st"><span class="spinner"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN: RESULTS ══ -->
+  <div class="app-screen" id="screen-results">
+    <div class="results-wrap">
+      <div class="conf-banner" id="conf-banner">
+        <div class="conf-banner-left">
+          <span id="results-bc-pill" class="bc-pill low">
+            <span class="bc-pill-dot"></span>
+            <span id="results-bc-text">Baseline: Low Confidence</span>
+          </span>
+          <span class="conf-banner-msg" id="conf-banner-msg">We need more check-ins to understand your baseline.</span>
+        </div>
+      </div>
+
+      <div class="status-banner green" id="sb">
+        <div class="sb-left">
+          <div class="sb-orb" id="sb-orb">✅</div>
+          <div class="sb-info">
+            <h2 id="sb-title">All Clear</h2>
+            <p id="sb-desc">No significant asymmetry or irregularity detected across all three FAST signals.</p>
+          </div>
+        </div>
+        <div class="sb-score-wrap">
+          <div class="sb-score-lbl">Risk Index</div>
+          <div class="sb-score" id="sb-score">0.4</div>
+        </div>
+      </div>
+
+      <div class="metric-cards">
+        <div class="mc face">
+          <div class="mc-hd"><div class="mc-ico">😊</div><div class="mc-ttl">Facial Symmetry</div><div class="mc-badge ok" id="face-badge">NORMAL</div></div>
+          <div class="mc-metric-lbl">Asymmetry Index</div>
+          <div class="mc-val" id="face-val">0.04<span class="mc-unit">/ 0.08 threshold</span></div>
+          <div class="mc-chart"><svg viewBox="0 0 200 46" preserveAspectRatio="none">
+            <line x1="0" y1="38" x2="200" y2="38" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <line x1="0" y1="18" x2="200" y2="18" stroke="rgba(0,229,200,0.15)" stroke-width="1" stroke-dasharray="3,3"/>
+            <polyline id="face-line" points="0,32 40,30 80,33 120,31 160,32 200,31" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="200" cy="31" r="3" fill="var(--teal)"/>
+          </svg></div>
+          <div class="mc-explain"><strong>What it means:</strong> Mouth corner and eye opening difference across frames. Values below 0.08 are within typical variation for natural smiling.</div>
+          <div class="delta-row" id="face-delta-row" style="display:none"><span class="delta-lbl">vs baseline</span><span class="delta-chip flat" id="face-delta-chip">—</span><span class="delta-baseline-val" id="face-baseline-val"></span></div>
+        </div>
+        <div class="mc arms">
+          <div class="mc-hd"><div class="mc-ico">🙌</div><div class="mc-ttl">Arm Stability</div><div class="mc-badge ok" id="arms-badge">NORMAL</div></div>
+          <div class="mc-metric-lbl">Right Arm Drift</div>
+          <div class="mc-val" id="arms-val">2.1<span class="mc-unit">% over 5s</span></div>
+          <div class="mc-chart"><svg viewBox="0 0 200 46" preserveAspectRatio="none">
+            <line x1="0" y1="38" x2="200" y2="38" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <line x1="0" y1="18" x2="200" y2="18" stroke="rgba(168,85,247,0.15)" stroke-width="1" stroke-dasharray="3,3"/>
+            <polyline id="arms-line" points="0,18 40,19 80,20 120,20 160,21 200,21" fill="none" stroke="var(--violet)" stroke-width="2" stroke-linecap="round"/>
+            <polyline points="0,16 40,17 80,18 120,17 160,17 200,17" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-dasharray="2,2" opacity="0.5"/>
+            <circle cx="200" cy="21" r="3" fill="var(--violet)"/>
+          </svg></div>
+          <div class="mc-explain"><strong>What it means:</strong> Wrist height relative to shoulder over 5 seconds. Gradual drift beyond 8% may indicate one-sided weakness worth monitoring.</div>
+          <div class="delta-row" id="arms-delta-row" style="display:none"><span class="delta-lbl">vs baseline</span><span class="delta-chip flat" id="arms-delta-chip">—</span><span class="delta-baseline-val" id="arms-baseline-val"></span></div>
+        </div>
+        <div class="mc speech">
+          <div class="mc-hd"><div class="mc-ico">🗣️</div><div class="mc-ttl">Speech Clarity</div><div class="mc-badge ok" id="speech-badge">NORMAL</div></div>
+          <div class="mc-metric-lbl">Pause Ratio</div>
+          <div class="mc-val" id="speech-val">0.18<span class="mc-unit">silence ratio</span></div>
+          <div class="mc-chart"><svg viewBox="0 0 200 46" preserveAspectRatio="none">
+            <line x1="0" y1="38" x2="200" y2="38" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <line x1="0" y1="23" x2="200" y2="23" stroke="rgba(59,130,246,0.15)" stroke-width="1" stroke-dasharray="3,3"/>
+            <polyline id="speech-line" points="0,26 50,24 90,28 130,25 170,27 200,26" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="200" cy="26" r="3" fill="var(--blue)"/>
+          </svg></div>
+          <div class="mc-explain" id="speech-extra"><strong>Transcript:</strong> <span id="transcript-txt" style="color:var(--muted);font-size:0.77rem;">"Today is a sunny day."</span><br><strong style="margin-top:0.35rem;display:block;">Words/min:</strong> <span id="wpm-txt" style="color:var(--muted);font-size:0.77rem;">112 wpm</span></div>
+          <div class="delta-row" id="speech-delta-row" style="display:none"><span class="delta-lbl">vs baseline</span><span class="delta-chip flat" id="speech-delta-chip">—</span><span class="delta-baseline-val" id="speech-baseline-val"></span></div>
+        </div>
+      </div>
+
+      <div class="previews-row">
+        <div class="preview-card">
+          <div class="preview-title">Face Landmark Preview</div>
+          <div class="preview-canvas">
+            <svg viewBox="0 0 320 180">
+              <rect width="320" height="180" fill="#080c17"/>
+              <ellipse cx="160" cy="85" rx="55" ry="68" fill="none" stroke="rgba(0,229,200,0.12)" stroke-width="1"/>
+              <g fill="var(--teal)" opacity="0.85">
+                <circle cx="136" cy="68" r="2.5"/><circle cx="144" cy="65" r="2"/><circle cx="152" cy="65" r="2"/><circle cx="159" cy="68" r="2.5"/>
+                <circle cx="151" cy="72" r="1.5"/><circle cx="144" cy="72" r="1.5"/>
+                <circle cx="162" cy="68" r="2.5"/><circle cx="170" cy="65" r="2"/><circle cx="178" cy="65" r="2"/><circle cx="185" cy="68" r="2.5"/>
+                <circle cx="178" cy="72" r="1.5"/><circle cx="170" cy="72" r="1.5"/>
+                <circle cx="160" cy="82" r="2"/><circle cx="155" cy="94" r="2"/><circle cx="160" cy="97" r="2"/><circle cx="165" cy="94" r="2"/>
+                <circle cx="143" cy="110" r="2.5"/><circle cx="152" cy="107" r="2"/><circle cx="160" cy="106" r="2"/>
+                <circle cx="168" cy="107" r="2"/><circle cx="177" cy="110" r="2.5"/>
+                <circle cx="168" cy="116" r="2"/><circle cx="160" cy="118" r="2"/><circle cx="152" cy="116" r="2"/>
+                <circle cx="108" cy="85" r="1.5"/><circle cx="112" cy="108" r="1.5"/><circle cx="122" cy="128" r="1.5"/><circle cx="142" cy="142" r="1.5"/>
+                <circle cx="160" cy="146" r="1.5"/><circle cx="178" cy="142" r="1.5"/><circle cx="198" cy="128" r="1.5"/>
+                <circle cx="208" cy="108" r="1.5"/><circle cx="212" cy="85" r="1.5"/>
+              </g>
+              <line x1="160" y1="18" x2="160" y2="158" stroke="rgba(0,229,200,0.18)" stroke-width="1" stroke-dasharray="4,4"/>
+              <line x1="143" y1="110" x2="177" y2="110" stroke="rgba(0,229,200,0.5)" stroke-width="1" stroke-dasharray="2,2"/>
+              <line x1="143" y1="107" x2="143" y2="113" stroke="var(--teal)" stroke-width="1.5"/>
+              <line x1="177" y1="107" x2="177" y2="113" stroke="var(--teal)" stroke-width="1.5"/>
+              <text x="151" y="104" fill="rgba(0,229,200,0.7)" font-size="8" font-family="Space Mono">Δ 0.04</text>
+            </svg>
+          </div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-title">Pose Keypoints Preview</div>
+          <div class="preview-canvas">
+            <svg viewBox="0 0 320 180">
+              <rect width="320" height="180" fill="#080c17"/>
+              <g stroke="rgba(168,85,247,0.28)" stroke-width="1.5" fill="none">
+                <line x1="160" y1="53" x2="160" y2="120"/>
+                <line x1="110" y1="70" x2="210" y2="70"/>
+                <line x1="110" y1="70" x2="70" y2="97"/>
+                <line x1="210" y1="70" x2="250" y2="93"/>
+                <line x1="160" y1="120" x2="133" y2="165"/>
+                <line x1="160" y1="120" x2="187" y2="165"/>
+              </g>
+              <g fill="var(--violet)" opacity="0.9">
+                <circle cx="110" cy="70" r="4"/><circle cx="210" cy="70" r="4"/>
+                <circle cx="70" cy="97" r="5"/><circle cx="250" cy="93" r="5"/>
+                <circle cx="133" cy="165" r="4"/><circle cx="187" cy="165" r="4"/>
+                <circle cx="160" cy="120" r="3"/>
+              </g>
+              <circle cx="160" cy="43" r="14" fill="none" stroke="rgba(168,85,247,0.25)" stroke-width="1.5"/>
+              <line x1="70" y1="88" x2="70" y2="97" stroke="rgba(245,158,11,0.65)" stroke-width="2"/>
+              <text x="26" y="98" fill="rgba(245,158,11,0.8)" font-size="8" font-family="Space Mono">↓ 2.1%</text>
+              <line x1="58" y1="82" x2="262" y2="82" stroke="rgba(168,85,247,0.14)" stroke-width="1" stroke-dasharray="4,4"/>
+              <text x="224" y="79" fill="rgba(168,85,247,0.45)" font-size="7" font-family="Space Mono">baseline</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-panel green" id="action-panel">
+        <div class="act-text">
+          <h4 id="act-title">No warning signals detected.</h4>
+          <p id="act-desc">All three FAST indicators are within typical range. Consider tracking these patterns over time to establish your personal baseline. If you ever notice sudden changes, seek care immediately.</p>
+        </div>
+        <div class="act-btns">
+          <button class="act-btn-p" onclick="saveAndHistory()">Save & View History</button>
+          <button class="act-btn-s" onclick="goRecord()">Retake</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN: HISTORY ══ -->
+  <div class="app-screen" id="screen-history">
+    <div class="history-wrap">
+      <div style="margin-bottom:1.75rem;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <h2 class="hist-hd-title">Your Check-In History</h2>
+          <p class="hist-hd-sub">Stored locally on your device only. Track patterns over time — not individual moments.</p>
+        </div>
+        <span id="hist-bc-pill" class="bc-pill low" style="margin-top:0.25rem;">
+          <span class="bc-pill-dot"></span>
+          <span id="hist-bc-text">Baseline: Low Confidence</span>
+          <span class="bc-tooltip">Confidence is based on the number, quality, and consistency of your check-ins. Complete more to improve accuracy.</span>
+        </span>
+      </div>
+      <div class="hcc">
+        <div class="hcc-hd"><div class="hcc-title">Risk Index — Recent Trend</div><div class="hcc-period" id="hist-period">No data yet</div></div>
+        <div class="hcc-area">
+          <svg id="hist-svg" viewBox="0 0 820 150" preserveAspectRatio="none">
+            <defs><linearGradient id="hg" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#00e5c8" stop-opacity="0.2"/><stop offset="100%" stop-color="#00e5c8" stop-opacity="0"/></linearGradient></defs>
+            <line x1="0" y1="50" x2="820" y2="50" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <line x1="0" y1="100" x2="820" y2="100" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <path id="hist-fill" fill="url(#hg)" d=""/>
+            <path id="hist-line" fill="none" stroke="var(--teal)" stroke-width="2.5" stroke-linecap="round" d=""/>
+            <text id="hist-empty" x="10" y="145" fill="#6b7280" font-size="12" font-family="Space Mono">Complete your first check-in to see trends here.</text>
+          </svg>
+        </div>
+      </div>
+      <div class="hist-entries" id="hist-entries">
+        <div class="hist-empty"><h3>No check-ins yet</h3><p>Complete your first FAST check-in to start tracking.</p></div>
+      </div>
+      <div style="margin-top:1.4rem;display:flex;gap:0.9rem;flex-wrap:wrap;">
+        <button class="btn-primary" onclick="showScreen('home')" style="font-size:0.875rem;padding:0.7rem 1.9rem;">+ New Check-In</button>
+        <button class="btn-ghost" onclick="clearHist()" style="font-size:0.875rem;padding:0.7rem 1.9rem;">Clear History</button>
+        <button class="btn-ghost" onclick="clearBaseline()" id="btn-clear-baseline" style="font-size:0.875rem;padding:0.7rem 1.9rem;display:none;">Reset Baseline</button>
+      </div>
+    </div>
+  </div>
+
+<!-- Quality Gate Overlay -->
+<div id="qg-overlay" class="qg-overlay" style="display:none;">
+  <div class="qg-box" id="qg-box">
+    <div class="qg-icon" id="qg-icon">✅</div>
+    <h3 class="qg-title" id="qg-title">Signal Quality OK</h3>
+    <p class="qg-desc" id="qg-desc">All four signal channels look good. Running analysis now.</p>
+    <div class="qg-score-row" id="qg-score-row">
+      <div class="qg-score-item"><div class="qg-score-lbl">Lighting</div><div class="qg-score-v good" id="qg-s-light">Good</div></div>
+      <div class="qg-score-item"><div class="qg-score-lbl">Framing</div><div class="qg-score-v good" id="qg-s-face">Good</div></div>
+      <div class="qg-score-item"><div class="qg-score-lbl">Body</div><div class="qg-score-v good" id="qg-s-body">Good</div></div>
+      <div class="qg-score-item"><div class="qg-score-lbl">Audio</div><div class="qg-score-v good" id="qg-s-audio">Good</div></div>
+    </div>
+    <div class="qg-btns" id="qg-btns">
+      <button class="qg-proceed" id="qg-btn-proceed" onclick="proceedFromGate()">Analyze Now →</button>
+    </div>
+    <div class="qg-ethos">"We block low-quality signals to avoid misleading you. Accuracy matters more than speed."</div>
+  </div>
+</div>
+
+</div><!-- #fast-app -->
+
+
+
+<script>
+/* ── LANDING WAVEFORM ── */
+const wf=document.getElementById('waveform');
+for(let i=0;i<90;i++){const b=document.createElement('div');b.className='bar';b.style.cssText=`--min:${4+Math.random()*10}px;--max:${20+Math.random()*50}px;--dur:${1+Math.random()*2}s;--delay:${Math.random()*-3}s;`;if(Math.random()>0.75)b.style.background='#a855f7';if(Math.random()>0.9)b.style.background='#3b82f6';wf.appendChild(b);}
+
+/* ── SCROLL REVEAL ── */
+const revObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),80);revObs.unobserve(e.target);}});},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(e=>revObs.observe(e));
+document.querySelectorAll('.signals-grid .signal-card,.audience-grid .audience-card').forEach((el,i)=>el.style.transitionDelay=`${i*0.1}s`);
+
+/* ── APP OPEN/CLOSE ── */
+const APP=document.getElementById('fast-app');
+function openApp(){updateHomeScreen();updateConfidenceUI();APP.classList.add('open');document.body.style.overflow='hidden';}
+function closeApp(){
+  // Release camera on close
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
+  stopSQ();
+  APP.style.animation='appOut 0.4s ease forwards';
+  setTimeout(()=>{APP.classList.remove('open');APP.style.animation='';document.body.style.overflow='';},380);
+}
+
+/* ── SCREEN NAV ── */
+function showScreen(id){document.querySelectorAll('.app-screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');APP.scrollTop=0;}
+function goHistory(){renderHistory();showScreen('history');}
+
+/* ── BASELINE STATE ── */
+let baseline=null;
+try{baseline=JSON.parse(localStorage.getItem('sc_baseline')||'null');}catch(e){}
+let isBaselineMode=false;
+
+/* ── HOME SCREEN (dynamic) ── */
+function updateHomeScreen(){
+  const screen=document.getElementById('screen-home');
+  const hasBaseline=!!baseline;
+  const DISCLAIMER=`<div class="fast-disclaimer"><strong>⚠ Not medical advice.</strong> This tool is for informational awareness only. If you experience sudden facial drooping, arm weakness, or speech difficulty — call emergency services immediately.</div>`;
+  const STEPS=`<div class="what-is-fast">
+    <div class="fsc"><div class="fsc-num">Step 01 / 03</div><span class="fsc-icon">😊</span><div class="fsc-title">Smile</div><div class="fsc-desc">Hold a natural smile for 3s. We measure left/right mouth corner and eye symmetry.</div></div>
+    <div class="fsc"><div class="fsc-num">Step 02 / 03</div><span class="fsc-icon">🙌</span><div class="fsc-title">Raise Both Arms</div><div class="fsc-desc">Hold arms out level for 5s. We detect drift, asymmetry, and downward drop over time.</div></div>
+    <div class="fsc"><div class="fsc-num">Step 03 / 03</div><span class="fsc-icon">🗣️</span><div class="fsc-title">Say the Phrase</div><div class="fsc-desc">"Today is a sunny day." We measure speech pace, pause ratio, and clarity score.</div></div>
+  </div>`;
+
+  if(!hasBaseline){
+    screen.innerHTML=`
+      <div class="fast-pill"><span class="fast-pill-dot"></span>FAST Neurological Screening</div>
+      <h1 class="fast-title">Start with your<br><em>Baseline.</em></h1>
+      <p class="fast-sub" style="margin-bottom:2rem;">Before your first FAST Check, you need to record a personal baseline — your normal. Every future check is measured against <em>you</em>, not a population average.</p>
+      <div class="baseline-needed-card">
+        <h3>📐 &nbsp;Record Your Baseline</h3>
+        <p style="margin-top:0.75rem;">Your baseline captures your face, arms, and speech on a day when you feel well. It takes the same 15 seconds as a regular check-in — and it's what makes every result personal and accurate.</p>
+        <button class="fast-start-btn" onclick="goBaseline()" style="margin:1.5rem auto 0;display:flex;">
+          <span>📐</span> Record My Baseline
+        </button>
+      </div>
+      <div class="fast-check-locked">🔒 &nbsp;FAST Check — unlocked after baseline</div>
+      ${DISCLAIMER}
+      ${STEPS}`;
+  } else {
+    const b=baseline;
+    screen.innerHTML=`
+      <div class="fast-pill"><span class="fast-pill-dot"></span>FAST Neurological Screening</div>
+      <h1 class="fast-title">15 seconds.<br><em>Honest signals.</em></h1>
+      <p class="fast-sub">Compared against your personal baseline from ${b.date}. Results reflect changes from <em>your</em> normal — not population averages.</p>
+      <button class="fast-start-btn" onclick="goFastCheck()">
+        <span>▶</span> Start FAST Check &nbsp;(15 seconds)
+      </button>
+      <div class="baseline-set-card">
+        <div class="bsc-icon">📐</div>
+        <div class="bsc-info">
+          <div class="bsc-title">Your Baseline</div>
+          <div class="bsc-date">Recorded ${b.date}</div>
+          <div class="bsc-scores">
+            <div class="bsc-score"><div class="bsc-score-lbl">Face</div><div class="bsc-score-v">${b.fa}</div></div>
+            <div class="bsc-score"><div class="bsc-score-lbl">Arms</div><div class="bsc-score-v">${b.ad}%</div></div>
+            <div class="bsc-score"><div class="bsc-score-lbl">Pause</div><div class="bsc-score-v">${b.pr}</div></div>
+            <div class="bsc-score"><div class="bsc-score-lbl">WPM</div><div class="bsc-score-v">${b.wpm}</div></div>
+          </div>
+        </div>
+        <button class="bsc-rerecord" onclick="goBaseline()">↺ Re-record</button>
+      </div>
+      ${DISCLAIMER}
+      ${STEPS}`;
+  }
+}
+
+function goBaseline(){
+  isBaselineMode=true;
+  showScreen('record');
+  resetRec();
+  const banner=document.getElementById('rec-mode-banner');
+  if(banner){banner.textContent='📐 Baseline Recording — record on a day you feel your normal self';banner.style.display='block';}
+  initCamPreview();
+}
+
+function goFastCheck(){
+  isBaselineMode=false;
+  showScreen('record');
+  resetRec();
+  const banner=document.getElementById('rec-mode-banner');
+  if(banner){banner.textContent='';banner.style.display='none';}
+  initCamPreview();
+}
+
+/* ── CAMERA ── */
+let stream=null;
+
+async function initCamPreview(){
+  // Start camera silently for preview — no recording yet
+  try{
+    if(stream)stream.getTracks().forEach(t=>t.stop());
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:true});
+    const vid=document.getElementById('cam-video');
+    vid.srcObject=stream;
+    vid.onloadedmetadata=()=>{
+      const ph=document.getElementById('cam-placeholder');
+      if(ph)ph.style.display='none';
+    };
+    animateSQ();
+  }catch(e){
+    // Camera denied — show a softer message in placeholder
+    const ph=document.getElementById('cam-placeholder');
+    if(ph)ph.innerHTML='<div style="font-size:1.5rem;">🚫</div><div style="font-family:\'Space Mono\',monospace;font-size:0.68rem;letter-spacing:0.08em;color:var(--muted);text-align:center;padding:0 1rem;">Camera access required.<br>Please allow permissions.</div>';
+  }
+}
+
+async function initCam(){
+  // Camera may already be live from preview — reuse if so
+  if(stream){return;}
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:true});
+    const vid=document.getElementById('cam-video');
+    vid.srcObject=stream;
+    vid.onloadedmetadata=()=>{
+      const ph=document.getElementById('cam-placeholder');
+      if(ph)ph.style.display='none';
+    };
+    animateSQ();
+  }catch(e){alert('Camera access is required. Please allow camera and microphone permissions.');}
+}
+/* ── SIGNAL QUALITY GATE ── */
+let sqScores={lighting:0.8,face:0.75,body:0.6,audio:0.85};
+let sqTimer=null;
+let _qualityScore=0.75;
+
+const SQ_CFG={
+  lighting:{id:'sq-lighting',tipId:'sq-lighting-tip',labels:['💡 Lighting','Lighting'],tip:'Move closer to a light source or face a window.'},
+  face:{id:'sq-face',tipId:'sq-face-tip',labels:['👤 Face Framing','Face Framing'],tip:'Center your face inside the guide box.'},
+  body:{id:'sq-body',tipId:'sq-body-tip',labels:['🦴 Body Visibility','Body Visibility'],tip:'Step back so both shoulders and arms are visible.'},
+  audio:{id:'sq-audio',tipId:'sq-audio-tip',labels:['🎙️ Audio Clarity','Audio Clarity'],tip:'Move closer to your microphone and reduce background noise.'}
+};
+
+function sqStatusText(score){
+  if(score>=0.75)return{cls:'good',text:'✅ Good'};
+  if(score>=0.55)return{cls:'warn',text:'⚠️ Needs adjustment'};
+  return{cls:'bad',text:'❌ Insufficient'};
+}
+
+function updateSqUI(){
+  Object.keys(SQ_CFG).forEach(k=>{
+    const cfg=SQ_CFG[k];const sc=sqScores[k];
+    const {cls,text}=sqStatusText(sc);
+    const el=document.getElementById(cfg.id);if(!el)return;
+    el.className='sq-status '+cls;el.textContent=text;
+    const tipEl=document.getElementById(cfg.tipId);if(!tipEl)return;
+    tipEl.textContent=sc<0.75?cfg.tip:'';
+  });
+}
+
+function animateSQ(){
+  if(sqTimer)clearInterval(sqTimer);
+  // Simulate gradual quality improvement as user adjusts
+  const sequences={
+    lighting:[0.82,0.78,0.85,0.72,0.88,0.80,0.84],
+    face:[0.76,0.80,0.74,0.82,0.79,0.85,0.77],
+    body:[0.58,0.62,0.55,0.65,0.60,0.63,0.68],
+    audio:[0.88,0.84,0.90,0.86,0.92,0.88,0.91]
+  };
+  const idx={lighting:0,face:0,body:0,audio:0};
+  sqTimer=setInterval(()=>{
+    Object.keys(sequences).forEach(k=>{
+      sqScores[k]=sequences[k][idx[k]%sequences[k].length];idx[k]++;
+    });
+    _qualityScore=(sqScores.lighting+sqScores.face+sqScores.body+sqScores.audio)/4;
+    updateSqUI();
+  },1800);
+}
+
+function stopSQ(){if(sqTimer){clearInterval(sqTimer);sqTimer=null;}}
+
+/* ── QUALITY GATE DECISION ── */
+let _gateDecision='pass'; // pass | warn | block
+
+function showQualityGate(){
+  const total=_qualityScore;
+  const box=document.getElementById('qg-box');
+  const overlay=document.getElementById('qg-overlay');
+
+  const scoreLabel=(sc)=>sc>=0.75?'Good':sc>=0.55?'Borderline':'Poor';
+  const scoreClass=(sc)=>sc>=0.75?'good':sc>=0.55?'warn':'bad';
+
+  document.getElementById('qg-s-light').textContent=scoreLabel(sqScores.lighting);
+  document.getElementById('qg-s-light').className='qg-score-v '+scoreClass(sqScores.lighting);
+  document.getElementById('qg-s-face').textContent=scoreLabel(sqScores.face);
+  document.getElementById('qg-s-face').className='qg-score-v '+scoreClass(sqScores.face);
+  document.getElementById('qg-s-body').textContent=scoreLabel(sqScores.body);
+  document.getElementById('qg-s-body').className='qg-score-v '+scoreClass(sqScores.body);
+  document.getElementById('qg-s-audio').textContent=scoreLabel(sqScores.audio);
+  document.getElementById('qg-s-audio').className='qg-score-v '+scoreClass(sqScores.audio);
+
+  const btns=document.getElementById('qg-btns');
+  if(total>=0.75){
+    _gateDecision='pass';
+    box.style.setProperty('--ac','var(--teal)');
+    document.getElementById('qg-icon').textContent='✅';
+    document.getElementById('qg-title').textContent='Signal Quality Looks Good';
+    document.getElementById('qg-desc').textContent='All four signal channels are reliable. Running analysis now.';
+    btns.innerHTML='<button class="qg-proceed" onclick="proceedFromGate()">Analyze Now →</button>';
+  } else if(total>=0.55){
+    _gateDecision='warn';
+    box.style.setProperty('--ac','var(--yellow)');
+    document.getElementById('qg-icon').textContent='⚠️';
+    document.getElementById('qg-title').textContent='Some Signals May Be Unreliable';
+    document.getElementById('qg-desc').textContent='One or more channels are borderline. You can continue or retake for better accuracy.';
+    btns.innerHTML='<button class="qg-proceed yellow" onclick="proceedFromGate()">Continue Anyway</button><button class="qg-retake" onclick="retakeFromGate()">↺ Retake for Better Accuracy</button>';
+  } else {
+    _gateDecision='block';
+    box.style.setProperty('--ac','var(--red)');
+    document.getElementById('qg-icon').textContent='❌';
+    document.getElementById('qg-title').textContent='Recording Not Reliable Enough';
+    document.getElementById('qg-desc').textContent='Signal quality is too low to provide meaningful insights. Please retake with better lighting, framing, and audio.';
+    btns.innerHTML='<button class="qg-retake" style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.3);color:var(--red);" onclick="retakeFromGate()">↺ Retake Recording</button>';
+  }
+  overlay.style.display='flex';
+}
+
+function proceedFromGate(){
+  document.getElementById('qg-overlay').style.display='none';
+  showScreen('processing');
+  runProcessing();
+}
+
+function retakeFromGate(){
+  document.getElementById('qg-overlay').style.display='none';
+  stopSQ();
+  resetRec();
+}
+
+/* ── RECORDING ── */
+const TASKS=[
+  {id:'smile',banner:'😊 &nbsp;SMILE — hold it naturally',cls:'smile',tip:'Relax, then smile naturally',dur:3,tp:'tp-smile',chk:'chk-smile'},
+  {id:'arms', banner:'🙌 &nbsp;RAISE BOTH ARMS — hold steady',cls:'arms',tip:'Keep shoulders visible · Arms level',dur:5,tp:'tp-arms',chk:'chk-arms'},
+  {id:'speak',banner:'🗣️ &nbsp;SAY: "Today is a sunny day."',cls:'speak',tip:'Speak clearly at a normal pace',dur:5,tp:'tp-speak',chk:'chk-speak'}
+];
+let tIdx=0,recTimer=null,recTime=0;
+
+async function startRec(){
+  const btn=document.getElementById('btn-go');
+  btn.disabled=true;
+  btn.textContent='Recording…';
+  // Camera already live from preview; initCam() is a no-op if stream exists
+  await initCam();
+  document.getElementById('rec-ind').classList.add('on');
+  tIdx=0;runTask();
+}
+
+function runTask(){
+  if(tIdx>=TASKS.length){endRec();return;}
+  const t=TASKS[tIdx];recTime=t.dur;
+  document.getElementById('prompt-banner').innerHTML=t.banner;
+  document.getElementById('prompt-banner').className='prompt-banner '+t.cls;
+  document.getElementById('cam-tip').textContent=t.tip;
+  document.getElementById('timer-lbl').textContent=t.id.toUpperCase()+' TASK';
+  document.getElementById(t.tp).className='tp-task active';
+  tickTimer(recTime,t.dur,tIdx);
+  recTimer=setInterval(()=>{
+    recTime--;tickTimer(recTime,t.dur,tIdx);
+    if(recTime<=0){clearInterval(recTimer);document.getElementById(t.chk).textContent='✓';document.getElementById(t.tp).className='tp-task done';tIdx++;setTimeout(runTask,300);}
+  },1000);
+}
+
+function tickTimer(cur,tot,ti){
+  const r=document.getElementById('timer-ring');const n=document.getElementById('timer-num');
+  const circ=251.3;r.style.strokeDashoffset=circ*(1-cur/tot);
+  r.style.stroke=['var(--teal)','var(--violet)','var(--blue)'][ti]||'var(--teal)';
+  n.textContent=cur;
+}
+
+function endRec(){
+  document.getElementById('rec-ind').classList.remove('on');
+  stopSQ();
+  showQualityGate();
+}
+
+function resetRec(skipPreview){
+  clearInterval(recTimer);tIdx=0;
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
+  stopSQ();
+  const ph=document.getElementById('cam-placeholder');
+  if(ph)ph.style.display='flex';
+  document.getElementById('cam-video').srcObject=null;
+  document.getElementById('btn-go').disabled=false;
+  document.getElementById('btn-go').textContent='▶  Start Recording';
+  document.getElementById('rec-ind').classList.remove('on');
+  document.getElementById('prompt-banner').innerHTML='😊 &nbsp;SMILE — hold it naturally';
+  document.getElementById('prompt-banner').className='prompt-banner smile';
+  document.getElementById('timer-num').textContent='—';
+  document.getElementById('timer-lbl').textContent='Ready to begin';
+  document.getElementById('timer-ring').style.strokeDashoffset='0';
+  TASKS.forEach(t=>{document.getElementById(t.chk).textContent='○';document.getElementById(t.tp).className=t.id==='smile'?'tp-task active':'tp-task pending';});
+  // Restart preview unless told not to
+  if(!skipPreview)initCamPreview();
+}
+
+/* ── PROCESSING ── */
+function runProcessing(){
+  const faceMsg=isBaselineMode?'Capturing baseline face symmetry…':'Comparing face symmetry to your baseline…';
+  const armsMsg=isBaselineMode?'Capturing baseline arm position…':'Comparing arm stability to your baseline…';
+  const speechMsg=isBaselineMode?'Capturing baseline speech cadence…':'Comparing speech clarity to your baseline…';
+  document.getElementById('pc-face-met').textContent=faceMsg;
+  document.getElementById('pc-arms-met').textContent=armsMsg;
+  document.getElementById('pc-speech-met').textContent=speechMsg;
+  ['face','arms','speech'].forEach(id=>{
+    const el=document.getElementById('pc-'+id);
+    el.classList.remove('running','done');
+    document.getElementById('pc-'+id+'-st').innerHTML='<span class="spinner"></span>';
+  });
+  const steps=[
+    {id:'face',met:isBaselineMode?'Baseline face symmetry captured ✓':'Face asymmetry compared to baseline ✓',delay:1200},
+    {id:'arms',met:isBaselineMode?'Baseline arm position captured ✓':'Arm drift compared to baseline ✓',delay:2600},
+    {id:'speech',met:isBaselineMode?'Baseline speech cadence captured ✓':'Speech clarity compared to baseline ✓',delay:4000}
+  ];
+  steps.forEach(s=>{
+    document.getElementById('pc-'+s.id).classList.add('running');
+    setTimeout(()=>{
+      document.getElementById('pc-'+s.id+'-met').textContent=s.met;
+      document.getElementById('pc-'+s.id+'-st').textContent='✅';
+      document.getElementById('pc-'+s.id).classList.remove('running');
+      document.getElementById('pc-'+s.id).classList.add('done');
+    },s.delay);
+  });
+  setTimeout(()=>{buildResults();showScreen('results');},5000);
+}
+
+/* ── RESULTS ── */
+let _res=null;
+function buildResults(){
+  const fa=+(0.02+Math.random()*0.11).toFixed(3);
+  const ad=+(1+Math.random()*11).toFixed(1);
+  const pr=+(0.1+Math.random()*0.38).toFixed(2);
+  const wpm=Math.floor(88+Math.random()*65);
+
+  const fs=fa>0.08?Math.min(1,0.55+(fa-0.08)*6):0;
+  const as=ad>8?Math.min(1,0.65+(ad-8)*0.06):ad>5?0.35:0;
+  const ss=pr>0.35?0.7:pr>0.25?0.35:0;
+  const total=fs+as+ss;
+
+  // Store quality score for this recording
+  storeQualityScore(_qualityScore);
+
+  // Update confidence UI
+  const {conf,level}=updateConfidenceUI();
+  const confBanner=document.getElementById('conf-banner');
+  if(confBanner)confBanner.style.display=isBaselineMode?'none':'flex';
+  document.getElementById('arms-val').innerHTML=ad+'<span class="mc-unit">% over 5s</span>';
+  document.getElementById('speech-val').innerHTML=pr+'<span class="mc-unit">silence ratio</span>';
+  document.getElementById('transcript-txt').textContent='"Today is a sunny day."';
+  document.getElementById('wpm-txt').textContent=wpm+' wpm';
+
+  // ── BASELINE MODE: save values, show success UI ──
+  if(isBaselineMode){
+    setBadge('face-badge',0);setBadge('arms-badge',0);setBadge('speech-badge',0);
+    nudgeLine('face-line',fa,0.08);nudgeLine('arms-line',ad,8);nudgeLine('speech-line',pr,0.35);
+    ['face','arms','speech'].forEach(id=>document.getElementById(id+'-delta-row').style.display='none');
+    document.getElementById('sb').className='status-banner baseline';
+    document.getElementById('sb-orb').textContent='📐';
+    document.getElementById('sb-title').textContent='Baseline Recorded';
+    document.getElementById('sb-desc').textContent='This is your personal reference. Every future FAST Check will be compared against these values — not population averages.';
+    document.getElementById('sb-score').textContent='—';
+    document.getElementById('action-panel').className='action-panel green';
+    document.getElementById('act-title').textContent='Your baseline has been saved.';
+    document.getElementById('act-desc').textContent='You can now run your first FAST Check. If your health changes or you feel your baseline is outdated, you can re-record it from the home screen at any time.';
+    const pBtn=document.getElementById('action-panel').querySelector('.act-btn-p');
+    const sBtn=document.getElementById('action-panel').querySelector('.act-btn-s');
+    pBtn.textContent='Start First FAST Check';
+    pBtn.onclick=function(){baseline=JSON.parse(localStorage.getItem('sc_baseline')||'null');updateHomeScreen();goFastCheck();};
+    sBtn.textContent='Back to Home';
+    sBtn.onclick=function(){baseline=JSON.parse(localStorage.getItem('sc_baseline')||'null');updateHomeScreen();showScreen('home');};
+    const bData={date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),fa,ad,pr,wpm};
+    try{localStorage.setItem('sc_baseline',JSON.stringify(bData));}catch(e){}
+    baseline=bData;
+    _res={date:new Date(),fa,ad,pr,wpm,fs:0,as:0,ss:0,total:0,status:'baseline',isBaseline:true};
+    return;
+  }
+
+  // ── FAST CHECK MODE: compare to baseline ──
+  setBadge('face-badge',fs);setBadge('arms-badge',as);setBadge('speech-badge',ss);
+  nudgeLine('face-line',fa,0.08);nudgeLine('arms-line',ad,8);nudgeLine('speech-line',pr,0.35);
+  if(baseline){
+    showDelta('face',fa,baseline.fa);
+    showDelta('arms',parseFloat(ad),parseFloat(baseline.ad));
+    showDelta('speech',pr,baseline.pr);
+  }
+
+  let sc='green',orb='✅',title='All Clear',desc='No significant changes from your baseline. All three FAST signals are within your personal range.',at,ad2;
+  
+  // Confidence-aware alert thresholds
+  const allowRed=level==='high';
+  const allowYellow=level==='high'||level==='medium';
+
+  if(allowRed&&(total>=2||fs>=0.9||as>=0.9||ss>=0.9)){
+    sc='red';orb='⚠️';title='Possible Warning Signs';
+    desc='One or more FAST signals show notable deviation from your baseline. This is not a diagnosis, but warrants attention.';
+    at='If symptoms are sudden or new, seek care immediately.';
+    ad2='Notable irregularities detected versus your baseline. If you experience sudden facial drooping, arm weakness, or slurred speech, seek emergency care now. Otherwise, consider consulting a healthcare professional.';
+  } else if(allowYellow&&total>=1){
+    sc='yellow';orb='⚡';title='Mild Variation Detected';
+    desc='Some signals showed slight deviation from your baseline. This may be normal day-to-day variation.';
+    at='Consider a retake or consult a professional.';
+    ad2='One or more signals were slightly outside your baseline range. This may be natural variation — consider retaking or speaking with a healthcare professional if it persists across multiple sessions.';
+  } else {
+    at='No warning signals detected.';
+    if(level==='low'){
+      ad2="Patterns are within a normal range, but we're still learning your baseline. Complete more check-ins for reliable trend detection.";
+      desc="No notable changes detected. Your baseline is still forming — more check-ins will make insights more reliable.";
+    } else if(level==='medium'){
+      ad2='Signals are consistent with your developing baseline. Trends are preliminary — keep checking in regularly.';
+    } else {
+      ad2='All three FAST indicators are consistent with your personal baseline. Keep checking in regularly to spot gradual shifts over time.';
+    }
+  }
+
+  document.getElementById('sb').className='status-banner '+sc;
+  document.getElementById('sb-orb').textContent=orb;
+  document.getElementById('sb-title').textContent=title;
+  document.getElementById('sb-desc').textContent=desc;
+  document.getElementById('sb-score').textContent=total.toFixed(1);
+  document.getElementById('action-panel').className='action-panel '+sc;
+  document.getElementById('act-title').textContent=at;
+  document.getElementById('act-desc').textContent=ad2;
+  const pBtn=document.getElementById('action-panel').querySelector('.act-btn-p');
+  const sBtn=document.getElementById('action-panel').querySelector('.act-btn-s');
+  pBtn.textContent='Save & View History';pBtn.onclick=saveAndHistory;
+  sBtn.textContent='Retake';sBtn.onclick=goFastCheck;
+
+  _res={date:new Date(),fa,ad,pr,wpm,fs,as,ss,total,status:sc,isBaseline:false};
+}
+
+function showDelta(key,current,baseVal){
+  const row=document.getElementById(key+'-delta-row');
+  const chip=document.getElementById(key+'-delta-chip');
+  const bval=document.getElementById(key+'-baseline-val');
+  if(!row||!chip||!bval||baseVal==null)return;
+  row.style.display='flex';
+  const diff=current-baseVal;
+  const pct=Math.abs(baseVal)>0.001?Math.round(Math.abs(diff)/Math.abs(baseVal)*100):0;
+  if(pct<4){
+    chip.className='delta-chip flat';chip.textContent='≈ No change';
+  } else if(diff>0){
+    chip.className='delta-chip up';chip.innerHTML=`↑ +${Math.abs(diff).toFixed(3)} (${pct}%)`;
+  } else {
+    chip.className='delta-chip down';chip.innerHTML=`↓ −${Math.abs(diff).toFixed(3)} (${pct}%)`;
+  }
+  bval.textContent=`baseline: ${baseVal}`;
+}
+
+function setBadge(id,score){
+  const el=document.getElementById(id);
+  if(score>=0.6){el.className='mc-badge alert';el.textContent='ELEVATED';}
+  else if(score>=0.3){el.className='mc-badge warn';el.textContent='MILD';}
+  else{el.className='mc-badge ok';el.textContent='NORMAL';}
+}
+
+function nudgeLine(id,val,thresh){
+  const el=document.getElementById(id);if(!el)return;
+  const r=Math.min(val/thresh,1.6);const pts=[];
+  for(let i=0;i<=5;i++){const x=i*40;const y=32-(r*14)+(Math.random()*3-1.5);pts.push(x+','+Math.max(4,Math.min(42,y)));}
+  el.setAttribute('points',pts.join(' '));
+}
+
+/* ── BASELINE CONFIDENCE METER ── */
+function computeBaselineConfidence(){
+  const count=hist.length;
+  const countScore=Math.min(count/7,1);
+
+  // Quality factor: average quality of all recordings stored
+  let qualityScores=[];
+  try{const q=JSON.parse(localStorage.getItem('sc_quality_scores')||'[]');qualityScores=q;}catch(e){}
+  const qualityFactor=qualityScores.length>0?(qualityScores.reduce((a,b)=>a+b,0)/qualityScores.length):0.5;
+
+  // Variance factor: compute stability of key metrics
+  let stabilityScore=0.5;
+  if(hist.length>=3){
+    const pauses=hist.map(h=>parseFloat(h.s)||0);
+    const mean=pauses.reduce((a,b)=>a+b,0)/pauses.length;
+    const variance=pauses.reduce((a,b)=>a+(b-mean)**2,0)/pauses.length;
+    stabilityScore=Math.max(0,Math.min(1,1-variance*8));
+  }
+
+  const confidence=0.4*countScore+0.35*qualityFactor+0.25*stabilityScore;
+  return confidence;
+}
+
+function bcLevel(conf){
+  if(conf<0.45)return{level:'low',label:'Low Confidence',msg:"We need more check-ins to understand your baseline.",emoji:'🟡'};
+  if(conf<0.75)return{level:'medium',label:'Medium Confidence',msg:"Your baseline is forming. Trends are preliminary.",emoji:'🟠'};
+  return{level:'high',label:'High Confidence',msg:"Your baseline is stable. Trends are reliable.",emoji:'🟢'};
+}
+
+function updateConfidenceUI(){
+  const conf=computeBaselineConfidence();
+  const {level,label,msg}=bcLevel(conf);
+
+  // Nav pill
+  const navPill=document.getElementById('nav-bc-pill');
+  const navText=document.getElementById('nav-bc-text');
+  if(navPill&&navText){
+    navPill.className='bc-pill '+level;
+    navText.textContent='Baseline: '+label;
+  }
+
+  // Results page pill + banner
+  const resPill=document.getElementById('results-bc-pill');
+  const resText=document.getElementById('results-bc-text');
+  const confMsg=document.getElementById('conf-banner-msg');
+  if(resPill&&resText){
+    resPill.className='bc-pill '+level;
+    resText.textContent='Baseline: '+label;
+  }
+  if(confMsg)confMsg.textContent=msg;
+
+  // History page pill
+  const histPill=document.getElementById('hist-bc-pill');
+  const histText=document.getElementById('hist-bc-text');
+  if(histPill&&histText){
+    histPill.className='bc-pill '+level;
+    histText.textContent='Baseline: '+label;
+  }
+
+  return{conf,level};
+}
+
+function storeQualityScore(score){
+  let q=[];try{q=JSON.parse(localStorage.getItem('sc_quality_scores')||'[]');}catch(e){}
+  q.unshift(score);if(q.length>20)q.pop();
+  try{localStorage.setItem('sc_quality_scores',JSON.stringify(q));}catch(e){}
+}
+
+/* ── HISTORY ── */
+let hist=[];try{hist=JSON.parse(localStorage.getItem('sc_hist')||'[]');}catch(e){}
+
+function saveAndHistory(){
+  if(_res&&!_res.isBaseline){
+    hist.unshift({
+      date:_res.date.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+      status:_res.status,
+      f:_res.fs.toFixed(2),a:_res.as.toFixed(2),s:_res.ss.toFixed(2),t:_res.total.toFixed(1)
+    });
+    if(hist.length>30)hist.pop();
+    try{localStorage.setItem('sc_hist',JSON.stringify(hist));}catch(e){}
+  }
+  updateConfidenceUI();
+  renderHistory();showScreen('history');
+}
+
+function renderHistory(){
+  const el=document.getElementById('hist-entries');
+  const period=document.getElementById('hist-period');
+  const empty=document.getElementById('hist-empty');
+  const btnClear=document.getElementById('btn-clear-baseline');
+  if(btnClear)btnClear.style.display=baseline?'inline-flex':'none';
+
+  if(!hist.length&&!baseline){
+    el.innerHTML='<div class="hist-empty"><h3>No check-ins yet</h3><p>Record your baseline first, then complete your first FAST check-in to start tracking.</p></div>';
+    period.textContent='No data yet';
+    empty.style.display='block';
+    document.getElementById('hist-fill').setAttribute('d','');
+    document.getElementById('hist-line').setAttribute('d','');
+    return;
+  }
+  empty.style.display='none';
+
+  // Baseline pinned at top
+  let baselineHtml='';
+  if(baseline){
+    baselineHtml=`<div class="he baseline-entry">
+      <div class="he-date">${baseline.date}</div>
+      <div class="he-dot" style="background:var(--teal);box-shadow:0 0 8px rgba(0,229,200,0.5);"></div>
+      <div class="he-scores">
+        <div class="he-sc"><div class="he-sc-lbl">Face</div><div class="he-sc-v" style="color:var(--teal)">${baseline.fa}</div></div>
+        <div class="he-sc"><div class="he-sc-lbl">Arms</div><div class="he-sc-v" style="color:var(--teal)">${baseline.ad}%</div></div>
+        <div class="he-sc"><div class="he-sc-lbl">Pause</div><div class="he-sc-v" style="color:var(--teal)">${baseline.pr}</div></div>
+        <div class="he-sc"><div class="he-sc-lbl">WPM</div><div class="he-sc-v" style="color:var(--teal)">${baseline.wpm}</div></div>
+      </div>
+      <div class="he-baseline-tag">BASELINE</div>
+    </div>`;
+  }
+
+  if(!hist.length){
+    el.innerHTML=baselineHtml+'<div class="hist-empty" style="padding:2rem;"><h3>No check-ins yet</h3><p>Run your first FAST check to start tracking changes from your baseline.</p></div>';
+    period.textContent='Baseline recorded — no checks yet';
+    return;
+  }
+
+  period.textContent=hist[hist.length-1].date+' – '+hist[0].date;
+  el.innerHTML=baselineHtml+hist.map(h=>`
+    <div class="he">
+      <div class="he-date">${h.date}</div>
+      <div class="he-dot ${h.status}"></div>
+      <div class="he-scores">
+        <div class="he-sc"><div class="he-sc-lbl">Face</div><div class="he-sc-v">${h.f}</div></div>
+        <div class="he-sc"><div class="he-sc-lbl">Arms</div><div class="he-sc-v">${h.a}</div></div>
+        <div class="he-sc"><div class="he-sc-lbl">Speech</div><div class="he-sc-v">${h.s}</div></div>
+        <div class="he-sc"><div class="he-sc-lbl">Total</div><div class="he-sc-v">${h.t}</div></div>
+      </div>
+      <div class="he-lbl ${h.status}">${h.status.toUpperCase()}</div>
+    </div>`).join('');
+  drawHistChart();
+}
+
+function drawHistChart(){
+  const rev=[...hist].reverse();if(rev.length<2)return;
+  const W=820,H=150,P=20,vals=rev.map(r=>parseFloat(r.t)),mx=Math.max(...vals,2.5);
+  const pts=rev.map((r,i)=>{const x=P+(i/(rev.length-1))*(W-P*2);const y=H-P-(parseFloat(r.t)/mx)*(H-P*2);return[x,y];});
+  let lineD='M'+pts.map(p=>p.join(',')).join(' L');
+  let fillD=lineD+` L${pts[pts.length-1][0]},${H-P} L${pts[0][0]},${H-P} Z`;
+  document.getElementById('hist-line').setAttribute('d',lineD);
+  document.getElementById('hist-fill').setAttribute('d',fillD);
+}
+
+function clearHist(){
+  if(confirm('Clear all check-in history? Your baseline will be kept.')){
+    hist=[];try{localStorage.removeItem('sc_hist');}catch(e){}renderHistory();
+  }
+}
+
+function clearBaseline(){
+  if(confirm('Reset your baseline? You will need to re-record it before running future FAST checks.')){
+    baseline=null;try{localStorage.removeItem('sc_baseline');}catch(e){}
+    updateHomeScreen();renderHistory();
+  }
+}
+
+// Init
+updateHomeScreen();
+renderHistory();
+updateConfidenceUI();
+</script>
+</body>
+</html>
