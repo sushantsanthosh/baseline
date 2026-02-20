@@ -501,6 +501,19 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
 .replay-badge.warn{background:rgba(245,158,11,0.1);color:var(--yellow);border:1px solid rgba(245,158,11,0.2);}
 .replay-badge.alert{background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.2);}
 
+/* ── VIDEO PLAYER CONTROLS ── */
+.vp-controls{display:flex;align-items:center;gap:0.9rem;padding:0.75rem 1rem;background:rgba(255,255,255,0.03);border:1px solid var(--cbord);border-radius:12px;margin-bottom:1.25rem;}
+.vp-play-btn{flex-shrink:0;width:34px;height:34px;background:rgba(0,229,200,0.1);border:1px solid rgba(0,229,200,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.18s;color:var(--teal);}
+.vp-play-btn:hover{background:rgba(0,229,200,0.2);box-shadow:0 0 16px rgba(0,229,200,0.25);}
+.vp-time{font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted);white-space:nowrap;min-width:72px;}
+.vp-scrub-wrap{flex:1;position:relative;height:20px;display:flex;align-items:center;cursor:pointer;}
+.vp-scrub-track{position:absolute;left:0;right:0;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;}
+.vp-scrub-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:2px;transition:width 0.1s linear;}
+.vp-scrub-thumb{position:absolute;top:50%;width:14px;height:14px;background:var(--teal);border-radius:50%;transform:translate(-50%,-50%);left:0%;box-shadow:0 0 8px rgba(0,229,200,0.6);transition:left 0.1s linear;pointer-events:none;}
+.vp-scrub-wrap:hover .vp-scrub-thumb{width:16px;height:16px;box-shadow:0 0 14px rgba(0,229,200,0.8);}
+.vp-scrub-wrap:active .vp-scrub-fill{transition:none;}
+.vp-scrub-wrap:active .vp-scrub-thumb{transition:none;}
+
 @media(max-width:900px){
   .hist-metric-charts{grid-template-columns:1fr;}
   #replay-grid{grid-template-columns:1fr!important;}
@@ -563,6 +576,38 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
 .hiw-cta h3{font-family:'DM Serif Display',serif;font-size:2rem;letter-spacing:-0.02em;margin-bottom:0.75rem;}
 .hiw-cta p{color:var(--muted);font-size:1.05rem;margin-bottom:2rem;line-height:1.7;}
 @media(max-width:640px){.hiw-signal-grid{grid-template-columns:1fr;}.hiw-body{padding:2rem 1.25rem 4rem;}}
+
+/* ===== FEATURE 4: MONITORING STREAK ===== */
+.streak-card{background:var(--surface);border:1px solid var(--cbord);border-radius:14px;padding:1.1rem 1.4rem;display:flex;align-items:center;gap:1.1rem;margin-bottom:1.4rem;position:relative;overflow:hidden;}
+.streak-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--teal),transparent);}
+.streak-flame{font-size:1.6rem;flex-shrink:0;}
+.streak-info{flex:1;}
+.streak-count{font-family:'DM Serif Display',serif;font-size:1.4rem;letter-spacing:-0.02em;line-height:1;margin-bottom:0.15rem;}
+.streak-count span{font-size:0.85rem;color:var(--muted);font-family:'DM Sans',sans-serif;letter-spacing:0;margin-left:0.3rem;}
+.streak-sub{font-size:0.8rem;color:var(--muted);line-height:1.4;}
+.streak-dots{display:flex;gap:5px;margin-top:0.6rem;}
+.streak-dot{width:8px;height:8px;border-radius:50%;background:var(--cbord);}
+.streak-dot.green{background:var(--green);box-shadow:0 0 5px rgba(34,197,94,0.5);}
+.streak-dot.yellow{background:var(--yellow);box-shadow:0 0 5px rgba(245,158,11,0.4);}
+.streak-dot.red{background:var(--red);box-shadow:0 0 5px rgba(239,68,68,0.4);}
+.streak-dot.missed{background:rgba(107,114,128,0.3);border:1px solid rgba(107,114,128,0.2);}
+.streak-cadence{font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);padding:0.22rem 0.65rem;border-radius:100px;border:1px solid var(--cbord);white-space:nowrap;flex-shrink:0;}
+.streak-cadence.on-track{color:var(--teal);border-color:rgba(0,229,200,0.25);background:rgba(0,229,200,0.06);}
+
+/* ===== FEATURE 6: SIGNAL FINGERPRINT RADAR ===== */
+.fingerprint-card{background:var(--surface);border:1px solid var(--cbord);border-radius:16px;padding:1.6rem;position:relative;overflow:hidden;margin-bottom:1.75rem;}
+.fingerprint-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--violet),transparent);}
+.fp-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+.fp-title{font-family:'DM Serif Display',serif;font-size:1.05rem;letter-spacing:-0.01em;}
+.fp-tag{font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--violet);background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.2);padding:0.2rem 0.6rem;border-radius:100px;}
+.fp-body{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:center;}
+.fp-svg-wrap{display:flex;justify-content:center;}
+.fp-legend{display:flex;flex-direction:column;gap:0.7rem;}
+.fp-legend-item{display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;}
+.fp-legend-swatch{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.fp-legend-lbl{color:var(--muted);}
+.fp-legend-val{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text);margin-left:auto;}
+.fp-note{font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--muted);letter-spacing:0.04em;margin-top:1rem;line-height:1.5;padding-top:0.75rem;border-top:1px solid var(--cbord);}
 
 </style>
 </head>
@@ -961,6 +1006,61 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
         </div>
       </div>
 
+      <!-- FEATURE 6: Signal Fingerprint -->
+      <div class="fingerprint-card" id="fingerprint-card" style="display:none;">
+        <div class="fp-hd">
+          <div class="fp-title">Signal Fingerprint</div>
+          <div class="fp-tag">vs Baseline</div>
+        </div>
+        <div class="fp-body">
+          <div class="fp-svg-wrap">
+            <svg id="fp-svg" width="180" height="180" viewBox="0 0 180 180">
+              <defs>
+                <filter id="fp-glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <circle cx="90" cy="90" r="72" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <circle cx="90" cy="90" r="48" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <circle cx="90" cy="90" r="24" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <line x1="90" y1="90" x2="90" y2="18" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+              <line x1="90" y1="90" x2="27.6" y2="126" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+              <line x1="90" y1="90" x2="152.4" y2="126" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+              <text x="90" y="11" text-anchor="middle" font-family="Space Mono" font-size="7.5" fill="rgba(0,229,200,0.8)" letter-spacing="0.05em">FACE</text>
+              <text x="16" y="136" text-anchor="middle" font-family="Space Mono" font-size="7.5" fill="rgba(168,85,247,0.8)" letter-spacing="0.05em">ARMS</text>
+              <text x="164" y="136" text-anchor="middle" font-family="Space Mono" font-size="7.5" fill="rgba(59,130,246,0.8)" letter-spacing="0.05em">SPEECH</text>
+              <polygon id="fp-baseline-poly" points="90,18 27.6,126 152.4,126" fill="rgba(255,255,255,0.025)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-dasharray="4,3"/>
+              <polygon id="fp-current-poly" points="90,18 27.6,126 152.4,126" fill="rgba(0,229,200,0.07)" stroke="rgba(0,229,200,0.75)" stroke-width="2" stroke-linejoin="round" style="transition:points 0.8s ease;"/>
+              <circle id="fp-dot-face" cx="90" cy="18" r="4" fill="#00e5c8" filter="url(#fp-glow)"/>
+              <circle id="fp-dot-arms" cx="27.6" cy="126" r="4" fill="#a855f7" filter="url(#fp-glow)"/>
+              <circle id="fp-dot-speech" cx="152.4" cy="126" r="4" fill="#3b82f6" filter="url(#fp-glow)"/>
+            </svg>
+          </div>
+          <div class="fp-legend">
+            <div class="fp-legend-item">
+              <div class="fp-legend-swatch" style="background:#00e5c8;box-shadow:0 0 6px rgba(0,229,200,0.6);"></div>
+              <span class="fp-legend-lbl">Face</span>
+              <span class="fp-legend-val" id="fp-face-val">—</span>
+            </div>
+            <div class="fp-legend-item">
+              <div class="fp-legend-swatch" style="background:#a855f7;box-shadow:0 0 6px rgba(168,85,247,0.6);"></div>
+              <span class="fp-legend-lbl">Arms</span>
+              <span class="fp-legend-val" id="fp-arms-val">—</span>
+            </div>
+            <div class="fp-legend-item">
+              <div class="fp-legend-swatch" style="background:#3b82f6;box-shadow:0 0 6px rgba(59,130,246,0.6);"></div>
+              <span class="fp-legend-lbl">Speech</span>
+              <span class="fp-legend-val" id="fp-speech-val">—</span>
+            </div>
+            <div style="margin-top:0.6rem;padding-top:0.6rem;border-top:1px solid var(--cbord);">
+              <div class="fp-legend-item" style="opacity:0.45;">
+                <div class="fp-legend-swatch" style="width:14px;height:3px;border-radius:0;background:transparent;border-top:2px dashed rgba(255,255,255,0.4);margin-top:3px;"></div>
+                <span class="fp-legend-lbl" style="font-size:0.75rem;">Baseline shape</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fp-note" id="fp-note">Each axis shows signal intensity relative to its alert threshold. The outer ring = 100% of threshold. A shape matching the dashed baseline means no change detected today.</div>
+      </div>
+
       <div class="previews-row">
         <div class="preview-card">
           <div class="preview-title">Face Landmark Preview</div>
@@ -1015,6 +1115,17 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
           </span>
         </span>
       </div>
+      <!-- FEATURE 4: Monitoring Streak -->
+      <div class="streak-card" id="streak-card">
+        <div class="streak-flame" id="streak-flame">🔥</div>
+        <div class="streak-info">
+          <div class="streak-count"><span id="streak-num">0</span><span>day streak</span></div>
+          <div class="streak-sub" id="streak-sub">Start your first check-in to begin tracking.</div>
+          <div class="streak-dots" id="streak-dots"></div>
+        </div>
+        <div class="streak-cadence" id="streak-cadence">No data</div>
+      </div>
+
       <div class="hcc">
         <div class="hcc-hd"><div class="hcc-title">Risk Index — Recent Trend</div><div class="hcc-period" id="hist-period">No data yet</div></div>
         <div class="hcc-area">
@@ -1096,11 +1207,11 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
 
       <div style="margin-bottom:1.25rem;">
         <!-- Full-width video — larger for better viewing -->
-        <div style="position:relative;border-radius:20px;overflow:hidden;background:#000;aspect-ratio:16/9;border:1px solid var(--cbord);margin-bottom:1.25rem;min-height:360px;box-shadow:0 8px 40px rgba(0,0,0,0.5);">
+        <div style="position:relative;border-radius:20px;overflow:hidden;background:#000;aspect-ratio:16/9;border:1px solid var(--cbord);margin-bottom:0.75rem;min-height:360px;box-shadow:0 8px 40px rgba(0,0,0,0.5);">
           <video id="replay-video" style="width:100%;height:100%;object-fit:cover;transform:scaleX(-1);" playsinline></video>
           <canvas id="replay-pose-canvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"></canvas>
           <!-- Play button overlay -->
-          <div id="replay-play-btn" onclick="document.getElementById('replay-video').play()" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;cursor:pointer;background:rgba(6,8,15,0.35);transition:background 0.2s;" onmouseover="this.style.background='rgba(6,8,15,0.5)'" onmouseout="this.style.background='rgba(6,8,15,0.35)'">
+          <div id="replay-play-btn" onclick="replayTogglePlay()" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;cursor:pointer;background:rgba(6,8,15,0.35);transition:background 0.2s;" onmouseover="this.style.background='rgba(6,8,15,0.5)'" onmouseout="this.style.background='rgba(6,8,15,0.35)'">
             <div style="width:72px;height:72px;background:rgba(0,229,200,0.15);border:2px solid rgba(0,229,200,0.6);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(0,229,200,0.3);">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" style="margin-left:4px;"><polygon points="6,4 20,12 6,20" fill="#00e5c8"/></svg>
             </div>
@@ -1110,6 +1221,20 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
             <div style="font-family:'Space Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:var(--muted);text-align:center;padding:0 1rem;">Video not available<br>for this recording.<br>Only new check-ins are saved.</div>
           </div>
           <div id="replay-overlay-label" style="display:none;position:absolute;top:0.75rem;left:0.75rem;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:var(--teal);background:rgba(6,8,15,0.8);padding:0.25rem 0.6rem;border-radius:100px;border:1px solid rgba(0,229,200,0.2);">📐 Pose Overlay</div>
+        </div>
+
+        <!-- Video progress bar + controls -->
+        <div class="vp-controls" id="vp-controls" style="display:none;">
+          <button class="vp-play-btn" id="vp-play-btn" onclick="replayTogglePlay()" title="Play / Pause">
+            <svg id="vp-play-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"><polygon points="6,4 20,12 6,20" fill="currentColor"/></svg>
+          </button>
+          <span class="vp-time" id="vp-time">0:00 / 0:00</span>
+          <div class="vp-scrub-wrap" id="vp-scrub-wrap">
+            <div class="vp-scrub-track">
+              <div class="vp-scrub-fill" id="vp-scrub-fill"></div>
+            </div>
+            <div class="vp-scrub-thumb" id="vp-scrub-thumb"></div>
+          </div>
         </div>
         <!-- Scores row -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:0.75rem;align-items:stretch;" id="replay-grid">
@@ -1581,6 +1706,43 @@ let faceReady=false;
 let faceBusy=false;
 let _lastFaceLandmarks=null;
 let _lastPoseLandmarks=null;
+let _smoothedPoseLandmarks=null; // EMA-smoothed pose for display
+let _smoothedPoseBBox=null;      // EMA-smoothed bounding box — keeps viewport stable
+const POSE_SMOOTH_ALPHA=0.25;    // landmark smoothing — lower = smoother
+const POSE_BBOX_ALPHA=0.06;      // bbox smoothing — very slow to prevent viewport jumping
+
+function smoothPoseLandmarks(raw){
+  if(!raw||!raw.length)return raw;
+  if(!_smoothedPoseLandmarks||_smoothedPoseLandmarks[0].length!==raw[0].length){
+    _smoothedPoseLandmarks=raw.map(person=>person.map(lm=>({...lm})));
+    return _smoothedPoseLandmarks;
+  }
+  _smoothedPoseLandmarks=raw.map((person,pi)=>person.map((lm,li)=>{
+    const prev=_smoothedPoseLandmarks[pi]&&_smoothedPoseLandmarks[pi][li];
+    if(!prev)return{...lm};
+    return{
+      x:prev.x+(lm.x-prev.x)*POSE_SMOOTH_ALPHA,
+      y:prev.y+(lm.y-prev.y)*POSE_SMOOTH_ALPHA,
+      z:prev.z+(lm.z-prev.z)*POSE_SMOOTH_ALPHA,
+      visibility:prev.visibility+(((lm.visibility||0)-(prev.visibility||0))*POSE_SMOOTH_ALPHA)
+    };
+  }));
+  return _smoothedPoseLandmarks;
+}
+
+function smoothPoseBBox(minX,maxX,minY,maxY){
+  if(!_smoothedPoseBBox){
+    _smoothedPoseBBox={minX,maxX,minY,maxY};
+    return _smoothedPoseBBox;
+  }
+  _smoothedPoseBBox={
+    minX:_smoothedPoseBBox.minX+( minX-_smoothedPoseBBox.minX)*POSE_BBOX_ALPHA,
+    maxX:_smoothedPoseBBox.maxX+( maxX-_smoothedPoseBBox.maxX)*POSE_BBOX_ALPHA,
+    minY:_smoothedPoseBBox.minY+( minY-_smoothedPoseBBox.minY)*POSE_BBOX_ALPHA,
+    maxY:_smoothedPoseBBox.maxY+( maxY-_smoothedPoseBBox.maxY)*POSE_BBOX_ALPHA,
+  };
+  return _smoothedPoseBBox;
+}
 let _previewRafId=null;
 
 async function initFace(){
@@ -1747,8 +1909,8 @@ function drawPosePreview(canvas,landmarks){
 
   const lms=landmarks[0];
 
-  // Only use visible landmarks for bounding box
-  const visible=lms.filter(lm=>(lm.visibility||0)>0.25);
+  // Use only confidently visible landmarks for bounding box
+  const visible=lms.filter(lm=>(lm.visibility||0)>0.35);
   if(!visible.length){
     ctx.fillStyle='rgba(107,114,128,0.45)';
     ctx.font=`${Math.round(W*0.04)}px Space Mono`;
@@ -1757,11 +1919,16 @@ function drawPosePreview(canvas,landmarks){
     return;
   }
 
-  let minX=1,maxX=0,minY=1,maxY=0;
-  visible.forEach(lm=>{minX=Math.min(minX,lm.x);maxX=Math.max(maxX,lm.x);minY=Math.min(minY,lm.y);maxY=Math.max(maxY,lm.y);});
-  const padX=0.08,padY=0.06;
-  minX=Math.max(0,minX-padX);maxX=Math.min(1,maxX+padX);
-  minY=Math.max(0,minY-padY);maxY=Math.min(1,maxY+padY);
+  // Compute raw bbox from visible landmarks
+  let rMinX=1,rMaxX=0,rMinY=1,rMaxY=0;
+  visible.forEach(lm=>{rMinX=Math.min(rMinX,lm.x);rMaxX=Math.max(rMaxX,lm.x);rMinY=Math.min(rMinY,lm.y);rMaxY=Math.max(rMaxY,lm.y);});
+  const padX=0.1,padY=0.08;
+  rMinX=Math.max(0,rMinX-padX);rMaxX=Math.min(1,rMaxX+padX);
+  rMinY=Math.max(0,rMinY-padY);rMaxY=Math.min(1,rMaxY+padY);
+
+  // Smooth the bbox — this prevents the viewport from jumping frame-to-frame
+  const bbox=smoothPoseBBox(rMinX,rMaxX,rMinY,rMaxY);
+  const {minX,maxX,minY,maxY}=bbox;
   const bw=maxX-minX||0.5, bh=maxY-minY||0.5;
 
   const scaleX=W/bw, scaleY=H/bh;
@@ -1830,12 +1997,18 @@ function sizePreviewCanvases(){
     const dpr=window.devicePixelRatio||1;
     const w=rect.width>0?rect.width:320;
     const h=rect.height>0?rect.height:180;
-    c.width=Math.round(w*dpr);
-    c.height=Math.round(h*dpr);
+    // Only resize if dimensions actually changed (avoids redundant resets)
+    const newW=Math.round(w*dpr);
+    const newH=Math.round(h*dpr);
+    if(c.width!==newW||c.height!==newH){
+      c.width=newW;
+      c.height=newH;
+    }
     c.style.width=w+'px';
     c.style.height=h+'px';
+    // Always reset transform to identity then apply dpr scale
     const ctx=c.getContext('2d');
-    ctx.scale(dpr,dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
   });
 }
 
@@ -1875,6 +2048,7 @@ function startPreviewLoop(){
         try{
           const res=poseLandmarker.detectForVideo(vid,performance.now());
           _lastPoseLandmarks=res.landmarks;
+          smoothPoseLandmarks(res.landmarks); // updates _smoothedPoseLandmarks
           const pass=computeBodyPassFromPose(res);
           bodyPassHistory.push(pass?1:0);
           if(bodyPassHistory.length>BODY_WINDOW)bodyPassHistory.shift();
@@ -1886,7 +2060,7 @@ function startPreviewLoop(){
     }
 
     if(fCanvas)drawFacePreview(fCanvas,vid,_lastFaceLandmarks);
-    if(pCanvas)drawPosePreview(pCanvas,_lastPoseLandmarks);
+    if(pCanvas)drawPosePreview(pCanvas,_smoothedPoseLandmarks||_lastPoseLandmarks);
   }
   requestAnimationFrame(loop);
 
@@ -1899,7 +2073,7 @@ function stopPreviewLoop(){
     if(typeof _previewRafId._cleanup==='function')_previewRafId._cleanup();
     cancelAnimationFrame(_previewRafId);_previewRafId=null;
   }
-  _lastFaceLandmarks=null;_lastPoseLandmarks=null;
+  _lastFaceLandmarks=null;_lastPoseLandmarks=null;_smoothedPoseLandmarks=null;_smoothedPoseBBox=null;
 }
 
 function isLandmarkGood(lm){
@@ -2328,8 +2502,9 @@ function buildResults(){
   // Store quality score for this recording
   storeQualityScore(_qualityScore);
 
-  // Update confidence UI
-  const {conf,level}=updateConfidenceUI();
+  // Update confidence UI — pass current check-in as pending so ring advances immediately
+  const pendingEntry=isBaselineMode?null:{fRaw:fa,aRaw:parseFloat(ad),sRaw:pr,quality:_qualityScore};
+  const {conf,level}=updateConfidenceUI(pendingEntry);
   const confBanner=document.getElementById('conf-banner');
   if(confBanner)confBanner.style.display=isBaselineMode?'none':'flex';
   document.getElementById('face-val').innerHTML=fa+'<span class="mc-unit">/ 0.08 threshold</span>';
@@ -2380,7 +2555,7 @@ function buildResults(){
   }
 
   // ── TREND ESCALATION ──
-  function evalTrend(){
+  const evalTrend=()=>{
     const recent=hist.slice(0,5).map(h=>h.status); // newest first
     const reds=recent.filter(s=>s==='red').length;
     const yellowOrRed=recent.filter(s=>s==='yellow'||s==='red').length;
@@ -2389,12 +2564,14 @@ function buildResults(){
     if(consecutive>=2||reds>=3) return 'strong';
     if(yellowOrRed>=3||yellowStreak>=3) return 'soft';
     return null;
-  }
+  };
   const trendFlag=evalTrend();
   
   // Confidence-aware alert thresholds
   const allowRed=level==='high';
   const allowYellow=level==='high'||level==='medium';
+
+  let sc='green',orb='✅',title='All Clear',desc='',at='',ad2='';
 
   if(allowRed&&(total>=2||fs>=0.9||as>=0.9||ss>=0.9)){
     sc='red';orb='⚠️';title='Possible Warning Signs';
@@ -2459,6 +2636,9 @@ function buildResults(){
   }
 
   _res={date:new Date(),fa,ad,pr,wpm,fs,as,ss,total,status:sc,trendFlag,isBaseline:false};
+
+  // Feature 6: draw signal fingerprint
+  drawFingerprint(fa,parseFloat(ad),pr,fs,as,ss);
 }
 
 function showDelta(key,current,baseVal){
@@ -2488,28 +2668,31 @@ function setBadge(id,score){
 
 
 /* ── BASELINE CONFIDENCE METER ── */
-function computeBaselineConfidence(){
-  const count=hist.length;
-  // Reaches 1.0 at 8 check-ins (was /7, now scaled so 5 = ~0.63)
+function computeBaselineConfidence(pendingEntry){
+  // pendingEntry: optional {fRaw,aRaw,sRaw,quality} for the current unsaved check-in
+  const allHist=pendingEntry?[pendingEntry,...hist]:hist;
+  const count=allHist.length;
+  // Reaches 1.0 at 8 check-ins
   const countScore=Math.min(count/8,1);
 
   // Quality factor: average quality of all recordings stored
   let qualityScores=[];
   try{const q=JSON.parse(localStorage.getItem('sc_quality_scores')||'[]');qualityScores=q;}catch(e){}
+  if(pendingEntry&&pendingEntry.quality!=null)qualityScores=[pendingEntry.quality,...qualityScores];
   const qualityFactor=qualityScores.length>0?(qualityScores.reduce((a,b)=>a+b,0)/qualityScores.length):0.5;
 
   // Multi-metric stability: use face, arms, speech signals
   let stabilityScore=0.5;
-  if(hist.length>=3){
+  if(allHist.length>=3){
     function metricStability(vals){
       const mean=vals.reduce((a,b)=>a+b,0)/vals.length;
       const variance=vals.reduce((a,b)=>a+(b-mean)**2,0)/vals.length;
       const std=Math.sqrt(variance);
       return Math.max(0,Math.min(1,1/(1+std*10)));
     }
-    const faceVals=hist.map(h=>parseFloat(h.fRaw!=null?h.fRaw:h.f)||0);
-    const armsVals=hist.map(h=>parseFloat(h.aRaw!=null?h.aRaw:h.a)||0);
-    const speechVals=hist.map(h=>parseFloat(h.sRaw!=null?h.sRaw:h.s)||0);
+    const faceVals=allHist.map(h=>parseFloat(h.fRaw!=null?h.fRaw:h.f)||0);
+    const armsVals=allHist.map(h=>parseFloat(h.aRaw!=null?h.aRaw:h.a)||0);
+    const speechVals=allHist.map(h=>parseFloat(h.sRaw!=null?h.sRaw:h.s)||0);
     stabilityScore=(metricStability(faceVals)+metricStability(armsVals)+metricStability(speechVals))/3;
   }
 
@@ -2517,9 +2700,9 @@ function computeBaselineConfidence(){
   return{score:confidence,countScore,qualityFactor,stabilityScore};
 }
 
-function getConfidenceDrivers(){
-  const{score,countScore,qualityFactor,stabilityScore}=computeBaselineConfidence();
-  const n=hist.length;
+function getConfidenceDrivers(pendingEntry){
+  const{score,countScore,qualityFactor,stabilityScore}=computeBaselineConfidence(pendingEntry);
+  const n=pendingEntry?hist.length+1:hist.length;
   const targetCounts=[3,5,8];
   const nextTarget=targetCounts.find(t=>t>n)||null;
   const nextStep=nextTarget
@@ -2543,9 +2726,12 @@ function bcLevel(conf){
   return             {level:'verified',label:'Trusted',       msg:"Deep pattern data. Results are highly personalised and accurate."};
 }
 
-function updateConfidenceUI(){
-  const{score:conf,countScore,qualityFactor,stabilityScore,checkIns,nextStep}=getConfidenceDrivers();
+function updateConfidenceUI(pendingEntry){
+  const{score:conf,countScore,qualityFactor,stabilityScore,checkIns,nextStep}=getConfidenceDrivers(pendingEntry);
   const {level,label,msg}=bcLevel(conf);
+
+  // Ring fill = check-ins completed / 8 (pure count, not composite)
+  const ringPct=Math.min(checkIns/8,1);
 
   // Helper to update a pill + ring + tip dot
   function applyPill(pillId,textId,ringId){
@@ -2555,26 +2741,27 @@ function updateConfidenceUI(){
       pill.className='bc-pill '+level;
       txt.textContent=label;
     }
-    // Update confidence ring (r=7, circumference=43.98)
+    // Update confidence ring (r=7, circumference=43.98) — driven by check-in count
+    const circ=2*Math.PI*7;
     const ring=document.getElementById(ringId);
     if(ring){
-      const pct=Math.min(conf,1);
-      const circ=2*Math.PI*7; // r=7 → 43.98
-      ring.style.strokeDashoffset=circ*(1-pct);
+      ring.style.strokeDasharray=circ+' '+circ;
+      ring.style.strokeDashoffset=circ*(1-ringPct);
     }
-    // Animate tip dot along the arc
+    // Tip dot: travels along arc, hidden when empty or when ring is complete (closed circle)
     const tipId=ringId.replace('-ring','-tip');
     const tip=document.getElementById(tipId);
     if(tip){
-      const pct=Math.min(conf,1);
-      if(pct<0.02){tip.setAttribute('opacity','0');return;}
-      // Compute tip position: arc goes from top (-90°), clockwise
-      const angle=(pct*360-90)*(Math.PI/180);
-      const cx=10+7*Math.cos(angle);
-      const cy=10+7*Math.sin(angle);
-      tip.setAttribute('cx',cx.toFixed(3));
-      tip.setAttribute('cy',cy.toFixed(3));
-      tip.setAttribute('opacity','1');
+      if(ringPct<0.02||ringPct>=0.999){
+        tip.setAttribute('opacity','0');
+      } else {
+        const angle=(ringPct*360-90)*(Math.PI/180);
+        const cx=10+7*Math.cos(angle);
+        const cy=10+7*Math.sin(angle);
+        tip.setAttribute('cx',cx.toFixed(3));
+        tip.setAttribute('cy',cy.toFixed(3));
+        tip.setAttribute('opacity','1');
+      }
     }
   }
 
@@ -2588,7 +2775,16 @@ function updateConfidenceUI(){
     panel.querySelector('.bcd-quality').textContent=Math.round(qualityFactor*100)+'%';
     panel.querySelector('.bcd-stability').textContent=Math.round(stabilityScore*100)+'%';
     panel.querySelector('.bcd-nextstep').textContent=nextStep;
-    panel.querySelector('.bcd-bar-fill').style.width=Math.round(conf*100)+'%';
+    const barFill=panel.querySelector('.bcd-bar-fill');
+    const pct=Math.round(ringPct*100);
+    barFill.style.width=Math.min(pct,100)+'%';
+    if(pct>=100){
+      barFill.style.background='var(--teal)';
+      barFill.style.boxShadow='0 0 8px rgba(0,229,200,0.6)';
+    } else {
+      barFill.style.background='linear-gradient(90deg,var(--teal),var(--blue))';
+      barFill.style.boxShadow='none';
+    }
   });
 
   const confMsg=document.getElementById('conf-banner-msg');
@@ -2601,6 +2797,209 @@ function storeQualityScore(score){
   let q=[];try{q=JSON.parse(localStorage.getItem('sc_quality_scores')||'[]');}catch(e){}
   q.unshift(score);if(q.length>20)q.pop();
   try{localStorage.setItem('sc_quality_scores',JSON.stringify(q));}catch(e){}
+}
+
+/* ══════════════════════════════════════════════════════
+   FEATURE 4: MONITORING STREAK
+   Computes consecutive-day streak from history timestamps.
+   We store a dateStr per entry; compare day-by-day.
+═══════════════════════════════════════════════════════ */
+function computeStreak(){
+  if(!hist.length)return{streak:0,lastSeen:null,cadence:'No data',dots:[]};
+
+  // Parse dates from history (hist[0] = newest)
+  const dates=hist.map(h=>{
+    try{return new Date(h.date);}catch(e){return null;}
+  }).filter(Boolean);
+
+  if(!dates.length)return{streak:0,lastSeen:null,cadence:'No data',dots:[]};
+
+  const today=new Date();today.setHours(0,0,0,0);
+  const msPerDay=86400000;
+
+  // Build set of unique day offsets from today (0=today, 1=yesterday, ...)
+  const daySet=new Set();
+  const statusByDay={};
+  hist.forEach(h=>{
+    try{
+      const d=new Date(h.date);d.setHours(0,0,0,0);
+      const offset=Math.round((today-d)/msPerDay);
+      if(offset>=0){
+        daySet.add(offset);
+        // Keep the most serious status for each day
+        const cur=statusByDay[offset];
+        const rank={red:3,yellow:2,green:1};
+        if(!cur||rank[h.status]>rank[cur])statusByDay[offset]=h.status;
+      }
+    }catch(e){}
+  });
+
+  // Count consecutive days ending at today or yesterday
+  let streak=0;
+  let start=daySet.has(0)?0:daySet.has(1)?1:null;
+  if(start!==null){
+    for(let i=start;;i++){
+      if(daySet.has(i))streak++;
+      else break;
+    }
+  }
+
+  // Last seen
+  const lastSeen=dates[0];
+  const daysSince=Math.round((today-new Date(lastSeen).setHours(0,0,0,0)===0?0:(today-lastSeen)/msPerDay));
+
+  // Cadence
+  let cadence='No data';
+  if(hist.length>=2){
+    // Average gap between entries
+    const gaps=[];
+    for(let i=0;i<Math.min(hist.length-1,6);i++){
+      const a=new Date(hist[i].date);const b=new Date(hist[i+1].date);
+      const gap=Math.abs(a-b)/msPerDay;if(gap>0)gaps.push(gap);
+    }
+    if(gaps.length){
+      const avg=gaps.reduce((a,b)=>a+b,0)/gaps.length;
+      if(avg<=1.5)cadence='Daily';
+      else if(avg<=4)cadence='Every few days';
+      else if(avg<=8)cadence='Weekly';
+      else cadence='Infrequent';
+    }
+  }
+
+  // Last 7 dot statuses
+  const dots=[];
+  for(let i=6;i>=0;i--){
+    if(daySet.has(i))dots.push(statusByDay[i]||'green');
+    else dots.push('missed');
+  }
+
+  return{streak,lastSeen,cadence,dots,daysSince:daySet.has(0)?0:daySet.has(1)?1:999};
+}
+
+function renderStreak(){
+  const{streak,cadence,dots,daysSince}=computeStreak();
+  const numEl=document.getElementById('streak-num');
+  const subEl=document.getElementById('streak-sub');
+  const dotsEl=document.getElementById('streak-dots');
+  const cad=document.getElementById('streak-cadence');
+  const flame=document.getElementById('streak-flame');
+
+  if(numEl)numEl.textContent=streak;
+  if(flame){
+    if(streak>=7)flame.textContent='🔥';
+    else if(streak>=3)flame.textContent='✦';
+    else flame.textContent='○';
+  }
+
+  if(subEl){
+    if(!hist.length){subEl.textContent='Start your first check-in to begin tracking.';}
+    else if(streak===0&&daysSince>1){subEl.textContent=`Last check-in was ${daysSince} day${daysSince===1?'':'s'} ago. Check in today to restart your streak.`;}
+    else if(streak===1){subEl.textContent='Checked in today. Come back tomorrow to build your streak.';}
+    else if(streak>=7){subEl.textContent=`${streak} consecutive days — your baseline confidence is building fast.`;}
+    else{subEl.textContent=`${streak} consecutive days of monitoring. Consistent check-ins make results more meaningful.`;}
+  }
+
+  if(dotsEl){
+    dotsEl.innerHTML=dots.map(d=>`<div class="streak-dot ${d}" title="${d==='missed'?'No check-in':d}"></div>`).join('');
+  }
+
+  if(cad){
+    cad.textContent=cadence;
+    cad.className='streak-cadence'+(cadence==='Daily'?' on-track':'');
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   FEATURE 6: SIGNAL FINGERPRINT RADAR
+   3-axis radar chart: Face / Arms / Speech
+   Each axis normalised 0→1 where 1 = alert threshold.
+   Baseline polygon drawn dashed; current solid teal.
+═══════════════════════════════════════════════════════ */
+function radarPoint(cx,cy,r,angleDeg){
+  const rad=(angleDeg-90)*Math.PI/180;
+  return[cx+r*Math.cos(rad),cy+r*Math.sin(rad)];
+}
+
+function drawFingerprint(fa,ad,pr,fs,as,ss){
+  const card=document.getElementById('fingerprint-card');
+  if(!card||isBaselineMode){if(card)card.style.display='none';return;}
+  card.style.display='block';
+
+  const cx=90,cy=90,maxR=72;
+  // Angles: Face=270° (top), Arms=30° (bottom-left), Speech=150° (bottom-right)
+  const angles=[270,30,150];
+
+  // Normalise raw values to 0–1 relative to thresholds, clamped 0–1.3 for overages
+  const faceN=Math.min(fa/0.08,1.3);
+  const armsN=Math.min(ad/8,1.3);
+  const speechN=Math.min(pr/0.35,1.3);
+  const current=[faceN,armsN,speechN];
+
+  // Baseline normalised (if exists)
+  let baseCurrent=[0.5,0.5,0.5]; // default neutral shape
+  if(baseline){
+    baseCurrent=[
+      Math.min(parseFloat(baseline.fa)/0.08,1.3),
+      Math.min(parseFloat(baseline.ad)/8,1.3),
+      Math.min(parseFloat(baseline.pr)/0.35,1.3)
+    ];
+  }
+
+  function polyPoints(vals){
+    return vals.map((v,i)=>{
+      const r=Math.max(8,v*maxR);
+      const[px,py]=radarPoint(cx,cy,r,angles[i]);
+      return`${px.toFixed(2)},${py.toFixed(2)}`;
+    }).join(' ');
+  }
+
+  const currentPoly=document.getElementById('fp-current-poly');
+  const baselinePoly=document.getElementById('fp-baseline-poly');
+  const dotFace=document.getElementById('fp-dot-face');
+  const dotArms=document.getElementById('fp-dot-arms');
+  const dotSpeech=document.getElementById('fp-dot-speech');
+
+  if(currentPoly)currentPoly.setAttribute('points',polyPoints(current));
+  if(baselinePoly)baselinePoly.setAttribute('points',polyPoints(baseCurrent));
+
+  // Position vertex dots
+  const [fx,fy]=radarPoint(cx,cy,Math.max(8,faceN*maxR),angles[0]);
+  const [ax,ay]=radarPoint(cx,cy,Math.max(8,armsN*maxR),angles[1]);
+  const [sx,sy]=radarPoint(cx,cy,Math.max(8,speechN*maxR),angles[2]);
+  if(dotFace){dotFace.setAttribute('cx',fx.toFixed(2));dotFace.setAttribute('cy',fy.toFixed(2));}
+  if(dotArms){dotArms.setAttribute('cx',ax.toFixed(2));dotArms.setAttribute('cy',ay.toFixed(2));}
+  if(dotSpeech){dotSpeech.setAttribute('cx',sx.toFixed(2));dotSpeech.setAttribute('cy',sy.toFixed(2));}
+
+  // Color current polygon by worst signal
+  const worst=Math.max(faceN,armsN,speechN);
+  let polyColor='rgba(0,229,200,0.75)';
+  let polyFill='rgba(0,229,200,0.07)';
+  if(worst>=1.0){polyColor='rgba(239,68,68,0.8)';polyFill='rgba(239,68,68,0.08)';}
+  else if(worst>=0.6){polyColor='rgba(245,158,11,0.8)';polyFill='rgba(245,158,11,0.07)';}
+  if(currentPoly){currentPoly.setAttribute('stroke',polyColor);currentPoly.setAttribute('fill',polyFill);}
+
+  // Legend values
+  const fv=document.getElementById('fp-face-val');
+  const av=document.getElementById('fp-arms-val');
+  const sv=document.getElementById('fp-speech-val');
+  if(fv)fv.textContent=fa.toFixed(3)+' / 0.08';
+  if(av)av.textContent=ad.toFixed(1)+'% / 8%';
+  if(sv)sv.textContent=pr.toFixed(2)+' / 0.35';
+
+  // Note
+  const note=document.getElementById('fp-note');
+  if(note){
+    if(!baseline){note.textContent='Record a baseline to see how today compares to your personal normal.';}
+    else{
+      const changes=[];
+      if(faceN>baseCurrent[0]*1.15)changes.push('face symmetry');
+      if(armsN>baseCurrent[1]*1.15)changes.push('arm drift');
+      if(speechN>baseCurrent[2]*1.15)changes.push('speech pause');
+      note.textContent=changes.length
+        ?`Today's shape is larger than your baseline on: ${changes.join(', ')}. The dashed outline shows your personal normal.`
+        :'Your signal shape today closely matches your baseline. No notable deviation across any axis.';
+    }
+  }
 }
 
 /* ── HISTORY ── */
@@ -2640,6 +3039,7 @@ function saveAndHistory(){
 }
 
 function renderHistory(){
+  renderStreak();
   const el=document.getElementById('hist-entries');
   const period=document.getElementById('hist-period');
   const empty=document.getElementById('hist-empty');
@@ -2696,7 +3096,7 @@ function renderHistory(){
         <div class="he-sc"><div class="he-sc-lbl">Speech</div><div class="he-sc-v">${h.s}</div></div>
         <div class="he-sc"><div class="he-sc-lbl">Total</div><div class="he-sc-v">${h.t}</div></div>
       </div>
-      <div class="he-lbl ${h.status}">${h.status.toUpperCase()}</div>
+      <div class="he-lbl ${h.status}">${{green:'Good',yellow:'Watch',red:'Alert'}[h.status]||h.status.toUpperCase()}</div>
       ${hasVideo?'<div style="font-size:0.75rem;margin-left:0.25rem;">▶</div>':'<div style="font-size:0.75rem;margin-left:0.25rem;opacity:0.3;">🎬</div>'}
     </div>`;
   }).join('');
@@ -2883,7 +3283,7 @@ function openReplayModal(idx){
   const blobUrl=_recordingBlobs.get(idx);
   if(blobUrl){
     videoEl.src=blobUrl;
-    videoEl.loop=true;
+    videoEl.loop=false;
     videoEl.pause();
     noVideo.style.display='none';
     videoEl.style.display='block';
@@ -2892,10 +3292,8 @@ function openReplayModal(idx){
     poseToggleWrap.style.display='block';
     _replayPoseOverlayActive=false;
     document.getElementById('replay-pose-toggle-btn').textContent='🦴 Show Pose Overlay';
-    // Update play button state on play/pause
-    videoEl.onplay=()=>{if(playBtn)playBtn.style.display='none';};
-    videoEl.onpause=()=>{if(playBtn)playBtn.style.display='flex';};
-    videoEl.onended=()=>{if(playBtn)playBtn.style.display='flex';};
+    // Init video controls (progress bar + play/pause)
+    initVideoControls(videoEl);
   } else {
     videoEl.src='';
     videoEl.style.display='none';
@@ -2912,14 +3310,111 @@ function openReplayModal(idx){
 
 function closeReplayModal(){
   const videoEl=document.getElementById('replay-video');
-  videoEl.onplay=null;videoEl.onpause=null;videoEl.onended=null;
+  videoEl.onplay=null;videoEl.onpause=null;videoEl.onended=null;videoEl.ontimeupdate=null;
   videoEl.pause();videoEl.src='';
   const playBtn=document.getElementById('replay-play-btn');
   if(playBtn)playBtn.style.display='none';
+  document.getElementById('vp-controls').style.display='none';
   stopReplayPoseLoop();
   document.getElementById('video-replay-modal').style.display='none';
   document.body.style.overflow='';
   _replayPoseOverlayActive=false;
+  _vpScrubbing=false;
+}
+
+/* ── VIDEO PLAYER CONTROLS ── */
+let _vpScrubbing=false;
+
+function fmtTime(s){
+  if(!isFinite(s)||s<0)return'0:00';
+  const m=Math.floor(s/60);
+  const sec=Math.floor(s%60);
+  return m+':'+(sec<10?'0':'')+sec;
+}
+
+function replayTogglePlay(){
+  const v=document.getElementById('replay-video');
+  if(!v.src)return;
+  if(v.paused||v.ended)v.play();else v.pause();
+}
+
+function initVideoControls(videoEl){
+  const controls=document.getElementById('vp-controls');
+  const fill=document.getElementById('vp-scrub-fill');
+  const thumb=document.getElementById('vp-scrub-thumb');
+  const timeEl=document.getElementById('vp-time');
+  const playIcon=document.getElementById('vp-play-icon');
+  const scrubWrap=document.getElementById('vp-scrub-wrap');
+
+  controls.style.display='flex';
+
+  // Pause icon SVG paths
+  const PLAY_PATH='<polygon points="6,4 20,12 6,20" fill="currentColor"/>';
+  const PAUSE_PATH='<rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/>';
+
+  function updateBar(){
+    if(_vpScrubbing)return;
+    const dur=videoEl.duration||0;
+    const cur=videoEl.currentTime||0;
+    const pct=dur>0?(cur/dur*100):0;
+    fill.style.width=pct+'%';
+    thumb.style.left=pct+'%';
+    timeEl.textContent=fmtTime(cur)+' / '+fmtTime(dur);
+  }
+
+  function updatePlayIcon(){
+    playIcon.innerHTML=videoEl.paused?PLAY_PATH:PAUSE_PATH;
+  }
+
+  videoEl.ontimeupdate=updateBar;
+  videoEl.ondurationchange=updateBar;
+  videoEl.onplay=()=>{
+    document.getElementById('replay-play-btn').style.display='none';
+    updatePlayIcon();
+  };
+  videoEl.onpause=()=>{
+    document.getElementById('replay-play-btn').style.display='flex';
+    updatePlayIcon();
+  };
+  videoEl.onended=()=>{
+    document.getElementById('replay-play-btn').style.display='flex';
+    updatePlayIcon();
+  };
+
+  // Scrubbing — click or drag on the track
+  function scrubTo(e){
+    const rect=scrubWrap.getBoundingClientRect();
+    const x=Math.max(0,Math.min(e.clientX-rect.left,rect.width));
+    const pct=x/rect.width;
+    const dur=videoEl.duration||0;
+    if(!dur)return;
+    videoEl.currentTime=pct*dur;
+    fill.style.width=(pct*100)+'%';
+    thumb.style.left=(pct*100)+'%';
+    timeEl.textContent=fmtTime(pct*dur)+' / '+fmtTime(dur);
+  }
+
+  scrubWrap.onmousedown=(e)=>{
+    _vpScrubbing=true;
+    scrubTo(e);
+    const onMove=(ev)=>{if(_vpScrubbing)scrubTo(ev);};
+    const onUp=()=>{_vpScrubbing=false;document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);};
+    document.addEventListener('mousemove',onMove);
+    document.addEventListener('mouseup',onUp);
+  };
+
+  // Touch support
+  scrubWrap.ontouchstart=(e)=>{
+    _vpScrubbing=true;
+    scrubTo(e.touches[0]);
+    const onMove=(ev)=>{if(_vpScrubbing)scrubTo(ev.touches[0]);};
+    const onEnd=()=>{_vpScrubbing=false;document.removeEventListener('touchmove',onMove);document.removeEventListener('touchend',onEnd);};
+    document.addEventListener('touchmove',onMove,{passive:true});
+    document.addEventListener('touchend',onEnd);
+  };
+
+  updatePlayIcon();
+  updateBar();
 }
 
 function toggleReplayPoseOverlay(){
