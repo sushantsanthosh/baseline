@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Baseline</title>
+<title>Baseline — Early Stroke Signal Detection</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=Space+Mono&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -1274,25 +1274,13 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
             <div style="font-family:'DM Serif Display',serif;font-size:1.6rem;" id="replay-total-val">—</div>
           </div>
           <div id="replay-overlay-toggle-wrap" style="display:none;">
-            <div style="display:flex;flex-direction:column;gap:0.6rem;padding:1rem 1.25rem;background:var(--cb);border:1px solid var(--cbord);border-radius:14px;min-width:160px;">
-              <div style="font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:0.15rem;">Overlay</div>
-              <!-- Pose toggle -->
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;">
-                <span style="font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--text);">🦴 Pose</span>
-                <label id="replay-pose-toggle-label" style="position:relative;display:inline-block;width:38px;height:22px;cursor:pointer;">
-                  <input type="checkbox" id="replay-pose-toggle-cb" onchange="handleOverlayToggle('pose',this.checked)" style="opacity:0;width:0;height:0;">
-                  <span id="replay-pose-toggle-track" style="position:absolute;inset:0;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:11px;transition:all 0.25s;"></span>
-                  <span id="replay-pose-toggle-thumb" style="position:absolute;top:3px;left:3px;width:16px;height:16px;background:var(--muted);border-radius:50%;transition:all 0.25s;"></span>
-                </label>
-              </div>
-              <!-- Face toggle -->
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;">
-                <span style="font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--text);">😐 Face</span>
-                <label id="replay-face-toggle-label" style="position:relative;display:inline-block;width:38px;height:22px;cursor:pointer;">
-                  <input type="checkbox" id="replay-face-toggle-cb" onchange="handleOverlayToggle('face',this.checked)" style="opacity:0;width:0;height:0;">
-                  <span id="replay-face-toggle-track" style="position:absolute;inset:0;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:11px;transition:all 0.25s;"></span>
-                  <span id="replay-face-toggle-thumb" style="position:absolute;top:3px;left:3px;width:16px;height:16px;background:var(--muted);border-radius:50%;transition:all 0.25s;"></span>
-                </label>
+            <div style="display:flex;flex-direction:column;gap:0.5rem;padding:0.85rem 1rem;background:var(--cb);border:1px solid var(--cbord);border-radius:14px;">
+              <div style="font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-align:center;">Overlay</div>
+              <!-- 3-state segmented control: Off / Pose / Face -->
+              <div id="overlay-seg" style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:3px;gap:2px;">
+                <button onclick="setOverlayMode('off')" id="overlay-seg-off" style="flex:1;font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;padding:0.35rem 0.4rem;border:none;border-radius:7px;cursor:pointer;transition:all 0.2s;background:rgba(255,255,255,0.1);color:var(--text);">Off</button>
+                <button onclick="setOverlayMode('pose')" id="overlay-seg-pose" style="flex:1;font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;padding:0.35rem 0.4rem;border:none;border-radius:7px;cursor:pointer;transition:all 0.2s;background:transparent;color:var(--muted);">🦴 Pose</button>
+                <button onclick="setOverlayMode('face')" id="overlay-seg-face" style="flex:1;font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;padding:0.35rem 0.4rem;border:none;border-radius:7px;cursor:pointer;transition:all 0.2s;background:transparent;color:var(--muted);">😐 Face</button>
               </div>
             </div>
           </div>
@@ -2214,8 +2202,7 @@ function measureLightingAndFraming(vid){
     const avgBrightness=totalBrightness/n; // 0-255
     const lightingScore=avgBrightness>110?1:avgBrightness>80?(avgBrightness-80)/30*0.25+0.75:avgBrightness/80*0.55;
 
-    // Face framing: look for a bright region in the upper-center third (face area)
-    // Sample a 40x40 box centered at (W/2, H/3) and compare to overall brightness
+    // Brightness-based framing heuristic (fallback)
     const fx=Math.floor(W/2-20),fy=Math.floor(H/3-20);
     let faceB=0,faceN=0;
     for(let y=fy;y<fy+40&&y<H;y++){
@@ -2225,12 +2212,19 @@ function measureLightingAndFraming(vid){
       }
     }
     const faceBrightness=faceB/faceN;
-    // Face framing is good if the face region is reasonably bright and not drastically
-    // different from overall (avoiding mostly-blank/dark frames)
     const faceRatio=faceBrightness/(avgBrightness||1);
-    // Good: face region 0.7–1.5× overall brightness, and face area itself is >80
     const faceCentered=faceBrightness>80&&faceRatio>0.65&&faceRatio<1.8;
-    const faceScore=faceCentered?(Math.min(faceBrightness,180)/180*0.3+0.7):Math.max(0.3,(faceBrightness/180)*0.65);
+    const brightnessScore=faceCentered?(Math.min(faceBrightness,180)/180*0.3+0.7):Math.max(0.3,(faceBrightness/180)*0.65);
+
+    // Landmark-based framing: if face landmarker has a recent result, blend it in.
+    // A detected face with good landmark confidence scores 1.0; no detection scores 0.4.
+    // We weight landmarks 60% and brightness 40% when detection is available.
+    let faceScore=brightnessScore;
+    if(faceReady&&_lastFaceLandmarks!=null){
+      const landmarkDetected=_lastFaceLandmarks.length>0;
+      const landmarkScore=landmarkDetected?1.0:0.4;
+      faceScore=landmarkScore*0.6+brightnessScore*0.4;
+    }
 
     return{lighting:Math.min(1,lightingScore),face:Math.min(1,faceScore)};
   }catch(e){return{lighting:sqScores.lighting,face:sqScores.face};}
@@ -3932,87 +3926,54 @@ function initVideoControls(videoEl){
 }
 
 function updateOverlayBtnStyles(){
-  const poseCb=document.getElementById('replay-pose-toggle-cb');
-  const faceCb=document.getElementById('replay-face-toggle-cb');
-  const poseTrack=document.getElementById('replay-pose-toggle-track');
-  const poseThumb=document.getElementById('replay-pose-toggle-thumb');
-  const faceTrack=document.getElementById('replay-face-toggle-track');
-  const faceThumb=document.getElementById('replay-face-toggle-thumb');
   const label=document.getElementById('replay-overlay-label');
+  const btnOff=document.getElementById('overlay-seg-off');
+  const btnPose=document.getElementById('overlay-seg-pose');
+  const btnFace=document.getElementById('overlay-seg-face');
+  const mode=_replayOverlayMode;
 
-  const poseOn=_replayPoseOverlayActive;
-  const faceOn=_replayFaceOverlayActive;
+  const inactiveStyle={background:'transparent',color:'var(--muted)',boxShadow:'none'};
+  const offActiveStyle={background:'rgba(255,255,255,0.1)',color:'var(--text)',boxShadow:'none'};
 
-  if(poseCb)poseCb.checked=poseOn;
-  if(faceCb)faceCb.checked=faceOn;
+  if(btnOff){Object.assign(btnOff.style,mode==='off'?offActiveStyle:inactiveStyle);}
+  if(btnPose){Object.assign(btnPose.style,mode==='pose'?{background:'rgba(168,85,247,0.7)',color:'#fff',boxShadow:'0 0 10px rgba(168,85,247,0.4)'}:inactiveStyle);}
+  if(btnFace){Object.assign(btnFace.style,mode==='face'?{background:'rgba(0,229,200,0.5)',color:'#fff',boxShadow:'0 0 10px rgba(0,229,200,0.3)'}:inactiveStyle);}
 
-  if(poseTrack){
-    poseTrack.style.background=poseOn?'rgba(168,85,247,0.35)':'rgba(255,255,255,0.08)';
-    poseTrack.style.borderColor=poseOn?'rgba(168,85,247,0.6)':'rgba(255,255,255,0.12)';
+  if(label){
+    if(mode==='pose'){label.textContent='\ud83e\uddb4 Pose Overlay';label.style.display='block';}
+    else if(mode==='face'){label.textContent='\ud83d\ude10 Face Overlay';label.style.display='block';}
+    else{label.style.display='none';}
   }
-  if(poseThumb){
-    poseThumb.style.left=poseOn?'19px':'3px';
-    poseThumb.style.background=poseOn?'var(--violet)':'var(--muted)';
-    if(poseOn)poseThumb.style.boxShadow='0 0 8px rgba(168,85,247,0.6)';
-    else poseThumb.style.boxShadow='none';
-  }
-  if(faceTrack){
-    faceTrack.style.background=faceOn?'rgba(0,229,200,0.35)':'rgba(255,255,255,0.08)';
-    faceTrack.style.borderColor=faceOn?'rgba(0,229,200,0.6)':'rgba(255,255,255,0.12)';
-  }
-  if(faceThumb){
-    faceThumb.style.left=faceOn?'19px':'3px';
-    faceThumb.style.background=faceOn?'var(--teal)':'var(--muted)';
-    if(faceOn)faceThumb.style.boxShadow='0 0 8px rgba(0,229,200,0.6)';
-    else faceThumb.style.boxShadow='none';
-  }
-
-  if(poseOn&&faceOn){label.textContent='🦴😐 Both Overlays';label.style.display='block';}
-  else if(poseOn){label.textContent='🦴 Pose Overlay';label.style.display='block';}
-  else if(faceOn){label.textContent='😐 Face Overlay';label.style.display='block';}
-  else{label.style.display='none';}
 }
 
-async function handleOverlayToggle(mode, checked){
+async function setOverlayMode(mode){
+  if(_replayOverlayMode!=='off'){
+    _replayPoseOverlayActive=false;
+    _replayFaceOverlayActive=false;
+    clearReplayCanvases();
+    stopReplayOverlayLoop();
+  }
   if(mode==='pose'){
-    if(checked){
-      // Turn on pose
-      const btn=document.getElementById('replay-pose-toggle-label');
-      await initPose();
-      if(!poseReady||!poseLandmarker){
-        document.getElementById('replay-pose-toggle-cb').checked=false;
-        return;
-      }
-      _replayPoseOverlayActive=true;
-      _replayOverlayMode=_replayFaceOverlayActive?'both':'pose';
-      startReplayOverlayLoop();
-    } else {
-      _replayPoseOverlayActive=false;
-      clearReplayCanvases();
-      if(_replayFaceOverlayActive){_replayOverlayMode='face';}
-      else{_replayOverlayMode='off';stopReplayOverlayLoop();}
-    }
+    await initPose();
+    if(!poseReady||!poseLandmarker){_replayOverlayMode='off';updateOverlayBtnStyles();return;}
+    _replayPoseOverlayActive=true;
+    _replayFaceOverlayActive=false;
+    _replayOverlayMode='pose';
+    startReplayOverlayLoop();
   } else if(mode==='face'){
-    if(checked){
-      await initFace();
-      if(!faceReady||!faceLandmarker){
-        document.getElementById('replay-face-toggle-cb').checked=false;
-        return;
-      }
-      _replayFaceOverlayActive=true;
-      _replayOverlayMode=_replayPoseOverlayActive?'both':'face';
-      startReplayOverlayLoop();
-    } else {
-      _replayFaceOverlayActive=false;
-      clearReplayCanvases();
-      if(_replayPoseOverlayActive){_replayOverlayMode='pose';}
-      else{_replayOverlayMode='off';stopReplayOverlayLoop();}
-    }
+    await initFace();
+    if(!faceReady||!faceLandmarker){_replayOverlayMode='off';updateOverlayBtnStyles();return;}
+    _replayFaceOverlayActive=true;
+    _replayPoseOverlayActive=false;
+    _replayOverlayMode='face';
+    startReplayOverlayLoop();
+  } else {
+    _replayOverlayMode='off';
   }
   updateOverlayBtnStyles();
 }
 
-// setReplayOverlay is now handled by handleOverlayToggle above
+async function handleOverlayToggle(mode,checked){await setOverlayMode(checked?mode:'off');}
 
 function clearReplayCanvases(){
   ['replay-pose-canvas','replay-face-canvas'].forEach(id=>{
@@ -4040,13 +4001,19 @@ function startReplayOverlayLoop(){
 
   let lastT=0;
   let lastVideoTime=-1;
+  let lastPausedVideoTime=-1;
   async function loop(t){
     _replayRafId=requestAnimationFrame(loop);
     if(_replayOverlayMode==='off')return;
     if(videoEl.readyState<2)return;
-    if(videoEl.paused||videoEl.ended)return;
-    if(videoEl.currentTime===lastVideoTime)return;
-    if(t-lastT<66)return;
+    if(videoEl.ended)return;
+    // When paused, still run once per seek/mode-switch so landmarks appear on a still frame
+    const isPaused=videoEl.paused;
+    if(!isPaused&&videoEl.currentTime===lastVideoTime)return;
+    if(t-lastT<66&&!isPaused)return;
+    // When paused, only re-run detection if the seek position changed
+    if(isPaused&&videoEl.currentTime===lastPausedVideoTime)return;
+    if(isPaused)lastPausedVideoTime=videoEl.currentTime;
 
     // Support both overlays simultaneously
     if(_replayPoseOverlayActive&&poseReady&&poseLandmarker&&!poseBusy){
