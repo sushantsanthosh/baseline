@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Baseline — Early Stroke Signal Detection</title>
+<title>Baseline</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=Space+Mono&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -371,9 +371,15 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
 .rec-mode-banner{text-align:center;padding:0.6rem 1.5rem;background:rgba(0,229,200,0.06);border:1px solid rgba(0,229,200,0.2);border-radius:10px;font-family:'Space Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:var(--teal);margin-bottom:1rem;}
 
 /* Countdown overlay on camera */
-.countdown-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(6,8,15,0.55);backdrop-filter:blur(2px);z-index:10;pointer-events:none;opacity:0;transition:opacity 0.2s;}
+.countdown-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:rgba(6,8,15,0.75);backdrop-filter:blur(6px);z-index:10;pointer-events:none;opacity:0;transition:opacity 0.25s;}
 .countdown-overlay.visible{opacity:1;}
 .countdown-num{font-family:'DM Serif Display',serif;font-size:9rem;color:#fff;text-shadow:0 0 60px rgba(0,229,200,0.8),0 0 20px rgba(0,229,200,0.5);line-height:1;animation:cntPop 0.35s cubic-bezier(0.175,0.885,0.32,1.275) forwards;}
+.countdown-task-intro{display:none;flex-direction:column;align-items:center;gap:0.6rem;text-align:center;padding:0 1.5rem;}
+.countdown-task-intro.show{display:flex;}
+.cti-icon{font-size:3rem;animation:cntPop 0.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards;}
+.cti-title{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,3.5vw,2.2rem);color:#fff;letter-spacing:-0.02em;text-shadow:0 0 30px rgba(0,229,200,0.5);}
+.cti-instruction{font-family:'Space Mono',monospace;font-size:clamp(0.72rem,1.5vw,0.9rem);letter-spacing:0.08em;color:rgba(0,229,200,0.9);text-transform:uppercase;padding:0.45rem 1.2rem;background:rgba(0,229,200,0.08);border:1px solid rgba(0,229,200,0.25);border-radius:100px;}
+.cti-get-ready{font-family:'Space Mono',monospace;font-size:0.68rem;letter-spacing:0.14em;color:rgba(255,255,255,0.45);text-transform:uppercase;margin-top:0.25rem;}
 @keyframes cntPop{from{transform:scale(0.4);opacity:0;}to{transform:scale(1);opacity:1;}}
 
 /* ── RESULTS ENTRANCE ANIMATIONS ── */
@@ -809,6 +815,12 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
               <div style="font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;color:var(--muted);text-align:center;">Starting camera preview…</div>
             </div>
             <div class="countdown-overlay" id="countdown-overlay">
+              <div class="countdown-task-intro" id="countdown-task-intro">
+                <span class="cti-icon" id="cti-icon">😐</span>
+                <div class="cti-title" id="cti-title">Neutral Face</div>
+                <div class="cti-instruction" id="cti-instruction">Keep a relaxed, neutral expression</div>
+                <div class="cti-get-ready">Starting in…</div>
+              </div>
               <div class="countdown-num" id="countdown-num">3</div>
             </div>
             <div class="prompt-banner smile" id="prompt-banner">😐 &nbsp;NEUTRAL FACE — keep still</div>
@@ -2139,6 +2151,7 @@ function startPreviewLoop(){
           bodyPassHistory.push(pass?1:0);
           if(bodyPassHistory.length>BODY_WINDOW)bodyPassHistory.shift();
           sqScores.body=bodyPassHistory.reduce((a,b)=>a+b,0)/bodyPassHistory.length;
+          updateSqUI();
         }catch(e){}
         finally{poseBusy=false;}
         lastPoseT=t;
@@ -2656,9 +2669,35 @@ function computeArmDrift(lms){
   return {lx, ly, rx, ry, conf};
 }
 
-function runCountdown(){
+// Task intro config for each task
+const TASK_INTROS={
+  smile:{icon:'😐',title:'Face Symmetry Test',instruction:'Center your face · Keep a relaxed, neutral expression'},
+  arms: {icon:'🙌',title:'Arm Drift Test',instruction:'Raise BOTH arms to shoulder height and hold steady'},
+  speak:{icon:'🗣️',title:'Speech Test',instruction:'Read the passage on screen out loud at your natural pace'}
+};
+
+function runCountdown(taskId){
   const overlay=document.getElementById('countdown-overlay');
   const numEl=document.getElementById('countdown-num');
+  const introEl=document.getElementById('countdown-task-intro');
+  const iconEl=document.getElementById('cti-icon');
+  const titleEl=document.getElementById('cti-title');
+  const instrEl=document.getElementById('cti-instruction');
+
+  // Show intro panel if taskId provided
+  if(taskId&&TASK_INTROS[taskId]){
+    const cfg=TASK_INTROS[taskId];
+    iconEl.textContent=cfg.icon;
+    titleEl.textContent=cfg.title;
+    instrEl.textContent=cfg.instruction;
+    introEl.classList.add('show');
+    // re-trigger icon animation
+    iconEl.style.animation='none';void iconEl.offsetWidth;
+    iconEl.style.animation='cntPop 0.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards';
+  } else {
+    introEl.classList.remove('show');
+  }
+
   overlay.classList.add('visible');
   return new Promise(resolve=>{
     let count=3;
@@ -2670,6 +2709,7 @@ function runCountdown(){
       count--;
       if(count<=0){
         clearInterval(tick);
+        introEl.classList.remove('show');
         overlay.classList.remove('visible');
         resolve();
       } else {
@@ -2688,8 +2728,8 @@ async function startRec(){
   btn.textContent='Get ready…';
   await initCam();
 
-  // 3-2-1 countdown on the camera
-  await runCountdown();
+  // 3-2-1 countdown on the camera with first task intro
+  await runCountdown('smile');
 
   btn.textContent='Recording…';
   document.getElementById('rec-ind').classList.add('on');
@@ -2749,24 +2789,19 @@ function runTask(){
       if(tIdx>=TASKS.length){
         setTimeout(endRec,300);
       } else {
-        // Auto-advance: show next task name for 2 seconds then start immediately
+        // Show task intro + 3-second countdown before next task
         const nextTask=TASKS[tIdx];
-        const names={smile:'Neutral Face',arms:'Raise Both Arms',speak:'Read Passage'};
-        const icons={smile:'😐',arms:'🙌',speak:'🗣️'};
-        document.getElementById('prompt-banner').innerHTML=`⏭ &nbsp;NEXT: ${icons[nextTask.id]} ${names[nextTask.id].toUpperCase()}`;
+        document.getElementById('prompt-banner').innerHTML='⏸ &nbsp;GET READY FOR NEXT TEST';
         document.getElementById('prompt-banner').className='prompt-banner pause';
-        document.getElementById('timer-lbl').textContent='GET READY';
-        document.getElementById('timer-num').textContent='2';
-        // Disable the go button during auto-transition so it can't be double-pressed
+        document.getElementById('timer-lbl').textContent='PAUSED';
+        document.getElementById('timer-num').textContent='—';
         const goBtn=document.getElementById('btn-go');
         goBtn.disabled=true;
-        setTimeout(()=>{
-          document.getElementById('timer-num').textContent='1';
-        },1000);
-        setTimeout(()=>{
+        // Run the countdown with the next task's intro
+        runCountdown(nextTask.id).then(()=>{
           goBtn.disabled=false;
           runTask();
-        },2000);
+        });
       }
     }
   },1000);
