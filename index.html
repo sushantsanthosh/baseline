@@ -371,15 +371,9 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
 .rec-mode-banner{text-align:center;padding:0.6rem 1.5rem;background:rgba(0,229,200,0.06);border:1px solid rgba(0,229,200,0.2);border-radius:10px;font-family:'Space Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:var(--teal);margin-bottom:1rem;}
 
 /* Countdown overlay on camera */
-.countdown-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:rgba(6,8,15,0.75);backdrop-filter:blur(6px);z-index:10;pointer-events:none;opacity:0;transition:opacity 0.25s;}
+.countdown-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(6,8,15,0.55);backdrop-filter:blur(2px);z-index:10;pointer-events:none;opacity:0;transition:opacity 0.2s;}
 .countdown-overlay.visible{opacity:1;}
 .countdown-num{font-family:'DM Serif Display',serif;font-size:9rem;color:#fff;text-shadow:0 0 60px rgba(0,229,200,0.8),0 0 20px rgba(0,229,200,0.5);line-height:1;animation:cntPop 0.35s cubic-bezier(0.175,0.885,0.32,1.275) forwards;}
-.countdown-task-intro{display:none;flex-direction:column;align-items:center;gap:0.6rem;text-align:center;padding:0 1.5rem;}
-.countdown-task-intro.show{display:flex;}
-.cti-icon{font-size:3rem;animation:cntPop 0.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards;}
-.cti-title{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,3.5vw,2.2rem);color:#fff;letter-spacing:-0.02em;text-shadow:0 0 30px rgba(0,229,200,0.5);}
-.cti-instruction{font-family:'Space Mono',monospace;font-size:clamp(0.72rem,1.5vw,0.9rem);letter-spacing:0.08em;color:rgba(0,229,200,0.9);text-transform:uppercase;padding:0.45rem 1.2rem;background:rgba(0,229,200,0.08);border:1px solid rgba(0,229,200,0.25);border-radius:100px;}
-.cti-get-ready{font-family:'Space Mono',monospace;font-size:0.68rem;letter-spacing:0.14em;color:rgba(255,255,255,0.45);text-transform:uppercase;margin-top:0.25rem;}
 @keyframes cntPop{from{transform:scale(0.4);opacity:0;}to{transform:scale(1);opacity:1;}}
 
 /* ── RESULTS ENTRANCE ANIMATIONS ── */
@@ -616,6 +610,113 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
 .fp-legend-val{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text);margin-left:auto;}
 .fp-note{font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--muted);letter-spacing:0.04em;margin-top:1rem;line-height:1.5;padding-top:0.75rem;border-top:1px solid var(--cbord);}
 
+
+/* ── SPEECH STRIP (below camera during speak task) ── */
+.speech-strip{
+  display:none;width:100%;
+  background:var(--surface);
+  border:1px solid rgba(59,130,246,0.3);
+  border-radius:16px;
+  padding:1.1rem 1.3rem 1rem;
+  margin-top:0.85rem;
+  position:relative;overflow:hidden;
+}
+.speech-strip::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--blue),transparent);
+}
+.speech-strip.active{display:block;}
+.ss-top{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:0.75rem;
+}
+.ss-label{
+  font-family:'Space Mono',monospace;font-size:0.58rem;
+  letter-spacing:0.14em;text-transform:uppercase;color:var(--blue);
+  display:flex;align-items:center;gap:0.4rem;
+}
+.ss-live-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--red);
+  animation:blink 1s ease-in-out infinite;flex-shrink:0;
+}
+.ss-wpm-badge{
+  display:flex;align-items:baseline;gap:0.3rem;
+  background:rgba(59,130,246,0.1);
+  border:1px solid rgba(59,130,246,0.25);
+  border-radius:100px;padding:0.25rem 0.75rem;
+}
+.ss-wpm-live{
+  font-family:'DM Serif Display',serif;font-size:1.4rem;
+  letter-spacing:-0.02em;color:var(--text);line-height:1;
+}
+.ss-wpm-unit{
+  font-family:'Space Mono',monospace;font-size:0.6rem;
+  color:var(--muted);
+}
+.ss-passage{
+  font-size:0.92rem;line-height:1.8;color:var(--muted);
+  margin-bottom:0.85rem;
+  padding:0.75rem 1rem;
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--cbord);
+  border-radius:10px;
+}
+.ss-word{transition:color 0.12s,font-weight 0.12s;}
+.ss-word.spoken{color:var(--blue);font-weight:500;}
+.ss-word.current{
+  color:#fff;font-weight:500;
+  text-shadow:0 0 12px rgba(59,130,246,0.6);
+}
+.ss-buckets-section{border-top:1px solid rgba(255,255,255,0.05);padding-top:0.7rem;}
+.ss-buckets-lbl{
+  font-family:'Space Mono',monospace;font-size:0.55rem;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:0.45rem;
+}
+.ss-buckets{
+  display:flex;gap:3px;align-items:flex-end;height:32px;
+}
+.ss-bucket-bar{
+  flex:0 0 10px;
+  background:rgba(59,130,246,0.5);
+  border-radius:3px 3px 0 0;
+  min-height:3px;
+  transition:height 0.2s;
+  box-shadow:0 0 4px rgba(59,130,246,0.2);
+}
+.ss-bucket-bar.spike{
+  background:rgba(239,68,68,0.75);
+  box-shadow:0 0 6px rgba(239,68,68,0.35);
+}
+
+/* ── SPEECH RESULTS STATS (in metric card) ── */
+.speech-stats{display:flex;flex-direction:column;gap:0;}
+.speech-stat-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0.42rem 0;border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.speech-stat-row:last-child{border-bottom:none;}
+.speech-stat-lbl{color:var(--muted);font-size:0.87rem;}
+.speech-stat-val{font-family:'Space Mono',monospace;font-size:0.87rem;font-weight:600;}
+.speech-stat-val.good{color:var(--teal);}
+.speech-stat-val.warn{color:var(--yellow);}
+.speech-stat-val.bad{color:var(--red);}
+.speech-stat-val.neutral{color:var(--text);}
+.ss-res-lbl{
+  font-family:'Space Mono',monospace;font-size:0.55rem;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:0.35rem;
+}
+.ss-res-buckets{
+  display:flex;gap:3px;align-items:flex-end;height:32px;
+  margin-top:0.6rem;padding-top:0.6rem;
+  border-top:1px solid rgba(255,255,255,0.04);
+}
+.ss-res-bucket-bar{
+  flex:1;background:rgba(59,130,246,0.5);
+  border-radius:2px 2px 0 0;min-height:3px;
+}
+.ss-res-bucket-bar.spike{background:rgba(239,68,68,0.75);}
 </style>
 </head>
 <body>
@@ -815,12 +916,6 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
               <div style="font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;color:var(--muted);text-align:center;">Starting camera preview…</div>
             </div>
             <div class="countdown-overlay" id="countdown-overlay">
-              <div class="countdown-task-intro" id="countdown-task-intro">
-                <span class="cti-icon" id="cti-icon">😐</span>
-                <div class="cti-title" id="cti-title">Neutral Face</div>
-                <div class="cti-instruction" id="cti-instruction">Keep a relaxed, neutral expression</div>
-                <div class="cti-get-ready">Starting in…</div>
-              </div>
               <div class="countdown-num" id="countdown-num">3</div>
             </div>
             <div class="prompt-banner smile" id="prompt-banner">😐 &nbsp;NEUTRAL FACE — keep still</div>
@@ -830,6 +925,21 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
             </div>
             <div class="rec-ind" id="rec-ind"><span class="rec-dot"></span> REC</div>
             <div class="cam-tip" id="cam-tip">Keep your face centered · Shoulders visible</div>
+          </div>
+        </div>
+        <!-- Speech strip — shown below camera during speak task -->
+        <div class="speech-strip" id="speech-strip">
+          <div class="ss-top">
+            <span class="ss-label"><span class="ss-live-dot"></span>Speech &middot; Live</span>
+            <div class="ss-wpm-badge">
+              <span class="ss-wpm-live" id="ss-wpm-live">&#x2014;</span>
+              <span class="ss-wpm-unit">wpm</span>
+            </div>
+          </div>
+          <div class="ss-passage" id="ss-passage-words"></div>
+          <div class="ss-buckets-section">
+            <div class="ss-buckets-lbl">WPM rhythm &middot; 1s buckets</div>
+            <div class="ss-buckets" id="ss-buckets"></div>
           </div>
         </div>
       </div>
@@ -1015,7 +1125,17 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
             <path id="speech-line" class="mc-chart-line" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M0,32 50,30 90,34 130,31 170,33 200,32"/>
             <circle id="speech-dot" cx="200" cy="32" r="4" fill="#3b82f6" class="mc-chart-dot chart-dot-glow" style="--dot-delay:1.1s;color:#3b82f6"/>
           </svg></div>
-          <div class="mc-explain" id="speech-extra"><strong>Transcript:</strong> <span id="transcript-txt" style="color:var(--muted);font-size:0.77rem;">"Today is a sunny day."</span><br><strong style="margin-top:0.35rem;display:block;">Words/min:</strong> <span id="wpm-txt" style="color:var(--muted);font-size:0.77rem;">112 wpm</span></div>
+          <div class="mc-explain" id="speech-extra">
+            <div class="speech-stats">
+              <div class="speech-stat-row"><span class="speech-stat-lbl">Overall WPM</span><span class="speech-stat-val neutral" id="wpm-txt">—</span></div>
+              <div class="speech-stat-row"><span class="speech-stat-lbl">Pause Ratio</span><span class="speech-stat-val neutral" id="pause-txt">—</span></div>
+              <div class="speech-stat-row"><span class="speech-stat-lbl">Rhythm Spike</span><span class="speech-stat-val neutral" id="spike-txt">—</span></div>
+              <div class="speech-stat-row"><span class="speech-stat-lbl">Words Detected</span><span class="speech-stat-val neutral" id="words-txt">—</span></div>
+              <div class="speech-stat-row"><span class="speech-stat-lbl">Coverage</span><span class="speech-stat-val neutral" id="coverage-txt">—</span></div>
+            </div>
+            <div class="ss-res-lbl" style="margin-top:0.7rem;">WPM rhythm (1s buckets)</div>
+            <div class="ss-res-buckets" id="ss-res-buckets"></div>
+          </div>
           <div class="delta-row" id="speech-delta-row" style="display:none"><span class="delta-lbl">vs baseline</span><span class="delta-chip flat" id="speech-delta-chip">—</span><span class="delta-baseline-val" id="speech-baseline-val"></span></div>
         </div>
       </div>
@@ -1274,13 +1394,25 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
             <div style="font-family:'DM Serif Display',serif;font-size:1.6rem;" id="replay-total-val">—</div>
           </div>
           <div id="replay-overlay-toggle-wrap" style="display:none;">
-            <div style="display:flex;flex-direction:column;gap:0.5rem;padding:0.85rem 1rem;background:var(--cb);border:1px solid var(--cbord);border-radius:14px;">
-              <div style="font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-align:center;">Overlay</div>
-              <!-- 3-state segmented control: Off / Pose / Face -->
-              <div id="overlay-seg" style="display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:3px;gap:2px;">
-                <button onclick="setOverlayMode('off')" id="overlay-seg-off" style="flex:1;font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;padding:0.35rem 0.4rem;border:none;border-radius:7px;cursor:pointer;transition:all 0.2s;background:rgba(255,255,255,0.1);color:var(--text);">Off</button>
-                <button onclick="setOverlayMode('pose')" id="overlay-seg-pose" style="flex:1;font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;padding:0.35rem 0.4rem;border:none;border-radius:7px;cursor:pointer;transition:all 0.2s;background:transparent;color:var(--muted);">🦴 Pose</button>
-                <button onclick="setOverlayMode('face')" id="overlay-seg-face" style="flex:1;font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;padding:0.35rem 0.4rem;border:none;border-radius:7px;cursor:pointer;transition:all 0.2s;background:transparent;color:var(--muted);">😐 Face</button>
+            <div style="display:flex;flex-direction:column;gap:0.6rem;padding:1rem 1.25rem;background:var(--cb);border:1px solid var(--cbord);border-radius:14px;min-width:160px;">
+              <div style="font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:0.15rem;">Overlay</div>
+              <!-- Pose toggle -->
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;">
+                <span style="font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--text);">🦴 Pose</span>
+                <label id="replay-pose-toggle-label" style="position:relative;display:inline-block;width:38px;height:22px;cursor:pointer;">
+                  <input type="checkbox" id="replay-pose-toggle-cb" onchange="handleOverlayToggle('pose',this.checked)" style="opacity:0;width:0;height:0;">
+                  <span id="replay-pose-toggle-track" style="position:absolute;inset:0;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:11px;transition:all 0.25s;"></span>
+                  <span id="replay-pose-toggle-thumb" style="position:absolute;top:3px;left:3px;width:16px;height:16px;background:var(--muted);border-radius:50%;transition:all 0.25s;"></span>
+                </label>
+              </div>
+              <!-- Face toggle -->
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;">
+                <span style="font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--text);">😐 Face</span>
+                <label id="replay-face-toggle-label" style="position:relative;display:inline-block;width:38px;height:22px;cursor:pointer;">
+                  <input type="checkbox" id="replay-face-toggle-cb" onchange="handleOverlayToggle('face',this.checked)" style="opacity:0;width:0;height:0;">
+                  <span id="replay-face-toggle-track" style="position:absolute;inset:0;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:11px;transition:all 0.25s;"></span>
+                  <span id="replay-face-toggle-thumb" style="position:absolute;top:3px;left:3px;width:16px;height:16px;background:var(--muted);border-radius:50%;transition:all 0.25s;"></span>
+                </label>
               </div>
             </div>
           </div>
@@ -2139,7 +2271,6 @@ function startPreviewLoop(){
           bodyPassHistory.push(pass?1:0);
           if(bodyPassHistory.length>BODY_WINDOW)bodyPassHistory.shift();
           sqScores.body=bodyPassHistory.reduce((a,b)=>a+b,0)/bodyPassHistory.length;
-          updateSqUI();
         }catch(e){}
         finally{poseBusy=false;}
         lastPoseT=t;
@@ -2202,7 +2333,8 @@ function measureLightingAndFraming(vid){
     const avgBrightness=totalBrightness/n; // 0-255
     const lightingScore=avgBrightness>110?1:avgBrightness>80?(avgBrightness-80)/30*0.25+0.75:avgBrightness/80*0.55;
 
-    // Brightness-based framing heuristic (fallback)
+    // Face framing: look for a bright region in the upper-center third (face area)
+    // Sample a 40x40 box centered at (W/2, H/3) and compare to overall brightness
     const fx=Math.floor(W/2-20),fy=Math.floor(H/3-20);
     let faceB=0,faceN=0;
     for(let y=fy;y<fy+40&&y<H;y++){
@@ -2212,20 +2344,17 @@ function measureLightingAndFraming(vid){
       }
     }
     const faceBrightness=faceB/faceN;
+    // Face framing is good if the face region is reasonably bright and not drastically
+    // different from overall (avoiding mostly-blank/dark frames)
     const faceRatio=faceBrightness/(avgBrightness||1);
+    // Good: face region 0.7–1.5× overall brightness, and face area itself is >80
     const faceCentered=faceBrightness>80&&faceRatio>0.65&&faceRatio<1.8;
     const brightnessScore=faceCentered?(Math.min(faceBrightness,180)/180*0.3+0.7):Math.max(0.3,(faceBrightness/180)*0.65);
-
-    // Landmark-based framing: if face landmarker has a recent result, blend it in.
-    // A detected face with good landmark confidence scores 1.0; no detection scores 0.4.
-    // We weight landmarks 60% and brightness 40% when detection is available.
     let faceScore=brightnessScore;
     if(faceReady&&_lastFaceLandmarks!=null){
-      const landmarkDetected=_lastFaceLandmarks.length>0;
-      const landmarkScore=landmarkDetected?1.0:0.4;
-      faceScore=landmarkScore*0.6+brightnessScore*0.4;
+      const det=_lastFaceLandmarks.length>0;
+      faceScore=det?1.0*0.6+brightnessScore*0.4:0.4*0.6+brightnessScore*0.4;
     }
-
     return{lighting:Math.min(1,lightingScore),face:Math.min(1,faceScore)};
   }catch(e){return{lighting:sqScores.lighting,face:sqScores.face};}
 }
@@ -2347,11 +2476,53 @@ function startSpeechRecognition(){
   if(passageEl)passageEl.textContent=SPEECH_PASSAGE;
   if(passageOverlay)passageOverlay.style.display='flex';
 
-  let _lastWordCount=0; // track how many final words we've shown
+  // Show speech strip + render passage as word spans
+  const strip=document.getElementById('speech-strip');
+  if(strip)strip.classList.add('active');
+  const passageWordsEl=document.getElementById('ss-passage-words');
+  if(passageWordsEl){
+    passageWordsEl.innerHTML=SPEECH_PASSAGE.trim().split(/\s+/).map((w,i)=>
+      '<span class="ss-word" id="ssw-'+i+'">'+w+' </span>'
+    ).join('');
+  }
+
+  function _highlightSpokenWords(){
+    const pw=SPEECH_PASSAGE.trim().split(/\s+/);
+    const sc=_spokenWords.map(w=>w.toLowerCase().replace(/[^a-z]/g,''));
+    let mi=0;
+    for(let i=0;i<pw.length;i++){
+      const p=pw[i].toLowerCase().replace(/[^a-z]/g,'');
+      const el=document.getElementById('ssw-'+i);
+      if(!el)continue;
+      if(mi<sc.length&&sc[mi]===p){el.className='ss-word spoken';mi++;}
+      else if(mi<sc.length){el.className='ss-word current';break;}
+      else{el.className='ss-word';}
+    }
+  }
+
+  function _updateSsWpm(){
+    const elapsed=(performance.now()-_speakStartTime)/1000/60;
+    const liveWpm=elapsed>0&&_spokenWords.length>0?Math.round(_spokenWords.length/elapsed):0;
+    const el=document.getElementById('ss-wpm-live');
+    if(el)el.textContent=liveWpm>0?liveWpm:'—';
+  }
+
+  function _renderSsBuckets(){
+    const el=document.getElementById('ss-buckets');
+    if(!el||!_wpmBuckets.length)return;
+    const max=Math.max(..._wpmBuckets,1);
+    const sorted=[..._wpmBuckets].sort((a,b)=>a-b);
+    const median=sorted[Math.floor(sorted.length/2)];
+    el.innerHTML=_wpmBuckets.map(b=>{
+      const h=Math.max(3,Math.round((b/max)*26));
+      const isSpike=median>0&&Math.abs(b-median)/median>0.4;
+      return '<div class="ss-bucket-bar'+(isSpike?' spike':'')+'" style="height:'+h+'px;"></div>';
+    }).join('');
+  }
 
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){
-    _bucketTimer=setInterval(_flushBucket,3000);
+    _bucketTimer=setInterval(()=>{_flushBucket();_updateSsWpm();_renderSsBuckets();},1000);
     return;
   }
   _speechRecognition=new SR();
@@ -2368,12 +2539,14 @@ function startSpeechRecognition(){
     if(finalWords.length){
       _spokenWords.push(...finalWords);
       _bucketWordCount+=finalWords.length;
+      _highlightSpokenWords();
+      _updateSsWpm();
     }
   };
   _speechRecognition.onerror=()=>{};
   try{_speechRecognition.start();}catch(e){}
 
-  _bucketTimer=setInterval(_flushBucket,3000);
+  _bucketTimer=setInterval(()=>{_flushBucket();_renderSsBuckets();_updateSsWpm();},1000);
 }
 
 function _flushBucket(){
@@ -2391,9 +2564,11 @@ function stopSpeechRecognition(){
 
   if(_speechRecognition){try{_speechRecognition.stop();}catch(e){}_speechRecognition=null;}
 
-  // Hide passage overlay
+  // Hide passage overlay and speech strip
   const passageOverlay=document.getElementById('speech-passage-overlay');
   if(passageOverlay)passageOverlay.style.display='none';
+  const strip=document.getElementById('speech-strip');
+  if(strip)strip.classList.remove('active');
 
   const elapsed=(performance.now()-_speakStartTime)/1000/60;
   const overallWpm=elapsed>0&&_spokenWords.length>0?Math.round(_spokenWords.length/elapsed):null;
@@ -2663,35 +2838,9 @@ function computeArmDrift(lms){
   return {lx, ly, rx, ry, conf};
 }
 
-// Task intro config for each task
-const TASK_INTROS={
-  smile:{icon:'😐',title:'Face Symmetry Test',instruction:'Center your face · Keep a relaxed, neutral expression'},
-  arms: {icon:'🙌',title:'Arm Drift Test',instruction:'Raise BOTH arms to shoulder height and hold steady'},
-  speak:{icon:'🗣️',title:'Speech Test',instruction:'Read the passage on screen out loud at your natural pace'}
-};
-
-function runCountdown(taskId){
+function runCountdown(){
   const overlay=document.getElementById('countdown-overlay');
   const numEl=document.getElementById('countdown-num');
-  const introEl=document.getElementById('countdown-task-intro');
-  const iconEl=document.getElementById('cti-icon');
-  const titleEl=document.getElementById('cti-title');
-  const instrEl=document.getElementById('cti-instruction');
-
-  // Show intro panel if taskId provided
-  if(taskId&&TASK_INTROS[taskId]){
-    const cfg=TASK_INTROS[taskId];
-    iconEl.textContent=cfg.icon;
-    titleEl.textContent=cfg.title;
-    instrEl.textContent=cfg.instruction;
-    introEl.classList.add('show');
-    // re-trigger icon animation
-    iconEl.style.animation='none';void iconEl.offsetWidth;
-    iconEl.style.animation='cntPop 0.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards';
-  } else {
-    introEl.classList.remove('show');
-  }
-
   overlay.classList.add('visible');
   return new Promise(resolve=>{
     let count=3;
@@ -2703,7 +2852,6 @@ function runCountdown(taskId){
       count--;
       if(count<=0){
         clearInterval(tick);
-        introEl.classList.remove('show');
         overlay.classList.remove('visible');
         resolve();
       } else {
@@ -2722,8 +2870,8 @@ async function startRec(){
   btn.textContent='Get ready…';
   await initCam();
 
-  // 3-2-1 countdown on the camera with first task intro
-  await runCountdown('smile');
+  // 3-2-1 countdown on the camera
+  await runCountdown();
 
   btn.textContent='Recording…';
   document.getElementById('rec-ind').classList.add('on');
@@ -2783,19 +2931,24 @@ function runTask(){
       if(tIdx>=TASKS.length){
         setTimeout(endRec,300);
       } else {
-        // Show task intro + 3-second countdown before next task
+        // Auto-advance: show next task name for 2 seconds then start immediately
         const nextTask=TASKS[tIdx];
-        document.getElementById('prompt-banner').innerHTML='⏸ &nbsp;GET READY FOR NEXT TEST';
+        const names={smile:'Neutral Face',arms:'Raise Both Arms',speak:'Read Passage'};
+        const icons={smile:'😐',arms:'🙌',speak:'🗣️'};
+        document.getElementById('prompt-banner').innerHTML=`⏭ &nbsp;NEXT: ${icons[nextTask.id]} ${names[nextTask.id].toUpperCase()}`;
         document.getElementById('prompt-banner').className='prompt-banner pause';
-        document.getElementById('timer-lbl').textContent='PAUSED';
-        document.getElementById('timer-num').textContent='—';
+        document.getElementById('timer-lbl').textContent='GET READY';
+        document.getElementById('timer-num').textContent='2';
+        // Disable the go button during auto-transition so it can't be double-pressed
         const goBtn=document.getElementById('btn-go');
         goBtn.disabled=true;
-        // Run the countdown with the next task's intro
-        runCountdown(nextTask.id).then(()=>{
+        setTimeout(()=>{
+          document.getElementById('timer-num').textContent='1';
+        },1000);
+        setTimeout(()=>{
           goBtn.disabled=false;
           runTask();
-        });
+        },2000);
       }
     }
   },1000);
@@ -2837,6 +2990,10 @@ function resetRec(skipPreview){
   _faceFrames=[];_armFrames=[];_prevArmFrame=null;resetArmMedianBufs();
   _collectingFace=false;_collectingArms=false;
   document.getElementById('rec-ind').classList.remove('on');
+  const _strip=document.getElementById('speech-strip');if(_strip)_strip.classList.remove('active');
+  const _ssWpm=document.getElementById('ss-wpm-live');if(_ssWpm)_ssWpm.textContent='—';
+  const _ssBk=document.getElementById('ss-buckets');if(_ssBk)_ssBk.innerHTML='';
+  const _ssPw=document.getElementById('ss-passage-words');if(_ssPw)_ssPw.innerHTML='';
   document.getElementById('prompt-banner').innerHTML='😐 &nbsp;NEUTRAL FACE — keep still';
   document.getElementById('prompt-banner').className='prompt-banner smile';
   document.getElementById('timer-num').textContent='—';
@@ -2981,8 +3138,29 @@ function buildResults(){
   document.getElementById('face-val').innerHTML=faDisplay+'<span class="mc-unit">/ 0.08 threshold</span>';
   document.getElementById('arms-val').innerHTML=ad+'<span class="mc-unit">% over 5s</span>';
   document.getElementById('speech-val').innerHTML=pr+'<span class="mc-unit">silence ratio</span>';
-  document.getElementById('transcript-txt').textContent='"'+SPEECH_PASSAGE.slice(0,55)+'…"';
-  document.getElementById('wpm-txt').textContent=wpm+' wpm'+(_measuredWpm?(_wpmSpike?' ⚠ spike detected':'  ✦ measured'):'');
+  // Speech stats panel
+  const _wpmEl=document.getElementById('wpm-txt');
+  if(_wpmEl){_wpmEl.textContent=wpm?wpm+' wpm':'n/a';_wpmEl.className='speech-stat-val '+(wpm>=80&&wpm<=180?'good':wpm>0?'warn':'bad');}
+  const _pauseEl=document.getElementById('pause-txt');
+  if(_pauseEl){_pauseEl.textContent=(pr*100).toFixed(0)+'%';_pauseEl.className='speech-stat-val '+(pr<0.25?'good':pr<0.35?'warn':'bad');}
+  const _spikeEl=document.getElementById('spike-txt');
+  if(_spikeEl){_spikeEl.textContent=_wpmSpike?'⚠ Spike detected':'✓ Steady';_spikeEl.className='speech-stat-val '+(_wpmSpike?'warn':'good');}
+  const _wordsEl=document.getElementById('words-txt');
+  if(_wordsEl){_wordsEl.textContent=_spokenWords.length+' / '+SPEECH_WORD_COUNT;_wordsEl.className='speech-stat-val neutral';}
+  const _covEl=document.getElementById('coverage-txt');
+  const _cov=Math.min(100,Math.round(_spokenWords.length/SPEECH_WORD_COUNT*100));
+  if(_covEl){_covEl.textContent=_cov+'%';_covEl.className='speech-stat-val '+(_cov>=80?'good':_cov>=50?'warn':'bad');}
+  const _resBuckets=document.getElementById('ss-res-buckets');
+  if(_resBuckets&&_wpmBuckets.length){
+    const _bMax=Math.max(..._wpmBuckets,1);
+    const _bSorted=[..._wpmBuckets].sort((a,b)=>a-b);
+    const _bMed=_bSorted[Math.floor(_bSorted.length/2)];
+    _resBuckets.innerHTML=_wpmBuckets.map(b=>{
+      const h=Math.max(3,Math.round((b/_bMax)*28));
+      const isSpike=_bMed>0&&Math.abs(b-_bMed)/_bMed>0.4;
+      return '<div class="ss-res-bucket-bar'+(isSpike?' spike':'')+'" style="height:'+h+'px;" title="'+b+' wpm"></div>';
+    }).join('');
+  } else if(_resBuckets){_resBuckets.innerHTML='';}
 
   // ── BASELINE MODE: save values, show success UI ──
   if(isBaselineMode){
@@ -3926,54 +4104,87 @@ function initVideoControls(videoEl){
 }
 
 function updateOverlayBtnStyles(){
+  const poseCb=document.getElementById('replay-pose-toggle-cb');
+  const faceCb=document.getElementById('replay-face-toggle-cb');
+  const poseTrack=document.getElementById('replay-pose-toggle-track');
+  const poseThumb=document.getElementById('replay-pose-toggle-thumb');
+  const faceTrack=document.getElementById('replay-face-toggle-track');
+  const faceThumb=document.getElementById('replay-face-toggle-thumb');
   const label=document.getElementById('replay-overlay-label');
-  const btnOff=document.getElementById('overlay-seg-off');
-  const btnPose=document.getElementById('overlay-seg-pose');
-  const btnFace=document.getElementById('overlay-seg-face');
-  const mode=_replayOverlayMode;
 
-  const inactiveStyle={background:'transparent',color:'var(--muted)',boxShadow:'none'};
-  const offActiveStyle={background:'rgba(255,255,255,0.1)',color:'var(--text)',boxShadow:'none'};
+  const poseOn=_replayPoseOverlayActive;
+  const faceOn=_replayFaceOverlayActive;
 
-  if(btnOff){Object.assign(btnOff.style,mode==='off'?offActiveStyle:inactiveStyle);}
-  if(btnPose){Object.assign(btnPose.style,mode==='pose'?{background:'rgba(168,85,247,0.7)',color:'#fff',boxShadow:'0 0 10px rgba(168,85,247,0.4)'}:inactiveStyle);}
-  if(btnFace){Object.assign(btnFace.style,mode==='face'?{background:'rgba(0,229,200,0.5)',color:'#fff',boxShadow:'0 0 10px rgba(0,229,200,0.3)'}:inactiveStyle);}
+  if(poseCb)poseCb.checked=poseOn;
+  if(faceCb)faceCb.checked=faceOn;
 
-  if(label){
-    if(mode==='pose'){label.textContent='\ud83e\uddb4 Pose Overlay';label.style.display='block';}
-    else if(mode==='face'){label.textContent='\ud83d\ude10 Face Overlay';label.style.display='block';}
-    else{label.style.display='none';}
+  if(poseTrack){
+    poseTrack.style.background=poseOn?'rgba(168,85,247,0.35)':'rgba(255,255,255,0.08)';
+    poseTrack.style.borderColor=poseOn?'rgba(168,85,247,0.6)':'rgba(255,255,255,0.12)';
   }
+  if(poseThumb){
+    poseThumb.style.left=poseOn?'19px':'3px';
+    poseThumb.style.background=poseOn?'var(--violet)':'var(--muted)';
+    if(poseOn)poseThumb.style.boxShadow='0 0 8px rgba(168,85,247,0.6)';
+    else poseThumb.style.boxShadow='none';
+  }
+  if(faceTrack){
+    faceTrack.style.background=faceOn?'rgba(0,229,200,0.35)':'rgba(255,255,255,0.08)';
+    faceTrack.style.borderColor=faceOn?'rgba(0,229,200,0.6)':'rgba(255,255,255,0.12)';
+  }
+  if(faceThumb){
+    faceThumb.style.left=faceOn?'19px':'3px';
+    faceThumb.style.background=faceOn?'var(--teal)':'var(--muted)';
+    if(faceOn)faceThumb.style.boxShadow='0 0 8px rgba(0,229,200,0.6)';
+    else faceThumb.style.boxShadow='none';
+  }
+
+  if(poseOn&&faceOn){label.textContent='🦴😐 Both Overlays';label.style.display='block';}
+  else if(poseOn){label.textContent='🦴 Pose Overlay';label.style.display='block';}
+  else if(faceOn){label.textContent='😐 Face Overlay';label.style.display='block';}
+  else{label.style.display='none';}
 }
 
-async function setOverlayMode(mode){
-  if(_replayOverlayMode!=='off'){
-    _replayPoseOverlayActive=false;
-    _replayFaceOverlayActive=false;
-    clearReplayCanvases();
-    stopReplayOverlayLoop();
-  }
+async function handleOverlayToggle(mode, checked){
   if(mode==='pose'){
-    await initPose();
-    if(!poseReady||!poseLandmarker){_replayOverlayMode='off';updateOverlayBtnStyles();return;}
-    _replayPoseOverlayActive=true;
-    _replayFaceOverlayActive=false;
-    _replayOverlayMode='pose';
-    startReplayOverlayLoop();
+    if(checked){
+      // Turn on pose
+      const btn=document.getElementById('replay-pose-toggle-label');
+      await initPose();
+      if(!poseReady||!poseLandmarker){
+        document.getElementById('replay-pose-toggle-cb').checked=false;
+        return;
+      }
+      _replayPoseOverlayActive=true;
+      _replayOverlayMode=_replayFaceOverlayActive?'both':'pose';
+      startReplayOverlayLoop();
+    } else {
+      _replayPoseOverlayActive=false;
+      clearReplayCanvases();
+      if(_replayFaceOverlayActive){_replayOverlayMode='face';}
+      else{_replayOverlayMode='off';stopReplayOverlayLoop();}
+    }
   } else if(mode==='face'){
-    await initFace();
-    if(!faceReady||!faceLandmarker){_replayOverlayMode='off';updateOverlayBtnStyles();return;}
-    _replayFaceOverlayActive=true;
-    _replayPoseOverlayActive=false;
-    _replayOverlayMode='face';
-    startReplayOverlayLoop();
-  } else {
-    _replayOverlayMode='off';
+    if(checked){
+      await initFace();
+      if(!faceReady||!faceLandmarker){
+        document.getElementById('replay-face-toggle-cb').checked=false;
+        return;
+      }
+      _replayFaceOverlayActive=true;
+      _replayOverlayMode=_replayPoseOverlayActive?'both':'face';
+      startReplayOverlayLoop();
+    } else {
+      _replayFaceOverlayActive=false;
+      clearReplayCanvases();
+      if(_replayPoseOverlayActive){_replayOverlayMode='pose';}
+      else{_replayOverlayMode='off';stopReplayOverlayLoop();}
+    }
   }
   updateOverlayBtnStyles();
 }
 
-async function handleOverlayToggle(mode,checked){await setOverlayMode(checked?mode:'off');}
+// setReplayOverlay is now handled by handleOverlayToggle above
 
 function clearReplayCanvases(){
   ['replay-pose-canvas','replay-face-canvas'].forEach(id=>{
@@ -4007,11 +4218,9 @@ function startReplayOverlayLoop(){
     if(_replayOverlayMode==='off')return;
     if(videoEl.readyState<2)return;
     if(videoEl.ended)return;
-    // When paused, still run once per seek/mode-switch so landmarks appear on a still frame
     const isPaused=videoEl.paused;
     if(!isPaused&&videoEl.currentTime===lastVideoTime)return;
     if(t-lastT<66&&!isPaused)return;
-    // When paused, only re-run detection if the seek position changed
     if(isPaused&&videoEl.currentTime===lastPausedVideoTime)return;
     if(isPaused)lastPausedVideoTime=videoEl.currentTime;
 
@@ -4284,6 +4493,326 @@ updateHomeScreen();
 renderHistory();
 updateConfidenceUI();
 loadPersistedVideos(); // restore videos from IndexedDB on page load
+</script>
+
+<!-- SECRET SPEECH LAB — navigate to #speech-lab -->
+<div id="speech-lab-page" style="display:none;position:fixed;inset:0;z-index:2000;background:var(--bg);overflow-y:auto;">
+<style>
+#speech-lab-page .sl-wrap{max-width:560px;margin:0 auto;padding:5rem 2rem 4rem;display:flex;flex-direction:column;align-items:center;gap:2rem;}
+#speech-lab-page .sl-eyebrow{font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--violet);text-transform:uppercase;}
+#speech-lab-page .sl-title{font-family:'DM Serif Display',serif;font-size:2.6rem;letter-spacing:-0.02em;text-align:center;line-height:1.15;}
+#speech-lab-page .sl-title em{font-style:italic;color:var(--teal);}
+#speech-lab-page .sl-passage-box{width:100%;background:var(--surface);border:1px solid var(--cbord);border-radius:18px;padding:2rem 2.25rem;position:relative;overflow:hidden;}
+#speech-lab-page .sl-passage-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--teal),transparent);}
+#speech-lab-page .sl-passage-label{font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+#speech-lab-page .sl-passage-text{font-size:1.1rem;line-height:1.9;color:var(--text);}
+#speech-lab-page .sl-word{transition:color 0.15s;}
+#speech-lab-page .sl-word.spoken{color:var(--teal);font-weight:500;}
+#speech-lab-page .sl-word.current{color:#fff;font-weight:500;}
+#speech-lab-page .sl-metrics{width:100%;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+#speech-lab-page .sl-metric{background:var(--cb);border:1px solid var(--cbord);border-radius:14px;padding:1.25rem 1rem;text-align:center;}
+#speech-lab-page .sl-metric-val{font-family:'DM Serif Display',serif;font-size:2rem;letter-spacing:-0.02em;line-height:1;}
+#speech-lab-page .sl-metric-lbl{font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:0.35rem;}
+#speech-lab-page .sl-timer-track{fill:none;stroke:rgba(255,255,255,0.06);stroke-width:4;}
+#speech-lab-page .sl-timer-fill{fill:none;stroke:var(--teal);stroke-width:4;stroke-linecap:round;stroke-dasharray:251.3;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear,stroke 0.4s;}
+#speech-lab-page .sl-btn-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+#speech-lab-page .sl-start{background:var(--teal);color:var(--bg);border:none;padding:0.85rem 2.5rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.95rem;cursor:pointer;transition:all 0.3s;box-shadow:0 0 30px rgba(0,229,200,0.25);}
+#speech-lab-page .sl-start:hover{box-shadow:0 0 50px rgba(0,229,200,0.45);transform:translateY(-2px);}
+#speech-lab-page .sl-start:disabled{opacity:0.45;cursor:not-allowed;transform:none;box-shadow:none;}
+#speech-lab-page .sl-reset{background:transparent;color:var(--muted);border:1px solid var(--cbord);padding:0.85rem 2rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.9rem;cursor:pointer;transition:all 0.3s;}
+#speech-lab-page .sl-reset:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
+#speech-lab-page .sl-result-bar{width:100%;background:var(--cb);border:1px solid var(--cbord);border-radius:14px;padding:1.5rem 1.75rem;display:none;flex-direction:column;gap:0.75rem;}
+#speech-lab-page .sl-result-bar.show{display:flex;}
+#speech-lab-page .sl-result-row{display:flex;justify-content:space-between;align-items:center;}
+#speech-lab-page .sl-result-lbl{color:var(--muted);font-size:0.9rem;}
+#speech-lab-page .sl-result-val{font-family:'Space Mono',monospace;font-weight:600;font-size:0.9rem;}
+#speech-lab-page .sl-result-val.good{color:var(--teal);}
+#speech-lab-page .sl-result-val.warn{color:var(--yellow);}
+#speech-lab-page .sl-result-val.bad{color:var(--red);}
+#speech-lab-page .sl-back{position:fixed;top:1.5rem;left:1.5rem;background:transparent;border:1px solid var(--cbord);color:var(--muted);padding:0.45rem 1.1rem;border-radius:100px;font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;cursor:pointer;transition:all 0.3s;z-index:10;}
+#speech-lab-page .sl-back:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
+#speech-lab-page .sl-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block;margin-right:0.4rem;transition:background 0.3s;}
+#speech-lab-page .sl-dot.recording{background:var(--red);animation:blink 1s ease-in-out infinite;}
+#speech-lab-page .sl-dot.done{background:var(--teal);}
+#speech-lab-page .sl-transcript{width:100%;background:rgba(0,229,200,0.03);border:1px solid rgba(0,229,200,0.1);border-radius:12px;padding:1rem 1.25rem;font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--muted);line-height:1.8;min-height:3.5rem;display:none;}
+#speech-lab-page .sl-transcript.show{display:block;}
+#speech-lab-page .sl-teal{color:var(--teal);}
+#speech-lab-page .sl-buckets{width:100%;display:flex;gap:4px;align-items:flex-end;height:44px;}
+#speech-lab-page .sl-bucket-bar{flex:1;background:rgba(168,85,247,0.45);border-radius:3px 3px 0 0;min-height:4px;transition:height 0.3s;}
+#speech-lab-page .sl-bucket-bar.spike{background:rgba(239,68,68,0.75);}
+</style>
+
+<button class="sl-back" onclick="closeSpeechLab()">&#8592; Back</button>
+
+<div class="sl-wrap">
+  <div class="sl-eyebrow">&#x1F52C; Dev Tool &nbsp;&middot;&nbsp; Speech Lab</div>
+  <h1 class="sl-title">Speech <em>isolation</em><br>test</h1>
+
+  <div class="sl-passage-box">
+    <div class="sl-passage-label">Read aloud at your natural pace</div>
+    <div class="sl-passage-text" id="sl-passage-text"></div>
+  </div>
+
+  <div class="sl-metrics">
+    <div class="sl-metric">
+      <svg width="56" height="56" viewBox="0 0 84 84" style="transform:rotate(-90deg);display:block;margin:0 auto 0.3rem;">
+        <circle class="sl-timer-track" cx="42" cy="42" r="40"/>
+        <circle class="sl-timer-fill" id="sl-timer-fill" cx="42" cy="42" r="40"/>
+      </svg>
+      <div class="sl-metric-val" id="sl-timer-val" style="font-size:1.5rem;">20</div>
+      <div class="sl-metric-lbl">Seconds</div>
+    </div>
+    <div class="sl-metric">
+      <div class="sl-metric-val" id="sl-wpm-val">&#x2014;</div>
+      <div class="sl-metric-lbl">Live WPM</div>
+    </div>
+    <div class="sl-metric">
+      <div class="sl-metric-val" id="sl-words-val">0</div>
+      <div class="sl-metric-lbl">Words</div>
+    </div>
+  </div>
+
+  <div style="width:100%;">
+    <div style="font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">WPM rhythm (1s buckets)</div>
+    <div class="sl-buckets" id="sl-buckets"><div style="font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted);align-self:center;">Start speaking to see rhythm&hellip;</div></div>
+  </div>
+
+  <div class="sl-btn-row">
+    <button class="sl-start" id="sl-start-btn" onclick="slStart()">&#9654; &nbsp;Start</button>
+    <button class="sl-reset" id="sl-reset-btn" onclick="slReset()" style="display:none;">&#8635; Reset</button>
+  </div>
+  <div style="font-family:'Space Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:var(--muted);text-align:center;">
+    <span class="sl-dot" id="sl-dot"></span><span id="sl-status-txt">Ready</span>
+  </div>
+
+  <div class="sl-transcript" id="sl-transcript"><span class="sl-teal">Heard: </span><span id="sl-transcript-inner">&hellip;</span></div>
+
+  <div class="sl-result-bar" id="sl-result-bar">
+    <div style="font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.25rem;">Results</div>
+    <div class="sl-result-row"><span class="sl-result-lbl">Overall WPM</span><span class="sl-result-val" id="sl-res-wpm">&#x2014;</span></div>
+    <div class="sl-result-row"><span class="sl-result-lbl">Pause Ratio</span><span class="sl-result-val" id="sl-res-pause">&#x2014;</span></div>
+    <div class="sl-result-row"><span class="sl-result-lbl">Rhythm Spike</span><span class="sl-result-val" id="sl-res-spike">&#x2014;</span></div>
+    <div class="sl-result-row"><span class="sl-result-lbl">Words Detected</span><span class="sl-result-val" id="sl-res-words">&#x2014;</span></div>
+    <div class="sl-result-row"><span class="sl-result-lbl">Passage Coverage</span><span class="sl-result-val" id="sl-res-coverage">&#x2014;</span></div>
+  </div>
+</div>
+</div>
+
+<script>
+const SL_DUR = 20;
+let _slTimeLeft = SL_DUR;
+let _slRunning = false;
+let _slTimer = null;
+let _slWpmInterval = null;
+let _slSRRef = null;
+let _slBuckets = [];
+
+function openSpeechLab(){
+  document.getElementById('speech-lab-page').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  slReset();
+}
+
+function closeSpeechLab(){
+  if(_slRunning) slStop();
+  document.getElementById('speech-lab-page').style.display = 'none';
+  document.body.style.overflow = '';
+  window.location.hash = '';
+}
+
+function slRenderPassage(){
+  const el = document.getElementById('sl-passage-text');
+  el.innerHTML = SPEECH_PASSAGE.trim().split(/\s+/).map((w,i) =>
+    '<span class="sl-word" id="sl-w-'+i+'">'+w+' </span>'
+  ).join('');
+}
+
+function slHighlightWords(spoken){
+  const pw = SPEECH_PASSAGE.trim().split(/\s+/);
+  const sc = spoken.map(w=>w.toLowerCase().replace(/[^a-z]/g,''));
+  let mi=0;
+  for(let i=0;i<pw.length;i++){
+    const p=pw[i].toLowerCase().replace(/[^a-z]/g,'');
+    const el=document.getElementById('sl-w-'+i);
+    if(!el)continue;
+    if(mi<sc.length&&sc[mi]===p){el.className='sl-word spoken';mi++;}
+    else if(mi<sc.length){el.className='sl-word current';break;}
+    else{el.className='sl-word';}
+  }
+}
+
+function slUpdateRing(t){
+  const fill=document.getElementById('sl-timer-fill');
+  const circ=251.3;
+  fill.style.strokeDashoffset=circ*(t/SL_DUR);
+  fill.style.stroke=t>8?'var(--teal)':t>4?'var(--yellow)':'var(--red)';
+}
+
+function slRenderBuckets(){
+  const el=document.getElementById('sl-buckets');
+  if(!_slBuckets.length){
+    el.innerHTML='<div style="font-family:Space Mono,monospace;font-size:0.65rem;color:var(--muted);align-self:center;">Start speaking to see rhythm\u2026</div>';
+    return;
+  }
+  const max=Math.max(..._slBuckets,1);
+  const sorted=[..._slBuckets].sort((a,b)=>a-b);
+  const median=sorted[Math.floor(sorted.length/2)];
+  el.innerHTML=_slBuckets.map(b=>{
+    const h=Math.max(8,Math.round((b/max)*38));
+    const isSpike=median>0&&Math.abs(b-median)/median>0.4;
+    return '<div class="sl-bucket-bar'+(isSpike?' spike':'')+'" style="height:'+h+'px;" title="'+b+' wpm"></div>';
+  }).join('');
+}
+
+async function slStart(){
+  if(_slRunning)return;
+  _slRunning=true;
+  _slTimeLeft=SL_DUR;
+  _slBuckets=[];
+  _spokenWords=[];
+  _speakStartTime=performance.now();
+  _wpmBuckets=[];
+  _bucketStartTime=performance.now();
+  _bucketWordCount=0;
+  _wpmSpike=false;
+
+  slRenderPassage();
+  slRenderBuckets();
+  slUpdateRing(SL_DUR);
+
+  const btn=document.getElementById('sl-start-btn');
+  btn.disabled=true;
+  btn.textContent='\uD83C\uDF99 Recording\u2026';
+  document.getElementById('sl-reset-btn').style.display='inline-block';
+  document.getElementById('sl-dot').className='sl-dot recording';
+  document.getElementById('sl-status-txt').textContent='Listening\u2026';
+  document.getElementById('sl-transcript').className='sl-transcript show';
+  document.getElementById('sl-result-bar').className='sl-result-bar';
+
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(SR){
+    _slSRRef=new SR();
+    _slSRRef.continuous=true;
+    _slSRRef.interimResults=true;
+    _slSRRef.lang='en-US';
+    _slSRRef.onresult=(e)=>{
+      let interim='';
+      for(let i=e.resultIndex;i<e.results.length;i++){
+        if(e.results[i].isFinal){
+          const words=e.results[i][0].transcript.trim().split(/\s+/).filter(Boolean);
+          _spokenWords.push(...words);
+          _bucketWordCount+=words.length;
+        } else { interim+=e.results[i][0].transcript; }
+      }
+      document.getElementById('sl-transcript-inner').textContent=[..._spokenWords,...(interim?[interim]:[])].join(' ')||'\u2026';
+      document.getElementById('sl-words-val').textContent=_spokenWords.length;
+      // Use both finalized words + interim words for smooth per-word highlighting
+      const interimWords=interim.trim().split(/\s+/).filter(Boolean);
+      slHighlightWords([..._spokenWords,...interimWords]);
+      if(_spokenWords.length>=SPEECH_WORD_COUNT&&_slRunning)_slTimeLeft=0;
+    };
+    _slSRRef.onerror=()=>{};
+    try{_slSRRef.start();}catch(e){}
+  }
+
+  if(_bucketTimer)clearInterval(_bucketTimer);
+  _bucketTimer=setInterval(()=>{_flushBucket();_slBuckets=[..._wpmBuckets];slRenderBuckets();},1000);
+
+  _slWpmInterval=setInterval(()=>{
+    const el=(performance.now()-_speakStartTime)/1000/60;
+    const wpm=el>0&&_spokenWords.length>0?Math.round(_spokenWords.length/el):0;
+    document.getElementById('sl-wpm-val').textContent=wpm>0?wpm:'\u2014';
+  },500);
+
+  document.getElementById('sl-timer-val').textContent=_slTimeLeft;
+  _slTimer=setInterval(()=>{
+    _slTimeLeft--;
+    document.getElementById('sl-timer-val').textContent=Math.max(0,_slTimeLeft);
+    slUpdateRing(Math.max(0,_slTimeLeft));
+    if(_slTimeLeft<=0){clearInterval(_slTimer);_slTimer=null;slFinish();}
+  },1000);
+}
+
+function slStop(){
+  if(_slTimer){clearInterval(_slTimer);_slTimer=null;}
+  if(_slWpmInterval){clearInterval(_slWpmInterval);_slWpmInterval=null;}
+  if(_bucketTimer){clearInterval(_bucketTimer);_bucketTimer=null;}
+  if(_slSRRef){try{_slSRRef.stop();}catch(e){}_slSRRef=null;}
+  _slRunning=false;
+}
+
+function slFinish(){
+  slStop();
+  _flushBucket();
+  _slBuckets=[..._wpmBuckets];
+  slRenderBuckets();
+
+  const btn=document.getElementById('sl-start-btn');
+  btn.textContent='\u25B6 \u00a0Run again';
+  btn.disabled=false;
+  btn.onclick=()=>{slReset();slStart();};
+  document.getElementById('sl-dot').className='sl-dot done';
+  document.getElementById('sl-status-txt').textContent='Done';
+
+  const elMin=(performance.now()-_speakStartTime)/1000/60;
+  const wpm=elMin>0&&_spokenWords.length>0?Math.round(_spokenWords.length/elMin):0;
+  const elSec=elMin*60;
+  const estSpeakSec=_spokenWords.length/((wpm||1)/60);
+  const pauseRatio=elSec>0?Math.max(0,1-estSpeakSec/elSec):0;
+
+  if(_wpmBuckets.length>=2){
+    const s=[..._wpmBuckets].sort((a,b)=>a-b);
+    const med=s[Math.floor(s.length/2)];
+    _wpmSpike=_wpmBuckets.some(b=>med>0&&Math.abs(b-med)/med>0.4);
+  }
+  const coverage=Math.min(100,Math.round(_spokenWords.length/SPEECH_WORD_COUNT*100));
+
+  const wpmEl=document.getElementById('sl-res-wpm');
+  wpmEl.textContent=wpm?wpm+' wpm':'n/a';
+  wpmEl.className='sl-result-val '+(wpm>=80&&wpm<=180?'good':wpm>0?'warn':'bad');
+
+  const pEl=document.getElementById('sl-res-pause');
+  pEl.textContent=(pauseRatio*100).toFixed(0)+'%';
+  pEl.className='sl-result-val '+(pauseRatio<0.35?'good':pauseRatio<0.5?'warn':'bad');
+
+  const sEl=document.getElementById('sl-res-spike');
+  sEl.textContent=_wpmSpike?'\u26A0 Spike detected':'\u2713 Steady';
+  sEl.className='sl-result-val '+(_wpmSpike?'warn':'good');
+
+  document.getElementById('sl-res-words').textContent=_spokenWords.length+' / '+SPEECH_WORD_COUNT;
+  const cEl=document.getElementById('sl-res-coverage');
+  cEl.textContent=coverage+'%';
+  cEl.className='sl-result-val '+(coverage>=80?'good':coverage>=50?'warn':'bad');
+
+  document.getElementById('sl-result-bar').className='sl-result-bar show';
+}
+
+function slReset(){
+  slStop();
+  _slTimeLeft=SL_DUR;
+  _slBuckets=[];
+  _spokenWords=[];
+  slRenderPassage();
+  slUpdateRing(SL_DUR);
+  slRenderBuckets();
+  document.getElementById('sl-timer-val').textContent=SL_DUR;
+  document.getElementById('sl-wpm-val').textContent='\u2014';
+  document.getElementById('sl-words-val').textContent='0';
+  document.getElementById('sl-transcript-inner').textContent='\u2026';
+  document.getElementById('sl-transcript').className='sl-transcript';
+  document.getElementById('sl-result-bar').className='sl-result-bar';
+  const btn=document.getElementById('sl-start-btn');
+  btn.disabled=false;btn.textContent='\u25B6 \u00a0Start';btn.onclick=slStart;
+  document.getElementById('sl-reset-btn').style.display='none';
+  document.getElementById('sl-dot').className='sl-dot';
+  document.getElementById('sl-status-txt').textContent='Ready';
+}
+
+window.addEventListener('hashchange',()=>{
+  if(window.location.hash==='#speech-lab')openSpeechLab();
+  else if(document.getElementById('speech-lab-page').style.display!=='none')closeSpeechLab();
+});
+if(window.location.hash==='#speech-lab')openSpeechLab();
 </script>
 </body>
 </html>
