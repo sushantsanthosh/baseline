@@ -12,6 +12,7 @@
   --green: #22c55e; --yellow: #f59e0b; --red: #ef4444;
   --text: #e8eaf0; --muted: #6b7280;
   --cb: rgba(255,255,255,0.03); --cbord: rgba(255,255,255,0.07);
+  --app-fz: 100%;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -717,6 +718,26 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
   border-radius:2px 2px 0 0;min-height:3px;
 }
 .ss-res-bucket-bar.spike{background:rgba(239,68,68,0.75);}
+
+/* ===== SETTINGS OVERLAY ===== */
+.st-row{display:flex;align-items:center;justify-content:space-between;padding:0.9rem 0;border-bottom:1px solid var(--cbord);}
+.st-row-info{flex:1;padding-right:1.25rem;}
+.st-row-lbl{font-size:0.9rem;font-weight:500;margin-bottom:0.15rem;}
+.st-row-sub{font-size:0.78rem;color:var(--muted);line-height:1.5;}
+.st-toggle{position:relative;display:inline-block;width:44px;height:24px;flex-shrink:0;}
+.st-toggle input{opacity:0;width:0;height:0;position:absolute;}
+.st-slider{position:absolute;cursor:pointer;inset:0;background:rgba(255,255,255,0.08);border:1px solid var(--cbord);border-radius:12px;transition:all 0.25s;}
+.st-slider::before{content:'';position:absolute;width:18px;height:18px;left:2px;top:2px;background:var(--muted);border-radius:50%;transition:all 0.25s;}
+.st-toggle input:checked + .st-slider{background:rgba(0,229,200,0.18);border-color:rgba(0,229,200,0.4);}
+.st-toggle input:checked + .st-slider::before{background:var(--teal);transform:translateX(20px);box-shadow:0 0 8px rgba(0,229,200,0.5);}
+.scheme-chip{display:inline-flex;align-items:center;gap:0.45rem;padding:0.4rem 0.85rem;border-radius:100px;border:1px solid var(--cbord);background:var(--cb);font-size:0.8rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;color:var(--text);}
+.scheme-chip:hover{border-color:rgba(255,255,255,0.2);}
+.scheme-chip.active{border-color:var(--teal);background:rgba(0,229,200,0.1);color:var(--teal);}
+.accent-dot{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all 0.2s;box-sizing:border-box;display:inline-block;}
+.accent-dot:hover{transform:scale(1.18);}
+.accent-dot.active{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,0.3);}
+input[type=range]{-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,0.1);outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal);cursor:pointer;box-shadow:0 0 8px rgba(0,229,200,0.4);}
 </style>
 </head>
 <body>
@@ -873,6 +894,7 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
     <div class="app-nav-logo" onclick="stopPreviewLoop();showScreen('home');" style="cursor:pointer;">Baseline <span class="app-nav-sub">/ FAST Check</span></div>
     <div class="app-nav-right">
       <button class="app-nav-hist" onclick="goHistory()">📈 History</button>
+      <button class="app-nav-hist" onclick="goSettings()">⚙️ Settings</button>
       <span id="nav-bc-pill" class="bc-pill low" tabindex="0">
         <svg class="bc-ring-svg" width="20" height="20" viewBox="0 0 20 20">
           <circle class="bc-ring-track" cx="10" cy="10" r="7"/>
@@ -884,7 +906,6 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
           <div class="bcd-title">Confidence Drivers</div>
           <div class="bcd-row"><span class="bcd-row-lbl">Check-ins</span><span class="bcd-checkins bcd-row-val">0 / 8</span></div>
           <div class="bcd-row"><span class="bcd-row-lbl">Avg quality</span><span class="bcd-quality bcd-row-val">—</span></div>
-          <div class="bcd-row"><span class="bcd-row-lbl">Signal stability</span><span class="bcd-stability bcd-row-val">—</span></div>
           <div class="bcd-bar"><div class="bcd-bar-fill" style="width:0%"></div></div>
           <div class="bcd-nextstep">Complete 3 more check-ins to reach Developing.</div>
         </span>
@@ -1048,7 +1069,6 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
               <div class="bcd-title">Confidence Drivers</div>
               <div class="bcd-row"><span class="bcd-row-lbl">Check-ins</span><span class="bcd-checkins bcd-row-val">0 / 8</span></div>
               <div class="bcd-row"><span class="bcd-row-lbl">Avg quality</span><span class="bcd-quality bcd-row-val">—</span></div>
-              <div class="bcd-row"><span class="bcd-row-lbl">Signal stability</span><span class="bcd-stability bcd-row-val">—</span></div>
               <div class="bcd-bar"><div class="bcd-bar-fill" style="width:0%"></div></div>
               <div class="bcd-nextstep">Complete more check-ins to improve confidence.</div>
             </span>
@@ -1130,6 +1150,8 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
               <div class="speech-stat-row"><span class="speech-stat-lbl">Overall WPM</span><span class="speech-stat-val neutral" id="wpm-txt">—</span></div>
               <div class="speech-stat-row"><span class="speech-stat-lbl">Pause Ratio</span><span class="speech-stat-val neutral" id="pause-txt">—</span></div>
               <div class="speech-stat-row"><span class="speech-stat-lbl">Rhythm Spike</span><span class="speech-stat-val neutral" id="spike-txt">—</span></div>
+              <div class="speech-stat-row"><span class="speech-stat-lbl">Jitter</span><span class="speech-stat-val neutral" id="jitter-txt">—</span></div>
+              <div class="speech-stat-row"><span class="speech-stat-lbl">Shimmer</span><span class="speech-stat-val neutral" id="shimmer-txt">—</span></div>
               <div class="speech-stat-row"><span class="speech-stat-lbl">Words Detected</span><span class="speech-stat-val neutral" id="words-txt">—</span></div>
               <div class="speech-stat-row"><span class="speech-stat-lbl">Coverage</span><span class="speech-stat-val neutral" id="coverage-txt">—</span></div>
             </div>
@@ -1195,6 +1217,36 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
         <div class="fp-note" id="fp-note">Each axis shows signal intensity relative to its alert threshold. The outer ring = 100% of threshold. A shape matching the dashed baseline means no change detected today.</div>
       </div>
 
+      <!-- BASELINE DRIFT INTELLIGENCE CARD -->
+      <div class="drift-card" id="drift-card">
+        <div class="drift-hd">
+          <div class="drift-title">Baseline Drift Intelligence</div>
+          <span class="drift-status-pill stable" id="drift-status-pill">Calibrating</span>
+        </div>
+        <div class="drift-domains">
+          <div class="drift-domain">
+            <div class="drift-domain-lbl">Face</div>
+            <div class="drift-domain-z" id="drift-z-face">—</div>
+            <div class="drift-domain-trend" id="drift-trend-face"><span class="drift-trend-flat">—</span></div>
+          </div>
+          <div class="drift-domain">
+            <div class="drift-domain-lbl">Arms</div>
+            <div class="drift-domain-z" id="drift-z-arms">—</div>
+            <div class="drift-domain-trend" id="drift-trend-arms"><span class="drift-trend-flat">—</span></div>
+          </div>
+          <div class="drift-domain">
+            <div class="drift-domain-lbl">Speech</div>
+            <div class="drift-domain-z" id="drift-z-speech">—</div>
+            <div class="drift-domain-trend" id="drift-trend-speech"><span class="drift-trend-flat">—</span></div>
+          </div>
+        </div>
+        <div class="drift-timeline-wrap">
+          <div class="drift-timeline-lbl">Drift score — last 10 sessions</div>
+          <svg class="drift-timeline-svg" id="drift-timeline-svg" viewBox="0 0 460 60" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="drift-explain" id="drift-explain">Complete check-ins to see personalised drift analysis.</div>
+      </div>
+
       <div class="previews-row">
         <div class="preview-card">
           <div class="preview-title">Face Landmark Preview</div>
@@ -1243,7 +1295,6 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
             <div class="bcd-title">Confidence Drivers</div>
             <div class="bcd-row"><span class="bcd-row-lbl">Check-ins</span><span class="bcd-checkins bcd-row-val">0 / 8</span></div>
             <div class="bcd-row"><span class="bcd-row-lbl">Avg quality</span><span class="bcd-quality bcd-row-val">—</span></div>
-            <div class="bcd-row"><span class="bcd-row-lbl">Signal stability</span><span class="bcd-stability bcd-row-val">—</span></div>
             <div class="bcd-bar"><div class="bcd-bar-fill" style="width:0%"></div></div>
             <div class="bcd-nextstep">Complete more check-ins to improve confidence.</div>
           </span>
@@ -1323,7 +1374,7 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
         </div>
       </div>
 
-      <div class="hist-entries" id="hist-entries">
+<div class="hist-entries" id="hist-entries">
         <div class="hist-empty"><h3>No check-ins yet</h3><p>Complete your first FAST check-in to start tracking.</p></div>
       </div>
     </div>
@@ -1444,6 +1495,110 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
 </div>
 
 </div><!-- #fast-app -->
+
+<!-- ── SETTINGS SCREEN ── -->
+<!-- NOTE: This is outside fast-app intentionally — it's a full-page overlay like HIW -->
+<div id="settings-overlay" style="display:none;position:fixed;inset:0;z-index:510;background:var(--bg);overflow-y:auto;">
+  <div style="position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(6,8,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--cbord);">
+    <div style="font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--teal);">Baseline <span style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:0.05em;">/ Settings</span></div>
+    <button onclick="closeSettings()" style="background:none;border:1px solid var(--cbord);color:var(--muted);padding:0.32rem 0.9rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">← Back</button>
+  </div>
+
+  <div style="max-width:680px;margin:0 auto;padding:2.5rem 2rem 5rem;display:flex;flex-direction:column;gap:1.5rem;">
+
+    <!-- APPEARANCE -->
+    <div style="background:var(--surface);border:1px solid var(--cbord);border-radius:16px;padding:1.75rem;">
+      <div style="font-family:'DM Serif Display',serif;font-size:1.15rem;margin-bottom:0.35rem;">Appearance</div>
+      <div style="color:var(--muted);font-size:0.875rem;margin-bottom:1.5rem;">Customize the look and feel of the app.</div>
+
+      <!-- Accent color -->
+      <div style="margin-bottom:0.5rem;">
+        <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.25rem;">Accent color</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.65rem;">Used for highlights, buttons, and active states.</div>
+        <div style="display:flex;gap:0.55rem;flex-wrap:wrap;align-items:center;">
+          <div class="accent-dot" id="ac-teal"   data-color="#00e5c8" style="background:#00e5c8;" onclick="applyAccent('#00e5c8')" title="Teal"></div>
+          <div class="accent-dot" id="ac-violet" data-color="#a855f7" style="background:#a855f7;" onclick="applyAccent('#a855f7')" title="Violet"></div>
+          <div class="accent-dot" id="ac-blue"   data-color="#3b82f6" style="background:#3b82f6;" onclick="applyAccent('#3b82f6')" title="Blue"></div>
+          <div class="accent-dot" id="ac-green"  data-color="#22c55e" style="background:#22c55e;" onclick="applyAccent('#22c55e')" title="Green"></div>
+          <div class="accent-dot" id="ac-amber"  data-color="#f59e0b" style="background:#f59e0b;" onclick="applyAccent('#f59e0b')" title="Amber"></div>
+          <div class="accent-dot" id="ac-red"    data-color="#ef4444" style="background:#ef4444;" onclick="applyAccent('#ef4444')" title="Red"></div>
+          <div class="accent-dot" id="ac-pink"   data-color="#ec4899" style="background:#ec4899;" onclick="applyAccent('#ec4899')" title="Pink"></div>
+        </div>
+      </div>
+
+      <!-- Accent color ends, nothing more in Appearance -->
+    </div>
+
+    <!-- ACCESSIBILITY -->
+    <div style="background:var(--surface);border:1px solid var(--cbord);border-radius:16px;padding:1.75rem;">
+      <div style="font-family:'DM Serif Display',serif;font-size:1.15rem;margin-bottom:0.35rem;">Accessibility</div>
+      <div style="color:var(--muted);font-size:0.875rem;margin-bottom:1.5rem;">Improve usability and reduce visual stress.</div>
+
+      <div class="st-row">
+        <div class="st-row-info"><div class="st-row-lbl">Reduce Motion</div><div class="st-row-sub">Disables non-essential animations. Helpful for motion sensitivity.</div></div>
+        <label class="st-toggle"><input type="checkbox" id="tog-motion" onchange="applyReduceMotion(this.checked)"><span class="st-slider"></span></label>
+      </div>
+      <div class="st-row">
+        <div class="st-row-info"><div class="st-row-lbl">High Contrast</div><div class="st-row-sub">Increases border and text contrast for bright environments.</div></div>
+        <label class="st-toggle"><input type="checkbox" id="tog-contrast" onchange="applyHighContrast(this.checked)"><span class="st-slider"></span></label>
+      </div>
+      <div class="st-row">
+        <div class="st-row-info"><div class="st-row-lbl">Dyslexia-Friendly Font</div><div class="st-row-sub">Switches body text to OpenDyslexic for improved readability.</div></div>
+        <label class="st-toggle"><input type="checkbox" id="tog-dyslexia" onchange="applyDyslexiaFont(this.checked)"><span class="st-slider"></span></label>
+      </div>
+      <div class="st-row" style="border-bottom:none;padding-bottom:0;">
+        <div class="st-row-info"><div class="st-row-lbl">Larger Touch Targets</div><div class="st-row-sub">Makes buttons bigger and easier to tap on touchscreens.</div></div>
+        <label class="st-toggle"><input type="checkbox" id="tog-touch" onchange="applyLargeTouchTargets(this.checked)"><span class="st-slider"></span></label>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div style="background:var(--surface);border:1px solid var(--cbord);border-radius:16px;padding:1.75rem;">
+      <div style="font-family:'DM Serif Display',serif;font-size:1.15rem;margin-bottom:0.35rem;">Check-In Reminders</div>
+      <div style="color:var(--muted);font-size:0.875rem;margin-bottom:1.5rem;">Receive device notifications reminding you to do a FAST check-in. Notifications are sent from this browser and require permission.</div>
+
+      <!-- Enable toggle -->
+      <div class="st-row">
+        <div class="st-row-info"><div class="st-row-lbl">Enable reminders</div><div class="st-row-sub" id="notif-perm-status">Grant notification permission to use this feature.</div></div>
+        <label class="st-toggle"><input type="checkbox" id="tog-notif" onchange="handleNotifToggle(this.checked)"><span class="st-slider"></span></label>
+      </div>
+      <!-- Demo button -->
+      <div style="padding:0.75rem 0 0.25rem;">
+        <button onclick="sendDemoNotif()" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--cb);border:1px solid var(--cbord);color:var(--muted);padding:0.4rem 1rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text)';this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--cbord)'">🔔 Send a test notification</button>
+      </div>
+
+      <!-- Options (shown only when enabled) -->
+      <div id="notif-options" style="display:none;padding-top:1rem;">
+        <!-- Count -->
+        <div style="margin-bottom:1.25rem;">
+          <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.2rem;">Reminders per day: <span id="notif-count-lbl" style="color:var(--teal);font-family:'Space Mono',monospace;">3</span></div>
+          <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.6rem;">How many check-in prompts to send throughout the day.</div>
+          <input type="range" id="notif-count" min="1" max="10" value="3" oninput="updateNotifPreview()" style="width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,0.1);outline:none;cursor:pointer;">
+        </div>
+        <!-- Time window -->
+        <div style="margin-bottom:1.25rem;padding-top:1.25rem;border-top:1px solid var(--cbord);">
+          <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.2rem;">Active window</div>
+          <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.6rem;">Notifications will only be sent within this time range.</div>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+            <div style="display:flex;flex-direction:column;gap:0.3rem;flex:1;min-width:120px;">
+              <label style="font-family:'Space Mono',monospace;font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);">From</label>
+              <input type="time" id="notif-start" value="08:00" oninput="updateNotifPreview()" style="background:var(--cb);border:1px solid var(--cbord);border-radius:8px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.85rem;padding:0.5rem 0.75rem;cursor:pointer;outline:none;width:100%;">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.3rem;flex:1;min-width:120px;">
+              <label style="font-family:'Space Mono',monospace;font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);">To</label>
+              <input type="time" id="notif-end" value="21:00" oninput="updateNotifPreview()" style="background:var(--cb);border:1px solid var(--cbord);border-radius:8px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.85rem;padding:0.5rem 0.75rem;cursor:pointer;outline:none;width:100%;">
+            </div>
+          </div>
+        </div>
+        <!-- Preview -->
+        <div id="notif-preview" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:rgba(0,229,200,0.05);border:1px solid rgba(0,229,200,0.15);border-radius:10px;font-family:'Space Mono',monospace;font-size:0.78rem;color:var(--teal);line-height:1.5;">
+          ⏰ &nbsp;3 reminders · 08:00 – 21:00 · ~4h 20m apart
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 
 
@@ -2558,6 +2713,66 @@ function _flushBucket(){
   _bucketWordCount=0;
 }
 
+function startJitterShimmer(audioStream){
+  try{
+    _pitchPeriods=[];_rmsValues=[];_prevPeriod=null;
+    _audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    _audioSource=_audioCtx.createMediaStreamSource(audioStream);
+    _audioAnalyser=_audioCtx.createAnalyser();
+    _audioAnalyser.fftSize=2048;
+    _audioSource.connect(_audioAnalyser);
+    const buf=new Float32Array(_audioAnalyser.fftSize);
+    const sr=_audioCtx.sampleRate;
+    const MIN_FREQ=80,MAX_FREQ=400; // human voice F0 range
+    const minPeriod=Math.floor(sr/MAX_FREQ);
+    const maxPeriod=Math.ceil(sr/MIN_FREQ);
+
+    _jitterInterval=setInterval(()=>{
+      _audioAnalyser.getFloatTimeDomainData(buf);
+      // RMS for silence gate + shimmer
+      let sum=0;for(let i=0;i<buf.length;i++)sum+=buf[i]*buf[i];
+      const rms=Math.sqrt(sum/buf.length);
+      if(rms<0.01)return; // silence gate — skip unvoiced frames
+
+      _rmsValues.push(rms);
+
+      // Autocorrelation-based F0 detection
+      let bestK=-1,bestR=-Infinity;
+      for(let k=minPeriod;k<=maxPeriod;k++){
+        let r=0;
+        for(let i=0;i<buf.length-k;i++)r+=buf[i]*buf[i+k];
+        if(r>bestR){bestR=r;bestK=k;}
+      }
+      if(bestK>0&&bestR>0){
+        if(_prevPeriod!==null)_pitchPeriods.push(Math.abs(bestK-_prevPeriod));
+        _prevPeriod=bestK;
+      }
+    },20);
+  }catch(e){console.warn('Jitter/shimmer init failed:',e);}
+}
+
+function stopJitterShimmer(){
+  if(_jitterInterval){clearInterval(_jitterInterval);_jitterInterval=null;}
+  // Compute jitter: mean absolute deviation of pitch periods, normalized
+  if(_pitchPeriods.length>=4){
+    const meanDev=_pitchPeriods.reduce((a,b)=>a+b,0)/_pitchPeriods.length;
+    // Typical jitter in samples at 44100Hz: <5 = excellent, >20 = concerning
+    _measuredJitter=Math.min(1,meanDev/20);
+  } else { _measuredJitter=null; }
+  // Compute shimmer: coefficient of variation of RMS amplitudes
+  if(_rmsValues.length>=4){
+    const mean=_rmsValues.reduce((a,b)=>a+b,0)/_rmsValues.length;
+    const variance=_rmsValues.reduce((a,b)=>a+(b-mean)**2,0)/_rmsValues.length;
+    const cv=mean>0?Math.sqrt(variance)/mean:0;
+    // Typical shimmer CV: <0.15 = normal, >0.35 = concerning
+    _measuredShimmer=Math.min(1,cv/0.35);
+  } else { _measuredShimmer=null; }
+  // Cleanup audio nodes
+  try{if(_audioSource)_audioSource.disconnect();}catch(e){}
+  try{if(_audioCtx)_audioCtx.close();}catch(e){}
+  _audioCtx=null;_audioSource=null;_audioAnalyser=null;
+}
+
 function stopSpeechRecognition(){
   if(_bucketTimer){clearInterval(_bucketTimer);_bucketTimer=null;}
   _flushBucket(); // capture last partial bucket
@@ -2646,6 +2861,10 @@ const TASKS=[
 let tIdx=0,recTimer=null,recTime=0;
 let _measuredWpm=null;
 let _wpmSpike=false; // true if a spike/dip was detected
+let _measuredJitter=null;  // normalized jitter 0-1 (null if not measured)
+let _measuredShimmer=null; // normalized shimmer 0-1 (null if not measured)
+let _audioCtx=null,_audioAnalyser=null,_audioSource=null,_jitterInterval=null;
+let _pitchPeriods=[],_rmsValues=[],_prevPeriod=null;
 
 // Real measurement buffers (populated during tasks)
 let _faceFrames=[];   // {asymIndex} collected during smile task
@@ -2875,7 +3094,7 @@ async function startRec(){
 
   btn.textContent='Recording…';
   document.getElementById('rec-ind').classList.add('on');
-  _measuredWpm=null;
+  _measuredWpm=null;_measuredJitter=null;_measuredShimmer=null;
   // Start MediaRecorder to capture video for replay
   _recordedChunks=[];
   try{
@@ -2909,7 +3128,7 @@ function runTask(){
   // Start collection flags and speech
   _collectingFace=(t.id==='smile');
   _collectingArms=(t.id==='arms');
-  if(t.id==='speak')startSpeechRecognition();
+  if(t.id==='speak'){startSpeechRecognition();if(stream)startJitterShimmer(stream);}
 
   tickTimer(recTime,t.dur,tIdx);
   recTimer=setInterval(()=>{
@@ -2924,7 +3143,7 @@ function runTask(){
       clearInterval(recTimer);
       _collectingFace=false;
       _collectingArms=false;
-      if(t.id==='speak'){const wpm=stopSpeechRecognition();if(wpm)_measuredWpm=wpm;}
+      if(t.id==='speak'){const wpm=stopSpeechRecognition();if(wpm)_measuredWpm=wpm;stopJitterShimmer();}
       document.getElementById(t.chk).textContent='✓';
       document.getElementById(t.tp).className='tp-task done';
       tIdx++;
@@ -3121,10 +3340,16 @@ function buildResults(){
   const faNum=parseFloat(fa);
   const fs=faNum>0.08?Math.min(1,0.55+(faNum-0.08)*6):0;
   const as=ad>8?Math.min(1,0.65+(ad-8)*0.06):ad>5?0.35:0;
-  // Speech score: pause ratio threshold + WPM spike/dip bonus
-  const ssPause=pr>0.35?0.7:pr>0.25?0.35:0;
-  const ssWpm=_wpmSpike?0.5:0; // spikes/dips are clinically significant
-  const ss=Math.min(1,ssPause+ssWpm);
+  // ── Speech score: 4 signals combined ──
+  // 1. Pause ratio (35% weight) — silence fraction above baseline
+  const ssPause = pr > 0.35 ? 1.0 : pr > 0.25 ? 0.5 : 0.0;
+  // 2. WPM spike/dip (25% weight) — rhythm irregularity from transcription
+  const ssWpm = _wpmSpike ? 1.0 : 0.0;
+  // 3. Jitter (25% weight) — pitch instability from raw audio (null = not measured → 0)
+  const ssJitter = _measuredJitter !== null ? _measuredJitter : 0.0;
+  // 4. Shimmer (15% weight) — amplitude instability from raw audio
+  const ssShimmer = _measuredShimmer !== null ? _measuredShimmer : 0.0;
+  const ss = Math.min(1, ssPause*0.35 + ssWpm*0.25 + ssJitter*0.25 + ssShimmer*0.15);
   const total=fs+as+ss;
 
   // Store quality score for this recording
@@ -3145,6 +3370,16 @@ function buildResults(){
   if(_pauseEl){_pauseEl.textContent=(pr*100).toFixed(0)+'%';_pauseEl.className='speech-stat-val '+(pr<0.25?'good':pr<0.35?'warn':'bad');}
   const _spikeEl=document.getElementById('spike-txt');
   if(_spikeEl){_spikeEl.textContent=_wpmSpike?'⚠ Spike detected':'✓ Steady';_spikeEl.className='speech-stat-val '+(_wpmSpike?'warn':'good');}
+  const _jitterEl=document.getElementById('jitter-txt');
+  if(_jitterEl){
+    if(_measuredJitter===null){_jitterEl.textContent='n/a';_jitterEl.className='speech-stat-val neutral';}
+    else{const pct=(_measuredJitter*100).toFixed(0)+'%';_jitterEl.textContent=pct;_jitterEl.className='speech-stat-val '+(_measuredJitter<0.3?'good':_measuredJitter<0.6?'warn':'bad');}
+  }
+  const _shimmerEl=document.getElementById('shimmer-txt');
+  if(_shimmerEl){
+    if(_measuredShimmer===null){_shimmerEl.textContent='n/a';_shimmerEl.className='speech-stat-val neutral';}
+    else{const pct=(_measuredShimmer*100).toFixed(0)+'%';_shimmerEl.textContent=pct;_shimmerEl.className='speech-stat-val '+(_measuredShimmer<0.3?'good':_measuredShimmer<0.6?'warn':'bad');}
+  }
   const _wordsEl=document.getElementById('words-txt');
   if(_wordsEl){_wordsEl.textContent=_spokenWords.length+' / '+SPEECH_WORD_COUNT;_wordsEl.className='speech-stat-val neutral';}
   const _covEl=document.getElementById('coverage-txt');
@@ -3429,7 +3664,7 @@ function updateConfidenceUI(pendingEntry){
   document.querySelectorAll('.bc-breakdown').forEach(panel=>{
     panel.querySelector('.bcd-checkins').textContent=`${checkIns} / 8`;
     panel.querySelector('.bcd-quality').textContent=Math.round(qualityFactor*100)+'%';
-    panel.querySelector('.bcd-stability').textContent=Math.round(stabilityScore*100)+'%';
+    const stabEl=panel.querySelector('.bcd-stability'); if(stabEl) stabEl.textContent=Math.round(stabilityScore*100)+'%';
     panel.querySelector('.bcd-nextstep').textContent=nextStep;
     const barFill=panel.querySelector('.bcd-bar-fill');
     const pct=Math.round(ringPct*100);
@@ -3529,7 +3764,7 @@ function computeStreak(){
     else dots.push('missed');
   }
 
-  return{streak,lastSeen,cadence,dots,daysSince:daySet.has(0)?0:daySet.has(1)?1:999};
+  return{streak,lastSeen,cadence,dots,daysSince:daySet.has(0)?0:daySet.has(1)?1:lastSeen?Math.round((Date.now()-lastSeen)/(864e5)):null};
 }
 
 function renderStreak(){
@@ -3550,6 +3785,7 @@ function renderStreak(){
   if(subEl){
     if(!hist.length){subEl.textContent='Start your first check-in to begin tracking.';}
     else if(streak===0&&daysSince>1){subEl.textContent=`Last check-in was ${daysSince} day${daysSince===1?'':'s'} ago. Check in today to restart your streak.`;}
+    else if(streak===0&&daysSince===null){subEl.textContent='No recent check-ins found. Check in today to start your streak.';}
     else if(streak===1){subEl.textContent='Checked in today. Come back tomorrow to build your streak.';}
     else if(streak>=7){subEl.textContent=`${streak} consecutive days — your baseline confidence is building fast.`;}
     else{subEl.textContent=`${streak} consecutive days of monitoring. Consistent check-ins make results more meaningful.`;}
@@ -3798,16 +4034,17 @@ function animatePath(el,d){
   el.style.animation=`chartDraw 1.2s cubic-bezier(0.4,0,0.2,1) forwards`;
 }
 
-function renderDots(groupId,pts,color,delayBase){
+function renderDots(groupId,pts,color,delayBase,colors){
   const g=document.getElementById(groupId);if(!g)return;
   g.innerHTML='';
   pts.forEach((p,i)=>{
     const isLast=i===pts.length-1;
+    const col=colors?colors[i]:color;
     const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
     c.setAttribute('cx',p[0]);c.setAttribute('cy',p[1]);
     c.setAttribute('r',isLast?5:3.5);
-    c.setAttribute('fill',color);
-    if(isLast){c.setAttribute('filter',`drop-shadow(0 0 5px ${color})`);c.setAttribute('stroke','rgba(255,255,255,0.3)');c.setAttribute('stroke-width','1');}
+    c.setAttribute('fill',col);
+    if(isLast){c.setAttribute('filter',`drop-shadow(0 0 5px ${col})`);c.setAttribute('stroke','rgba(255,255,255,0.3)');c.setAttribute('stroke-width','1');}
     c.style.opacity='0';
     c.style.animation=`chartFadeIn 0.3s ease forwards`;
     c.style.animationDelay=`${delayBase+i*0.06}s`;
@@ -3826,7 +4063,8 @@ function drawHistChart(){
   fillEl.setAttribute('d',fillD);
   fillEl.style.opacity='0';fillEl.style.animation='none';void fillEl.getBoundingClientRect();fillEl.style.animation='chartFadeIn 0.6s ease forwards 0.8s';
   animatePath(lineEl,lineD);
-  renderDots('hist-dots',pts,'#00e5c8',0.9);
+  const dotColors=rev.map(r=>r.status==='red'?'#ef4444':r.status==='yellow'?'#f59e0b':'#22c55e');
+  renderDots('hist-dots',pts,'#00e5c8',0.9,dotColors);
   // Baseline reference line at the baseline value if we have one
   const blEl=document.getElementById('hist-baseline-line');
   const blLbl=document.getElementById('hist-baseline-lbl');
@@ -4808,11 +5046,915 @@ function slReset(){
   document.getElementById('sl-status-txt').textContent='Ready';
 }
 
+
+/* ═══════════════════════════════════════════════════════════════════════
+   BASELINE DRIFT INTELLIGENCE
+   ─ baselineMath   : weighted Welford online mean/variance, linear slope
+   ─ driftScoring   : per-metric z-score + trend slope → drift_total
+   ─ baselineStore  : read/write DriftProfile to localStorage
+   ─ driftUI        : render drift card, timeline sparklines, history chart
+   ─ devMode        : simulate 15 sessions + inject drift pattern for demo
+═══════════════════════════════════════════════════════════════════════ */
+
+// ── CONFIG (tunable constants) ────────────────────────────────────────
+const DRIFT_CFG = {
+  ALPHA: 0.7,          // weight of absolute z-score in drift_metric
+  BETA:  0.3,          // weight of trend z-slope in drift_metric
+  TREND_N: 7,          // sessions used for slope regression
+  MIN_SESSIONS_SCORE: 3, // below this: build phase, no escalation
+  CONF_THRESHOLD: 0.6, // below this overall conf → LOW_CONFIDENCE_RETAKE
+  THRESH_WATCH: 0.55,  // drift_total above this → Watch
+  THRESH_CONCERN: 1.1, // drift_total above this → Concerning
+  EPS: 1e-6,           // variance floor (avoid divide-by-zero)
+  K_BOOTSTRAP: 3,      // sessions before switching from MAD→Welford variance
+};
+
+// ── baselineMath ──────────────────────────────────────────────────────
+
+/**
+ * Welford online weighted mean/variance update.
+ * state: { mean, M2, wSum, n }
+ *   M2    = sum of squared weighted deviations
+ *   wSum  = sum of weights
+ *   n     = count of samples seen
+ */
+function welfordUpdate(state, x, w) {
+  if (!state) state = { mean: 0, M2: 0, wSum: 0, n: 0 };
+  const { mean, M2, wSum, n } = state;
+  const wSumNew = wSum + w;
+  const delta   = x - mean;
+  const meanNew = mean + (w / wSumNew) * delta;
+  const delta2  = x - meanNew;
+  const M2New   = M2 + w * delta * delta2;
+  return { mean: meanNew, M2: M2New, wSum: wSumNew, n: n + 1 };
+}
+
+function welfordVariance(state) {
+  if (!state || state.wSum <= 0 || state.n < 2) return DRIFT_CFG.EPS;
+  // Reliability-weighted sample variance
+  const nEff = state.n; // effective count = n (each sample counted once)
+  const v    = (state.M2 / state.wSum) * (nEff / Math.max(nEff - 1, 1));
+  return Math.max(v, DRIFT_CFG.EPS);
+}
+
+/**
+ * During bootstrap (n < K_BOOTSTRAP) use conservative MAD-based variance
+ * to avoid outlier-driven false escalation.
+ */
+function bootstrapVariance(samples) {
+  if (!samples || samples.length < 2) return DRIFT_CFG.EPS;
+  const sorted = [...samples].sort((a, b) => a - b);
+  const med    = sorted[Math.floor(sorted.length / 2)];
+  const mad    = sorted.map(v => Math.abs(v - med)).sort((a, b) => a - b);
+  const madV   = mad[Math.floor(mad.length / 2)] || DRIFT_CFG.EPS;
+  // MAD → std estimate: std ≈ 1.4826 * MAD; use conservative ×2
+  return Math.max((1.4826 * madV * 2) ** 2, DRIFT_CFG.EPS);
+}
+
+/**
+ * OLS slope of (index, value) pairs — simple linear regression.
+ * Returns slope per session index unit.
+ */
+function linearSlope(values) {
+  const n = values.length;
+  if (n < 2) return 0;
+  let sx = 0, sy = 0, sxy = 0, sxx = 0;
+  for (let i = 0; i < n; i++) {
+    sx  += i; sy  += values[i];
+    sxy += i * values[i]; sxx += i * i;
+  }
+  const denom = n * sxx - sx * sx;
+  if (Math.abs(denom) < 1e-12) return 0;
+  return (n * sxy - sx * sy) / denom;
+}
+
+// ── baselineStore ─────────────────────────────────────────────────────
+const DRIFT_STORE_KEY = 'sc_drift_profile';
+
+/**
+ * DriftProfile shape:
+ * {
+ *   face:   WelfordState,   // state for face asymmetry metric
+ *   arms:   WelfordState,
+ *   speech: WelfordState,
+ *   rawSamples: { face: [], arms: [], speech: [] },  // last 20 raw values
+ *   sessionCount: number,
+ *   lastUpdated: ISO string
+ * }
+ */
+function loadDriftProfile() {
+  try {
+    const raw = localStorage.getItem(DRIFT_STORE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch(e) { return null; }
+}
+
+function saveDriftProfile(profile) {
+  try { localStorage.setItem(DRIFT_STORE_KEY, JSON.stringify(profile)); }
+  catch(e) { console.warn('drift profile save failed:', e); }
+}
+
+function getBaselineProfile() {
+  return loadDriftProfile();
+}
+
+/**
+ * Update drift profile with a new session.
+ * session: { fa, ad, pr, quality }  (raw metric values + recording quality)
+ * quality: 0–1 (used as Welford weight)
+ */
+function updateDriftProfile(session) {
+  let profile = loadDriftProfile() || {
+    face:   null, arms: null, speech: null,
+    rawSamples: { face: [], arms: [], speech: [] },
+    sessionCount: 0,
+    lastUpdated: null
+  };
+
+  const w = Math.max(0.1, session.quality || 0.5); // quality as weight
+
+  const metrics = {
+    face:   parseFloat(session.fa)  || 0,
+    arms:   parseFloat(session.ad)  || 0,
+    speech: parseFloat(session.pr)  || 0
+  };
+
+  for (const key of ['face', 'arms', 'speech']) {
+    profile[key] = welfordUpdate(profile[key], metrics[key], w);
+    profile.rawSamples[key].unshift(metrics[key]);
+    if (profile.rawSamples[key].length > 20) profile.rawSamples[key].pop();
+  }
+
+  profile.sessionCount++;
+  profile.lastUpdated = new Date().toISOString();
+  saveDriftProfile(profile);
+  return profile;
+}
+
+// ── driftScoring ──────────────────────────────────────────────────────
+
+/**
+ * Compute drift for a single metric.
+ * Returns { z, slope, drift_metric, trendDir }
+ */
+function computeMetricDrift(value, welfordState, rawSamples, sessionQuality) {
+  if (!welfordState || welfordState.n < 1) {
+    return { z: 0, slope: 0, drift_metric: 0, trendDir: 'flat' };
+  }
+
+  const mean = welfordState.mean;
+  const n    = welfordState.n;
+
+  // Choose variance source: bootstrap early on to be conservative
+  const variance = n < DRIFT_CFG.K_BOOTSTRAP
+    ? bootstrapVariance(rawSamples)
+    : welfordVariance(welfordState);
+
+  const z = (value - mean) / Math.sqrt(variance + DRIFT_CFG.EPS);
+
+  // Trend: slope over last TREND_N sessions (oldest→newest)
+  const window = [...rawSamples].slice(0, DRIFT_CFG.TREND_N).reverse();
+  const slope  = linearSlope(window);
+
+  // Normalize slope: divide by std to make it unit-free
+  const std      = Math.sqrt(variance + DRIFT_CFG.EPS);
+  const zSlope   = std > 0 ? slope / std : 0;
+
+  // Weighted drift metric (confidence of this session factors in)
+  const confW = Math.max(0.2, sessionQuality || 0.5);
+  const drift_metric = confW * (DRIFT_CFG.ALPHA * Math.abs(z) + DRIFT_CFG.BETA * Math.abs(zSlope));
+
+  const trendDir = Math.abs(zSlope) < 0.05 ? 'flat' : zSlope > 0 ? 'up' : 'down';
+
+  return { z, slope, zSlope, drift_metric, trendDir };
+}
+
+/**
+ * Compute full drift report for a session.
+ * Returns the complete drift object to display.
+ */
+function computeDrift(session, profile) {
+  if (!profile || profile.sessionCount < 1) {
+    return { status: 'BUILDING', total: 0, face: null, arms: null, speech: null };
+  }
+
+  const quality = Math.max(0.2, session.quality || 0.5);
+
+  const faceD   = computeMetricDrift(parseFloat(session.fa)  || 0, profile.face,   profile.rawSamples.face,   quality);
+  const armsD   = computeMetricDrift(parseFloat(session.ad)  || 0, profile.arms,   profile.rawSamples.arms,   quality);
+  const speechD = computeMetricDrift(parseFloat(session.pr)  || 0, profile.speech, profile.rawSamples.speech, quality);
+
+  // Aggregate: face 35%, arms 35%, speech 30%
+  const drift_total = faceD.drift_metric * 0.35
+                    + armsD.drift_metric * 0.35
+                    + speechD.drift_metric * 0.30;
+
+  // Decision logic
+  let status = 'STABLE';
+  if (profile.sessionCount < DRIFT_CFG.MIN_SESSIONS_SCORE) {
+    status = 'BUILDING';
+  } else if (drift_total >= DRIFT_CFG.THRESH_CONCERN) {
+    status = 'CONCERNING';
+  } else if (drift_total >= DRIFT_CFG.THRESH_WATCH) {
+    // Trend escalation: Watch + rising trend on 2+ domains → Concerning
+    const risingCount = [faceD, armsD, speechD].filter(d => d.trendDir === 'up' && d.zSlope > 0.15).length;
+    status = risingCount >= 2 ? 'CONCERNING' : 'WATCH';
+  }
+
+  // Build human-readable explanation
+  const topMetrics = [
+    { label: 'face symmetry', d: faceD },
+    { label: 'arm stability', d: armsD },
+    { label: 'speech rhythm', d: speechD }
+  ].filter(m => Math.abs(m.d.z) > 0.4)
+   .sort((a, b) => Math.abs(b.d.z) - Math.abs(a.d.z))
+   .slice(0, 2);
+
+  let explanation = '';
+  if (status === 'BUILDING') {
+    explanation = `<strong>Calibrating:</strong> ${profile.sessionCount} of ${DRIFT_CFG.MIN_SESSIONS_SCORE} sessions collected. Continue checking in to establish your personal drift baseline.`;
+  } else if (status === 'STABLE') {
+    explanation = '<strong>All clear:</strong> Today\'s signals are consistent with your personal history. No meaningful deviation detected.';
+  } else {
+    const parts = topMetrics.map(m => {
+      const dir = m.d.z > 0 ? 'higher' : 'lower';
+      const trend = m.d.trendDir === 'up' ? ' with a rising trend' : m.d.trendDir === 'down' ? ' with a declining trend' : '';
+      return `${m.label} is ${Math.abs(m.d.z).toFixed(1)}σ ${dir} than your baseline${trend}`;
+    });
+    explanation = `<strong>${status === 'CONCERNING' ? 'Notable deviation:' : 'Mild variation:'}</strong> ${parts.join('; ') || 'signals outside typical range'}. This is a personal comparison, not a medical diagnosis. Consider a retake or professional consultation if this pattern persists.`;
+  }
+
+  return {
+    status, total: drift_total,
+    face: faceD, arms: armsD, speech: speechD,
+    explanation, sessionCount: profile.sessionCount
+  };
+}
+
+// ── driftUI ───────────────────────────────────────────────────────────
+
+function renderDriftCard(drift) {
+  const card = document.getElementById('drift-card');
+  if (!card) return;
+
+  if (!drift || drift.status === 'BUILDING') {
+    card.style.display = 'block';
+    const n = drift ? drift.sessionCount : 0;
+    document.getElementById('drift-explain').innerHTML =
+      `<strong>Building baseline:</strong> ${n} of ${DRIFT_CFG.MIN_SESSIONS_SCORE} sessions collected. ` +
+      `Drift intelligence activates after ${DRIFT_CFG.MIN_SESSIONS_SCORE} check-ins.`;
+    document.getElementById('drift-status-pill').className = 'drift-status-pill stable';
+    document.getElementById('drift-status-pill').textContent = 'Calibrating';
+    ['face','arms','speech'].forEach(k => {
+      const zEl = document.getElementById('drift-z-' + k);
+      const tEl = document.getElementById('drift-trend-' + k);
+      if (zEl) zEl.textContent = '—';
+      if (tEl) tEl.innerHTML = '<span class="drift-trend-flat">—</span>';
+    });
+    renderDriftTimeline('drift-timeline-svg', [], 460, 60);
+    return;
+  }
+
+  card.style.display = 'block';
+
+  // Status pill
+  const pill = document.getElementById('drift-status-pill');
+  const statusMap = { STABLE: ['stable','Stable'], WATCH: ['watch','Watch'], CONCERNING: ['concerning','Concerning'] };
+  const [cls, lbl] = statusMap[drift.status] || ['stable','Stable'];
+  pill.className = 'drift-status-pill ' + cls;
+  pill.textContent = lbl;
+
+  // Per-domain z-scores and trend indicators
+  const domainData = { face: drift.face, arms: drift.arms, speech: drift.speech };
+  for (const [key, d] of Object.entries(domainData)) {
+    const zEl = document.getElementById('drift-z-' + key);
+    const tEl = document.getElementById('drift-trend-' + key);
+    if (!d) { if(zEl) zEl.textContent = '—'; continue; }
+    const z = d.z;
+    const zStr = (z >= 0 ? '+' : '') + z.toFixed(2) + 'σ';
+    if (zEl) {
+      zEl.textContent = zStr;
+      zEl.style.color = Math.abs(z) < 0.5 ? 'var(--green)' : Math.abs(z) < 1.2 ? 'var(--yellow)' : 'var(--red)';
+    }
+    if (tEl) {
+      const slopeStr = Math.abs(d.zSlope) < 0.05 ? '→ flat' :
+                       d.trendDir === 'up' ? '↑ rising' : '↓ falling';
+      const cls2 = d.trendDir === 'up' ? 'drift-trend-up' : d.trendDir === 'down' ? 'drift-trend-down' : 'drift-trend-flat';
+      tEl.innerHTML = `<span class="${cls2}">${slopeStr}</span>`;
+    }
+  }
+
+  // Timeline sparkline
+  const driftHistory = buildDriftHistory();
+  renderDriftTimeline('drift-timeline-svg', driftHistory, 460, 60);
+
+  // Explanation
+  const explEl = document.getElementById('drift-explain');
+  if (explEl) explEl.innerHTML = drift.explanation || '';
+}
+
+/**
+ * Build array of { date, total, status } for drift history sparkline
+ * by retrospectively scoring each session against the profile at that time.
+ * Simplified: use stored drift scores if available, else compute from hist.
+ */
+function buildDriftHistory() {
+  // Load stored drift scores (appended on each saveAndHistory)
+  try {
+    const raw = localStorage.getItem('sc_drift_scores');
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return [];
+}
+
+/**
+ * Render a drift timeline sparkline into an SVG element.
+ * points: [{ total: number, status: string }]  (oldest→newest)
+ */
+function renderDriftTimeline(svgId, points, W, H) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  svg.innerHTML = '';
+  const ns = 'http://www.w3.org/2000/svg';
+
+  if (!points || points.length < 2) {
+    const t = document.createElementNS(ns, 'text');
+    t.setAttribute('x', W / 2); t.setAttribute('y', H / 2 + 5);
+    t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('font-family', 'Space Mono,monospace');
+    t.setAttribute('font-size', '10');
+    t.setAttribute('fill', 'rgba(107,114,128,0.6)');
+    t.textContent = 'Not enough data yet';
+    svg.appendChild(t);
+    return;
+  }
+
+  const PAD = 8;
+  const vals = points.map(p => p.total);
+  const maxV = Math.max(...vals, DRIFT_CFG.THRESH_CONCERN * 1.1, 0.1);
+
+  function toX(i) { return PAD + (i / (points.length - 1)) * (W - PAD * 2); }
+  function toY(v) { return H - PAD - (v / maxV) * (H - PAD * 2); }
+
+  // Watch threshold line
+  const watchY = toY(DRIFT_CFG.THRESH_WATCH);
+  const threshLine = document.createElementNS(ns, 'line');
+  threshLine.setAttribute('x1', PAD); threshLine.setAttribute('x2', W - PAD);
+  threshLine.setAttribute('y1', watchY); threshLine.setAttribute('y2', watchY);
+  threshLine.setAttribute('stroke', 'rgba(245,158,11,0.25)');
+  threshLine.setAttribute('stroke-width', '1');
+  threshLine.setAttribute('stroke-dasharray', '4,4');
+  svg.appendChild(threshLine);
+
+  // Baseline mean line at y=0 (z=0 → total≈0)
+  const baseY = toY(0);
+  const baseLine = document.createElementNS(ns, 'line');
+  baseLine.setAttribute('x1', PAD); baseLine.setAttribute('x2', W - PAD);
+  baseLine.setAttribute('y1', baseY); baseLine.setAttribute('y2', baseY);
+  baseLine.setAttribute('stroke', 'rgba(0,229,200,0.2)');
+  baseLine.setAttribute('stroke-width', '1');
+  svg.appendChild(baseLine);
+
+  // Area fill
+  const pts = points.map((p, i) => [toX(i), toY(p.total)]);
+  if (pts.length >= 2) {
+    let d = `M${pts[0][0]},${pts[0][1]}`;
+    for (let i = 1; i < pts.length; i++) d += ` L${pts[i][0]},${pts[i][1]}`;
+    const closeD = d + ` L${pts[pts.length-1][0]},${H-PAD} L${pts[0][0]},${H-PAD} Z`;
+    const fill = document.createElementNS(ns, 'path');
+    fill.setAttribute('d', closeD);
+    fill.setAttribute('fill', 'url(#drift-area-grad)');
+    fill.setAttribute('opacity', '0.4');
+    const defs = document.createElementNS(ns, 'defs');
+    const grad = document.createElementNS(ns, 'linearGradient');
+    grad.setAttribute('id', 'drift-area-grad'); grad.setAttribute('x1','0'); grad.setAttribute('x2','0'); grad.setAttribute('y1','0'); grad.setAttribute('y2','1');
+    const s1 = document.createElementNS(ns, 'stop'); s1.setAttribute('offset','0%'); s1.setAttribute('stop-color','#3b82f6'); s1.setAttribute('stop-opacity','0.4');
+    const s2 = document.createElementNS(ns, 'stop'); s2.setAttribute('offset','100%'); s2.setAttribute('stop-color','#3b82f6'); s2.setAttribute('stop-opacity','0');
+    grad.appendChild(s1); grad.appendChild(s2); defs.appendChild(grad); svg.appendChild(defs);
+    svg.appendChild(fill);
+    // Line
+    const line = document.createElementNS(ns, 'path');
+    line.setAttribute('d', d);
+    line.setAttribute('fill', 'none');
+    line.setAttribute('stroke', '#3b82f6');
+    line.setAttribute('stroke-width', '2');
+    line.setAttribute('stroke-linecap', 'round');
+    line.setAttribute('stroke-linejoin', 'round');
+    svg.appendChild(line);
+  }
+
+  // Dots
+  points.forEach((p, i) => {
+    const isLast = i === points.length - 1;
+    const col = p.status === 'CONCERNING' ? '#ef4444' : p.status === 'WATCH' ? '#f59e0b' : '#22c55e';
+    const c = document.createElementNS(ns, 'circle');
+    c.setAttribute('cx', toX(i)); c.setAttribute('cy', toY(p.total));
+    c.setAttribute('r', isLast ? 5 : 3);
+    c.setAttribute('fill', col);
+    if (isLast) c.setAttribute('filter', `drop-shadow(0 0 4px ${col})`);
+    svg.appendChild(c);
+  });
+}
+
+// renderHistDriftTimeline removed
+
+// ── Integration: hook into existing saveAndHistory ────────────────────
+
+/** Called during endRec (after computing scores) to update drift profile and score. */
+function integrateWithDrift(session) {
+  const profile = updateDriftProfile(session);
+  const drift   = computeDrift(session, profile);
+
+  // Store drift score for sparkline history
+  let driftScores = [];
+  try { driftScores = JSON.parse(localStorage.getItem('sc_drift_scores') || '[]'); } catch(e) {}
+  driftScores.unshift({ total: drift.total, status: drift.status, date: new Date().toISOString() });
+  if (driftScores.length > 50) driftScores.pop();
+  try { localStorage.setItem('sc_drift_scores', JSON.stringify(driftScores)); } catch(e) {}
+
+  return { profile, drift };
+}
+
+// ── exportSummaryJSON ─────────────────────────────────────────────────
+function exportDriftSummary() {
+  const profile = loadDriftProfile();
+  const driftScores = (() => { try { return JSON.parse(localStorage.getItem('sc_drift_scores') || '[]'); } catch(e) { return []; } })();
+  const summary = {
+    exportedAt: new Date().toISOString(),
+    sessionCount: profile ? profile.sessionCount : 0,
+    baselineMeans: profile ? {
+      face:   profile.face   ? +profile.face.mean.toFixed(5)   : null,
+      arms:   profile.arms   ? +profile.arms.mean.toFixed(5)   : null,
+      speech: profile.speech ? +profile.speech.mean.toFixed(5) : null
+    } : null,
+    driftHistory: driftScores.map(d => ({
+      date: d.date, total: +d.total.toFixed(3), status: d.status
+    })),
+    note: 'All data is stored locally. This export contains only metrics and timestamps — no video or personal identifiers.'
+  };
+  const blob = new Blob([JSON.stringify(summary, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'baseline-drift-summary.json'; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+// ── DEV MODE: simulate 15 sessions then inject drift pattern ──────────
+function runDriftSimulation() {
+  // Clear existing drift data
+  localStorage.removeItem(DRIFT_STORE_KEY);
+  localStorage.removeItem('sc_drift_scores');
+
+  const sessions = [];
+  // 10 normal sessions: baseline-like values with realistic noise
+  for (let i = 0; i < 10; i++) {
+    sessions.push({
+      fa:      +(0.035 + (Math.random() - 0.5) * 0.012).toFixed(4),
+      ad:      +(3.2   + (Math.random() - 0.5) * 1.0  ).toFixed(2),
+      pr:      +(0.18  + (Math.random() - 0.5) * 0.04 ).toFixed(3),
+      quality: +(0.82  + (Math.random() - 0.5) * 0.1  ).toFixed(2)
+    });
+  }
+  // 5 drift sessions: speech latency rising + mild facial asymmetry
+  for (let i = 0; i < 5; i++) {
+    const t = (i + 1) / 5; // 0.2 → 1.0 drift progression
+    sessions.push({
+      fa:      +(0.035 + t * 0.042 + (Math.random() - 0.5) * 0.008).toFixed(4),
+      ad:      +(3.2   + (Math.random() - 0.5) * 1.0              ).toFixed(2),
+      pr:      +(0.18  + t * 0.22  + (Math.random() - 0.5) * 0.03 ).toFixed(3),
+      quality: +(0.80  + (Math.random() - 0.5) * 0.1              ).toFixed(2)
+    });
+  }
+
+  // Feed sessions through profile update and score storage
+  let profile = null;
+  for (const s of sessions) {
+    profile = updateDriftProfile(s);
+    const drift = computeDrift(s, profile);
+    let scores = [];
+    try { scores = JSON.parse(localStorage.getItem('sc_drift_scores') || '[]'); } catch(e) {}
+    scores.unshift({ total: drift.total, status: drift.status, date: new Date().toISOString() });
+    localStorage.setItem('sc_drift_scores', JSON.stringify(scores));
+  }
+
+  alert('✅ Simulation complete — 15 sessions injected (10 normal + 5 drifting). Reload the history screen to see the drift timeline.');
+}
+
+// ── Wire into existing endRec flow ────────────────────────────────────
+// Patch saveAndHistory to also call integrateWithDrift
+const _origSaveAndHistory = saveAndHistory;
+saveAndHistory = function() {
+  // Run drift integration if we have a valid result
+  if (_res && !_res.isBaseline) {
+    const driftSession = {
+      fa:      _res.fa,
+      ad:      _res.ad,
+      pr:      _res.pr,
+      quality: _qualityScore
+    };
+    const { drift } = integrateWithDrift(driftSession);
+    // Render drift card with computed drift
+    renderDriftCard(drift);
+  }
+  _origSaveAndHistory();
+  // After history renders, also update drift timeline
+};
+
+// Patch endRec to show drift card on results screen
+const _origEndRec_drift = typeof endRec === 'function' ? endRec : null;
+// Hook into the results render path instead — after endRec populates _res
+// We do this by overriding the display path in showScreen
+const _origShowScreen = showScreen;
+showScreen = function(name) {
+  _origShowScreen(name);
+  if (name === 'results' || name === 'history') {
+    const profile = loadDriftProfile();
+    if (name === 'results' && _res && !_res.isBaseline && profile) {
+      const drift = computeDrift({
+        fa: _res.fa, ad: _res.ad, pr: _res.pr, quality: _qualityScore
+      }, profile);
+      renderDriftCard(drift);
+    } else if (name === 'results') {
+      // Show building state
+      renderDriftCard({ status: 'BUILDING', sessionCount: profile ? profile.sessionCount : 0 });
+    }
+    if (name === 'history') {
+        }
+  }
+};
+
+// Expose public API
+window.BaselineDrift = {
+  addSession:       updateDriftProfile,
+  getBaselineProfile,
+  computeDrift,
+  updateBaseline:   updateDriftProfile,
+  getHistory:       buildDriftHistory,
+  exportSummary:    exportDriftSummary,
+  runSimulation:    runDriftSimulation,
+  renderDriftCard,
+};
+
+// On load: bootstrap drift profile from existing sc_hist if profile is absent or stale
+function bootstrapDriftFromHistory() {
+  const existing = loadDriftProfile();
+  const histRaw = (() => { try { return JSON.parse(localStorage.getItem('sc_hist') || '[]'); } catch(e) { return []; } })();
+  const qualityArr = (() => { try { return JSON.parse(localStorage.getItem('sc_quality_scores') || '[]'); } catch(e) { return []; } })();
+
+  // Only rebuild if we have history entries that aren't yet reflected in the profile.
+  // We consider the profile stale if sessionCount < hist.length (new entries added before
+  // the drift module existed, or after a profile reset).
+  const needsRebuild = !existing || existing.sessionCount < histRaw.length;
+
+  if (!needsRebuild || histRaw.length === 0) {
+    if (existing) renderDriftCard({ status: 'BUILDING', sessionCount: existing.sessionCount });
+    return;
+  }
+
+  // Clear stale profile and drift scores so we rebuild cleanly
+  localStorage.removeItem(DRIFT_STORE_KEY);
+  localStorage.removeItem('sc_drift_scores');
+
+  // hist is stored newest-first; process oldest-first so Welford builds naturally
+  const ordered = [...histRaw].reverse();
+
+  ordered.forEach((h, i) => {
+    // Match quality score: qualityArr is also newest-first, so index from end
+    const qIdx = histRaw.length - 1 - i;
+    const quality = qualityArr[qIdx] != null ? qualityArr[qIdx] : 0.72; // sensible default
+
+    const session = {
+      fa:      parseFloat(h.fRaw != null ? h.fRaw : h.f) || 0,
+      ad:      parseFloat(h.aRaw != null ? h.aRaw : h.a) || 0,
+      pr:      parseFloat(h.sRaw != null ? h.sRaw : h.s) || 0,
+      quality
+    };
+
+    const profile = updateDriftProfile(session);
+    const drift   = computeDrift(session, profile);
+
+    // Append drift score to history (oldest-first so unshift reversal matches)
+    let scores = [];
+    try { scores = JSON.parse(localStorage.getItem('sc_drift_scores') || '[]'); } catch(e) {}
+    // Use the entry's date if available for sparkline labels
+    scores.push({ total: drift.total, status: drift.status, date: h.date || new Date().toISOString() });
+    try { localStorage.setItem('sc_drift_scores', JSON.stringify(scores)); } catch(e) {}
+  });
+
+  // Reverse scores to newest-first (matches buildDriftHistory convention)
+  let scores = [];
+  try { scores = JSON.parse(localStorage.getItem('sc_drift_scores') || '[]'); } catch(e) {}
+  scores.reverse();
+  try { localStorage.setItem('sc_drift_scores', JSON.stringify(scores)); } catch(e) {}
+
+  console.log(`[Drift] Bootstrapped from ${ordered.length} existing sessions.`);
+}
+
+window.bootstrapDriftFromHistory = bootstrapDriftFromHistory;
+bootstrapDriftFromHistory();
+
 window.addEventListener('hashchange',()=>{
   if(window.location.hash==='#speech-lab')openSpeechLab();
   else if(document.getElementById('speech-lab-page').style.display!=='none')closeSpeechLab();
 });
 if(window.location.hash==='#speech-lab')openSpeechLab();
+
+/* ══════════════════════════════════════════════════════════
+   SETTINGS
+   ══════════════════════════════════════════════════════════ */
+
+var _cfg = (function(){
+  try{ return JSON.parse(localStorage.getItem('bl_cfg')||'{}'); }catch(e){ return {}; }
+})();
+
+function _saveCfg(){ try{ localStorage.setItem('bl_cfg', JSON.stringify(_cfg)); }catch(e){} }
+
+// ── Open / Close ─────────────────────────────────────────────
+function goSettings(){
+  var overlay = document.getElementById('settings-overlay');
+  overlay.style.display = 'block';
+  overlay.style.animation = 'appIn 0.4s cubic-bezier(0.16,1,0.3,1) forwards';
+  document.body.style.overflow = 'hidden';
+  _loadSettingsUI();
+}
+function closeSettings(){
+  var overlay = document.getElementById('settings-overlay');
+  overlay.style.animation = 'appOut 0.35s ease forwards';
+  setTimeout(function(){ overlay.style.display='none'; overlay.style.animation=''; document.body.style.overflow=''; }, 330);
+}
+
+// ── Color scheme ─────────────────────────────────────────────
+var SCHEMES = {
+  dark:     { '--bg':'#06080f', '--surface':'#0d1220', '--text':'#e8eaf0', '--muted':'#6b7280', '--cb':'rgba(255,255,255,0.03)', '--cbord':'rgba(255,255,255,0.07)' },
+  midnight: { '--bg':'#07071a', '--surface':'#0e0e2c', '--text':'#dde0ff', '--muted':'#7070a8', '--cb':'rgba(120,120,255,0.04)', '--cbord':'rgba(120,120,255,0.09)' },
+  light:    { '--bg':'#f0f4f8', '--surface':'#ffffff',  '--text':'#1a202c', '--muted':'#718096', '--cb':'rgba(0,0,0,0.03)',        '--cbord':'rgba(0,0,0,0.09)' },
+  warm:     { '--bg':'#0f0c07', '--surface':'#1a1508', '--text':'#f0e8d8', '--muted':'#9a8a70', '--cb':'rgba(255,210,120,0.03)', '--cbord':'rgba(255,210,120,0.08)' }
+};
+function applyScheme(name){
+  var s = SCHEMES[name]; if(!s) return;
+  var r = document.documentElement;
+  Object.keys(s).forEach(function(k){ r.style.setProperty(k, s[k]); });
+  _cfg.scheme = name;
+  ['dark','midnight','light','warm'].forEach(function(id){
+    var el = document.getElementById('sc-'+id);
+    if(el) el.classList.toggle('active', id === name);
+  });
+}
+
+// ── Accent color ─────────────────────────────────────────────
+var ACCENT_IDS = { '#00e5c8':'teal','#a855f7':'violet','#3b82f6':'blue','#22c55e':'green','#f59e0b':'amber','#ef4444':'red','#ec4899':'pink' };
+function applyAccent(color){
+  document.documentElement.style.setProperty('--teal', color);
+  _cfg.accent = color;
+  Object.keys(ACCENT_IDS).forEach(function(c){
+    var el = document.getElementById('ac-'+ACCENT_IDS[c]);
+    if(el) el.classList.toggle('active', c === color);
+  });
+  _saveCfg();
+}
+
+// ── Font size ─────────────────────────────────────────────────
+var _fz = 100;
+function adjustFontSize(d){
+  _fz = _fz + (d > 0 ? 5 : -5);
+  if(_fz < 80) _fz = 80;
+  if(_fz > 140) _fz = 140;
+  document.documentElement.style.fontSize = _fz + '%';
+  var el = document.getElementById('font-size-display');
+  if(el) el.textContent = _fz + '%';
+  _cfg.fontSize = _fz;
+}
+
+// ── Accessibility ─────────────────────────────────────────────
+function applyReduceMotion(on){
+  var id='_rm_style', el=document.getElementById(id);
+  if(on && !el){ var s=document.createElement('style'); s.id=id; s.textContent='*,*::before,*::after{animation-duration:0.001s!important;transition-duration:0.001s!important;}'; document.head.appendChild(s); }
+  else if(!on && el){ el.remove(); }
+  _cfg.reduceMotion = on; _saveCfg();
+}
+function applyHighContrast(on){
+  var id='_hc_style', el=document.getElementById(id);
+  if(on && !el){ var s=document.createElement('style'); s.id=id; s.textContent=':root{--cbord:rgba(255,255,255,0.28)!important;--muted:#b8c0cc!important;}'; document.head.appendChild(s); }
+  else if(!on && el){ el.remove(); }
+  _cfg.highContrast = on; _saveCfg();
+}
+function applyDyslexiaFont(on){
+  if(on){
+    if(!document.getElementById('_od_link')){ var lk=document.createElement('link'); lk.id='_od_link'; lk.rel='stylesheet'; lk.href='https://fonts.cdnfonts.com/css/opendyslexic'; document.head.appendChild(lk); }
+    if(!document.getElementById('_od_style')){ var s=document.createElement('style'); s.id='_od_style'; s.textContent="body,p,li,span,div,button{font-family:'OpenDyslexic',sans-serif!important;}"; document.head.appendChild(s); }
+  } else {
+    ['_od_link','_od_style'].forEach(function(id){ var el=document.getElementById(id); if(el) el.remove(); });
+  }
+  _cfg.dyslexia = on; _saveCfg();
+}
+function applyLargeTouchTargets(on){
+  var id='_lt_style', el=document.getElementById(id);
+  if(on && !el){ var s=document.createElement('style'); s.id=id; s.textContent='button,a,input,label{min-height:44px!important;min-width:44px!important;}'; document.head.appendChild(s); }
+  else if(!on && el){ el.remove(); }
+  _cfg.largeTouchTargets = on; _saveCfg();
+}
+
+// ── Load settings into UI ─────────────────────────────────────
+function _loadSettingsUI(){
+  // Accent
+  var accent = _cfg.accent || '#00e5c8';
+  Object.keys(ACCENT_IDS).forEach(function(c){
+    var el = document.getElementById('ac-'+ACCENT_IDS[c]);
+    if(el) el.classList.toggle('active', c === accent);
+  });
+  // Font size display
+  var fd = document.getElementById('font-size-display');
+  if(fd) fd.textContent = _fz + '%';
+  // Toggles
+  function setTog(id, val, fn){ var el=document.getElementById(id); if(el){ el.checked=!!val; if(val) fn(true); } }
+  setTog('tog-motion',   _cfg.reduceMotion,     applyReduceMotion);
+  setTog('tog-contrast', _cfg.highContrast,      applyHighContrast);
+  setTog('tog-dyslexia', _cfg.dyslexia,          applyDyslexiaFont);
+  setTog('tog-touch',    _cfg.largeTouchTargets, applyLargeTouchTargets);
+  // Notif
+  var togNotif = document.getElementById('tog-notif');
+  if(togNotif) togNotif.checked = !!_cfg.notifEnabled;
+  var notifOpts = document.getElementById('notif-options');
+  if(notifOpts) notifOpts.style.display = _cfg.notifEnabled ? 'block' : 'none';
+  if(_cfg.notifCount){ var nc=document.getElementById('notif-count'); if(nc) nc.value=_cfg.notifCount; }
+  if(_cfg.notifStart){ var ns=document.getElementById('notif-start'); if(ns) ns.value=_cfg.notifStart; }
+  if(_cfg.notifEnd)  { var ne=document.getElementById('notif-end');   if(ne) ne.value=_cfg.notifEnd; }
+  updateNotifPreview();
+  _updatePermStatus();
+}
+
+// ── Apply saved settings on page load ─────────────────────────
+(function _applySaved(){
+  if(_cfg.accent) applyAccent(_cfg.accent);
+  if(_cfg.fontSize){ _fz=_cfg.fontSize; document.documentElement.style.fontSize=_fz+'%'; }
+  if(_cfg.reduceMotion) applyReduceMotion(true);
+  if(_cfg.highContrast) applyHighContrast(true);
+  if(_cfg.dyslexia)     applyDyslexiaFont(true);
+  if(_cfg.largeTouchTargets) applyLargeTouchTargets(true);
+})();
+
+// ── Save & Reset ─────────────────────────────────────────────
+function saveSettings(){
+  updateNotifPreview();
+  _saveCfg();
+  if(_cfg.notifEnabled) _scheduleNotifs();
+  else _cancelNotifs();
+  var btn = document.getElementById('save-settings-btn');
+  if(btn){ var orig=btn.textContent; btn.textContent='✓ Saved!'; setTimeout(function(){ btn.textContent=orig; }, 1600); }
+}
+function resetSettings(){
+  _cfg = {};
+  try{ localStorage.removeItem('bl_cfg'); }catch(e){}
+  document.documentElement.style.setProperty('--teal','#00e5c8');
+  _fz = 100;
+  document.documentElement.style.fontSize = '100%';
+  ['_rm_style','_hc_style','_od_style','_od_link','_lt_style'].forEach(function(id){ var el=document.getElementById(id); if(el) el.remove(); });
+  _cancelNotifs();
+  _loadSettingsUI();
+}
+
+/* ══════════════════════════════════════════════════════════
+   DEVICE NOTIFICATIONS (Web Notifications API)
+   ══════════════════════════════════════════════════════════ */
+
+var _notifTimers = [];
+
+function _updatePermStatus(){
+  var el = document.getElementById('notif-perm-status');
+  if(!el) return;
+  if(!('Notification' in window)){
+    el.textContent = 'Notifications not supported in this browser.';
+    var tog = document.getElementById('tog-notif'); if(tog) tog.disabled = true;
+    return;
+  }
+  var p = Notification.permission;
+  if(p === 'granted'){
+    el.textContent = 'Permission granted — notifications will fire from this browser.';
+    el.style.color = 'var(--teal)';
+  } else if(p === 'denied'){
+    el.textContent = 'Blocked — allow notifications in your browser site settings, then reload.';
+    el.style.color = '#ef4444';
+    var tog = document.getElementById('tog-notif'); if(tog){ tog.checked=false; tog.disabled=true; }
+  } else {
+    el.textContent = 'Permission not yet granted — toggle to enable or use the test button.';
+    el.style.color = '';
+  }
+}
+
+// Single shared helper: request permission if needed, then run callback
+function _withNotifPermission(cb){
+  if(!('Notification' in window)){ alert('Notifications are not supported in this browser.'); return; }
+  if(Notification.permission === 'granted'){ cb(); return; }
+  if(Notification.permission === 'denied'){
+    alert('Notifications are blocked. Go to your browser\'s site settings, allow notifications for this page, then reload.');
+    return;
+  }
+  Notification.requestPermission().then(function(perm){
+    _updatePermStatus();
+    if(perm === 'granted'){ cb(); }
+    else { alert('Notification permission was not granted.'); }
+  });
+}
+
+function handleNotifToggle(on){
+  var opts = document.getElementById('notif-options');
+  if(!on){
+    _cancelNotifs();
+    _cfg.notifEnabled = false;
+    if(opts) opts.style.display = 'none';
+    return;
+  }
+  _withNotifPermission(function(){
+    _cfg.notifEnabled = true;
+    if(opts) opts.style.display = 'block';
+    var tog = document.getElementById('tog-notif'); if(tog) tog.checked = true;
+  });
+}
+
+function updateNotifPreview(){
+  var countEl = document.getElementById('notif-count');
+  var startEl = document.getElementById('notif-start');
+  var endEl   = document.getElementById('notif-end');
+  if(!countEl) return;
+  var count = parseInt(countEl.value, 10) || 3;
+  var start = startEl ? startEl.value : '08:00';
+  var end   = endEl   ? endEl.value   : '21:00';
+  var lbl = document.getElementById('notif-count-lbl');
+  if(lbl) lbl.textContent = count;
+  _cfg.notifCount = count;
+  _cfg.notifStart = start;
+  _cfg.notifEnd   = end;
+  var sh = parseInt(start.split(':')[0],10), sm = parseInt(start.split(':')[1]||0,10);
+  var eh = parseInt(end.split(':')[0],10),   em = parseInt(end.split(':')[1]||0,10);
+  var windowMins = (eh*60+em) - (sh*60+sm);
+  var prev = document.getElementById('notif-preview');
+  if(prev && windowMins > 0 && count > 0){
+    var avgMins = Math.round(windowMins / count);
+    var ah = Math.floor(avgMins/60), am = avgMins % 60;
+    var avgStr = ah > 0 ? (ah+'h'+(am > 0 ? ' '+am+'m' : '')) : (am+'m');
+    prev.innerHTML = '⏰ &nbsp;'+count+' reminder'+(count>1?'s':'')+' &middot; '+start+' – '+end+' &middot; ~'+avgStr+' apart on average';
+  }
+}
+
+function _fireNotif(title, body, tag){
+  try{
+    var n = new Notification(title, {
+      body: body,
+      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="%2306080f"/><text y="44" x="16" font-size="36">🧠</text></svg>',
+      tag: tag || 'baseline-notif',
+      requireInteraction: false
+    });
+    n.onclick = function(){ window.focus(); n.close(); openApp(); };
+  } catch(e){ console.warn('Notification error:', e); }
+}
+
+function sendDemoNotif(){
+  _withNotifPermission(function(){
+    _fireNotif('Baseline — Check-In Reminder', 'Time for your 30-second FAST check. How are you feeling right now?', 'baseline-demo');
+  });
+}
+
+function _scheduleNotifs(){
+  _cancelNotifs();
+  if(Notification.permission !== 'granted') return;
+  var count = parseInt(_cfg.notifCount||3, 10);
+  var start = _cfg.notifStart || '08:00';
+  var end   = _cfg.notifEnd   || '21:00';
+  var now = new Date();
+  var sh=parseInt(start.split(':')[0],10), sm=parseInt(start.split(':')[1]||0,10);
+  var eh=parseInt(end.split(':')[0],10),   em=parseInt(end.split(':')[1]||0,10);
+  var startMs = new Date(now.getFullYear(),now.getMonth(),now.getDate(),sh,sm,0).getTime();
+  var endMs   = new Date(now.getFullYear(),now.getMonth(),now.getDate(),eh,em,0).getTime();
+  var nowMs   = now.getTime();
+  var windowStart = Math.max(nowMs, startMs);
+  var remaining = endMs - windowStart;
+  if(remaining <= 0) return;
+  var msgs = [
+    ['Baseline — Check-In Reminder','Time for your 30-second FAST check. How are you feeling?'],
+    ['Quick check — 30 seconds','Run your FAST screening and keep your streak going.'],
+    ['Baseline Reminder','Regular check-ins help you notice changes early. Ready?'],
+    ['Check in with yourself','Your baseline is waiting. One 30-second screening now.']
+  ];
+  var times = [];
+  for(var i=0;i<count;i++) times.push(windowStart + Math.random()*remaining);
+  times.sort(function(a,b){return a-b;});
+  times.forEach(function(fireMs,idx){
+    var delay = fireMs - nowMs;
+    if(delay < 0) return;
+    var m = msgs[Math.floor(Math.random()*msgs.length)];
+    _notifTimers.push(setTimeout(function(){ _fireNotif(m[0],m[1],'baseline-'+idx); }, delay));
+  });
+}
+
+function _cancelNotifs(){
+  _notifTimers.forEach(function(t){ clearTimeout(t); });
+  _notifTimers = [];
+}
+
+(function _initNotifs(){
+  if(_cfg.notifEnabled && Notification.permission === 'granted') _scheduleNotifs();
+})();
 </script>
 </body>
 </html>
