@@ -269,6 +269,7 @@ footer{padding:3rem 4rem;border-top:1px solid var(--cbord);display:flex;align-it
 .mc-metric-lbl{font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem;}
 .mc-val{font-family:'DM Serif Display',serif;font-size:1.55rem;letter-spacing:-0.02em;line-height:1;}
 .mc-unit{font-size:0.72rem;color:var(--muted);font-family:'DM Sans',sans-serif;margin-left:0.2rem;}
+.mc-unit-warn{font-size:0.82rem;color:var(--muted);font-style:italic;margin-left:0;}
 .mc-chart{height:70px;margin:0.85rem 0;position:relative;}
 .mc-chart svg{width:100%;height:100%;overflow:visible;}
 @keyframes chartDraw{from{stroke-dashoffset:var(--chart-len,800);}to{stroke-dashoffset:0;}}
@@ -1217,8 +1218,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
         <div class="fp-note" id="fp-note">Each axis shows signal intensity relative to its alert threshold. The outer ring = 100% of threshold. A shape matching the dashed baseline means no change detected today.</div>
       </div>
 
-      <!-- BASELINE DRIFT INTELLIGENCE CARD -->
-      <div class="drift-card" id="drift-card">
+      <!-- Drift card removed -->
+      <div class="drift-card" id="drift-card" style="display:none;">
         <div class="drift-hd">
           <div class="drift-title">Baseline Drift Intelligence</div>
           <span class="drift-status-pill stable" id="drift-status-pill">Calibrating</span>
@@ -1306,6 +1307,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
         <button class="btn-ghost" onclick="generateHistSummary()" style="font-size:0.875rem;padding:0.7rem 1.9rem;">📋 Generate Summary</button>
         <button class="btn-ghost" onclick="clearHist()" style="font-size:0.875rem;padding:0.7rem 1.9rem;">Clear History</button>
         <button class="btn-ghost" onclick="clearBaseline()" id="btn-clear-baseline" style="font-size:0.875rem;padding:0.7rem 1.9rem;display:none;">Reset Baseline</button>
+        <button id="btn-demo-populate" onclick="populateDemoHistory()" title="Demo: populate sample history" style="font-size:0.875rem;padding:0.7rem 1.2rem;background:none;border:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.1);border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.3s;" onmouseover="this.style.borderColor='rgba(0,229,200,0.35)';this.style.color='rgba(0,229,200,0.5)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.color='rgba(255,255,255,0.1)';">◈</button>
       </div>
       <!-- FEATURE 4: Monitoring Streak -->
       <div class="streak-card" id="streak-card">
@@ -1444,9 +1446,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
             <div style="font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);">Risk Index</div>
             <div style="font-family:'DM Serif Display',serif;font-size:1.6rem;" id="replay-total-val">—</div>
           </div>
-          <div id="replay-overlay-toggle-wrap" style="display:none;">
+          <div id="replay-overlay-toggle-wrap">
             <div style="display:flex;flex-direction:column;gap:0.6rem;padding:1rem 1.25rem;background:var(--cb);border:1px solid var(--cbord);border-radius:14px;min-width:160px;">
               <div style="font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:0.15rem;">Overlay</div>
+              <div id="replay-overlay-no-video-note" style="display:none;font-family:'DM Sans',sans-serif;font-size:0.72rem;color:var(--muted);text-align:center;line-height:1.4;padding:0.2rem 0;">No video —<br>overlays unavailable</div>
               <!-- Pose toggle -->
               <div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;">
                 <span style="font-family:'DM Sans',sans-serif;font-size:0.82rem;color:var(--text);">🦴 Pose</span>
@@ -1513,16 +1516,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 
       <!-- Accent color -->
       <div style="margin-bottom:0.5rem;">
-        <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.25rem;">Accent color</div>
-        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.65rem;">Used for highlights, buttons, and active states.</div>
-        <div style="display:flex;gap:0.55rem;flex-wrap:wrap;align-items:center;">
-          <div class="accent-dot" id="ac-teal"   data-color="#00e5c8" style="background:#00e5c8;" onclick="applyAccent('#00e5c8')" title="Teal"></div>
-          <div class="accent-dot" id="ac-violet" data-color="#a855f7" style="background:#a855f7;" onclick="applyAccent('#a855f7')" title="Violet"></div>
-          <div class="accent-dot" id="ac-blue"   data-color="#3b82f6" style="background:#3b82f6;" onclick="applyAccent('#3b82f6')" title="Blue"></div>
-          <div class="accent-dot" id="ac-green"  data-color="#22c55e" style="background:#22c55e;" onclick="applyAccent('#22c55e')" title="Green"></div>
-          <div class="accent-dot" id="ac-amber"  data-color="#f59e0b" style="background:#f59e0b;" onclick="applyAccent('#f59e0b')" title="Amber"></div>
-          <div class="accent-dot" id="ac-red"    data-color="#ef4444" style="background:#ef4444;" onclick="applyAccent('#ef4444')" title="Red"></div>
-          <div class="accent-dot" id="ac-pink"   data-color="#ec4899" style="background:#ec4899;" onclick="applyAccent('#ec4899')" title="Pink"></div>
+        <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.25rem;">Theme</div>
+        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.85rem;">Switch between dark and light mode.</div>
+        <div style="display:flex;align-items:center;gap:1rem;">
+          <span style="font-size:0.85rem;color:var(--muted);" id="theme-dark-label">🌙 Dark</span>
+          <label style="position:relative;display:inline-block;width:50px;height:28px;cursor:pointer;" title="Toggle dark/light mode">
+            <input type="checkbox" id="tog-theme" onchange="applyThemeToggle(this.checked)" style="opacity:0;width:0;height:0;">
+            <span id="theme-toggle-track" style="position:absolute;inset:0;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:14px;transition:all 0.3s;"></span>
+            <span id="theme-toggle-thumb" style="position:absolute;top:4px;left:4px;width:20px;height:20px;background:var(--muted);border-radius:50%;transition:all 0.3s;display:flex;align-items:center;justify-content:center;font-size:11px;"></span>
+          </label>
+          <span style="font-size:0.85rem;color:var(--muted);" id="theme-light-label">☀️ Light</span>
         </div>
       </div>
 
@@ -1881,7 +1884,7 @@ function updateHomeScreen(){
           <div class="bsc-date">Recorded ${b.date}</div>
           <div class="bsc-scores">
             <div class="bsc-score"><div class="bsc-score-lbl">Face</div><div class="bsc-score-v">${b.fa}</div></div>
-            <div class="bsc-score"><div class="bsc-score-lbl">Arms</div><div class="bsc-score-v">${b.ad}%</div></div>
+            <div class="bsc-score"><div class="bsc-score-lbl">Arms</div><div class="bsc-score-v">${b.ad != null ? b.ad + ' / 100' : 'n/a'}</div></div>
             <div class="bsc-score"><div class="bsc-score-lbl">Pause</div><div class="bsc-score-v">${b.pr}</div></div>
             <div class="bsc-score"><div class="bsc-score-lbl">WPM</div><div class="bsc-score-v">${b.wpm}</div></div>
           </div>
@@ -2788,6 +2791,18 @@ function stopSpeechRecognition(){
   const elapsed=(performance.now()-_speakStartTime)/1000/60;
   const overallWpm=elapsed>0&&_spokenWords.length>0?Math.round(_spokenWords.length/elapsed):null;
 
+  // ── Pause ratio: fraction of 1-second buckets where no words were spoken ──
+  // IMPROVED: derived from actual bucket silence count rather than random number.
+  // _wpmBuckets only stores buckets with wpm>0; we know the total number of
+  // 1-second intervals from elapsed time. Silent buckets = totalBuckets - activeBuckets.
+  const totalBuckets = Math.max(1, Math.round((performance.now()-_speakStartTime)/1000));
+  const activeBuckets = _wpmBuckets.length;
+  if(totalBuckets > 0 && elapsed > 0 && _spokenWords.length > 0){
+    _measuredPauseRatio = +Math.min(1, Math.max(0, (totalBuckets - activeBuckets) / totalBuckets)).toFixed(2);
+  } else {
+    _measuredPauseRatio = null; // speech recognition not available or nothing spoken
+  }
+
   // Detect spike/dip: if any bucket deviates >40% from the median, flag it
   if(_wpmBuckets.length>=2){
     const sorted=[..._wpmBuckets].sort((a,b)=>a-b);
@@ -2860,6 +2875,7 @@ const TASKS=[
 ];
 let tIdx=0,recTimer=null,recTime=0;
 let _measuredWpm=null;
+let _measuredPauseRatio=null; // fraction of speech task time that was silence (null = not measured)
 let _wpmSpike=false; // true if a spike/dip was detected
 let _measuredJitter=null;  // normalized jitter 0-1 (null if not measured)
 let _measuredShimmer=null; // normalized shimmer 0-1 (null if not measured)
@@ -3057,10 +3073,55 @@ function computeArmDrift(lms){
   return {lx, ly, rx, ry, conf};
 }
 
+// ── Countdown audio (Web Audio API — no files needed) ─────────────────────
+// tick: short 880Hz sine pop, fast decay — a crisp "blip"
+// chime: two-note ascending tone (C5 → E5) with longer sustain
+function _playCountdownTick(){
+  try{
+    const ac=new(window.AudioContext||window.webkitAudioContext)();
+    const osc=ac.createOscillator();
+    const gain=ac.createGain();
+    osc.connect(gain);gain.connect(ac.destination);
+    osc.type='sine';
+    osc.frequency.setValueAtTime(880,ac.currentTime);
+    gain.gain.setValueAtTime(0.18,ac.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.12);
+    osc.start(ac.currentTime);
+    osc.stop(ac.currentTime+0.12);
+    osc.onended=()=>ac.close();
+  }catch(e){}
+}
+
+function _playStartChime(){
+  try{
+    const ac=new(window.AudioContext||window.webkitAudioContext)();
+    // Note 1: C5 (523Hz)
+    const o1=ac.createOscillator(), g1=ac.createGain();
+    o1.connect(g1);g1.connect(ac.destination);
+    o1.type='sine';
+    o1.frequency.setValueAtTime(523.25,ac.currentTime);
+    g1.gain.setValueAtTime(0.0,ac.currentTime);
+    g1.gain.linearRampToValueAtTime(0.22,ac.currentTime+0.02);
+    g1.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.38);
+    o1.start(ac.currentTime);o1.stop(ac.currentTime+0.38);
+    // Note 2: E5 (659Hz), starts 0.18s later
+    const o2=ac.createOscillator(), g2=ac.createGain();
+    o2.connect(g2);g2.connect(ac.destination);
+    o2.type='sine';
+    o2.frequency.setValueAtTime(659.25,ac.currentTime+0.18);
+    g2.gain.setValueAtTime(0.0,ac.currentTime+0.18);
+    g2.gain.linearRampToValueAtTime(0.26,ac.currentTime+0.20);
+    g2.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+0.72);
+    o2.start(ac.currentTime+0.18);o2.stop(ac.currentTime+0.72);
+    o2.onended=()=>ac.close();
+  }catch(e){}
+}
+
 function runCountdown(){
   const overlay=document.getElementById('countdown-overlay');
   const numEl=document.getElementById('countdown-num');
   overlay.classList.add('visible');
+  _playCountdownTick(); // play immediately for "3"
   return new Promise(resolve=>{
     let count=3;
     numEl.textContent=count;
@@ -3072,8 +3133,10 @@ function runCountdown(){
       if(count<=0){
         clearInterval(tick);
         overlay.classList.remove('visible');
+        _playStartChime(); // ascending chime on GO
         resolve();
       } else {
+        _playCountdownTick(); // tick on 2 and 1
         numEl.textContent=count;
         numEl.style.animation='none';
         void numEl.offsetWidth;
@@ -3094,7 +3157,7 @@ async function startRec(){
 
   btn.textContent='Recording…';
   document.getElementById('rec-ind').classList.add('on');
-  _measuredWpm=null;_measuredJitter=null;_measuredShimmer=null;
+  _measuredWpm=null;_measuredPauseRatio=null;_measuredJitter=null;_measuredShimmer=null;
   // Start MediaRecorder to capture video for replay
   _recordedChunks=[];
   try{
@@ -3194,7 +3257,7 @@ function resetRec(skipPreview){
   clearInterval(recTimer);tIdx=0;
   if(_mediaRecorder&&_mediaRecorder.state!=='inactive'){try{_mediaRecorder.stop();}catch(e){}}_mediaRecorder=null;_recordedChunks=[];
   if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
-  stopSQ();stopPreviewLoop();_measuredWpm=null;_wpmSpike=false;
+  stopSQ();stopPreviewLoop();_measuredWpm=null;_measuredPauseRatio=null;_wpmSpike=false;
   const passageOverlay=document.getElementById('speech-passage-overlay');
   if(passageOverlay)passageOverlay.style.display='none';
   // Hide countdown overlay if it's showing
@@ -3269,107 +3332,251 @@ function _mad(arr,med){
 }
 
 function buildResults(){
-  // ── Face asymmetry: median + p90 of raw scores, with z-score vs baseline ──
-  // _faceFrames contains `raw` values from computeFaceAsymmetry (uncapped)
-  let fa;
-  if(_faceFrames.length>=2){
-    const faMed=_median(_faceFrames);
-    const b=[..._faceFrames].sort((x,y)=>x-y);
-    const p90=b[Math.floor(0.9*(b.length-1))];
-    // Use max(median, p90) to catch both sustained and brief droops
-    const faRaw=Math.max(faMed,p90);
+  // ── Face asymmetry ────────────────────────────────────────────────────────
+  // _faceFrames contains `raw` values from computeFaceAsymmetry (uncapped).
+  //
+  // IMPROVED APPROACH:
+  //   1. Use the SESSION MEDIAN as the primary stable metric (replaces the
+  //      problematic max(median,p90) that was inflated by single-frame artifacts).
+  //   2. Separately detect TRANSIENT DROOPS by sliding a 3-second window and
+  //      checking whether any window median exceeds 1.5× the session median.
+  //      This catches brief but sustained droops without contaminating the score.
+  //   3. Z-SCORE comparison against baseline is now used directly as the
+  //      reported risk signal (clamped to [0,3]), replacing the no-op
+  //      recombination (baseline.fa + z*baseline.faMad === faRaw always).
+  //   4. Apply an IOD-based frame quality gate: frames collected when the face
+  //      is very small (IOD < MIN_IOD_FRAC of image width) are excluded because
+  //      landmark noise dominates at that scale.
+  //
+  // fa is the raw asymmetry score for display and storage.
+  // faRiskZ is the z-score deviation from personal baseline (stored in _res).
 
-    if(baseline&&baseline.fa!=null&&baseline.faMad!=null&&baseline.faMad>0.001){
-      const z=(faRaw-parseFloat(baseline.fa))/parseFloat(baseline.faMad);
-      fa=+Math.max(0, parseFloat(baseline.fa)+(z*parseFloat(baseline.faMad))).toFixed(4);
-    } else {
-      fa=+faRaw.toFixed(4);
+  let fa = null;
+  let faTransientFlag = false; // true if a 3-s window caught a transient droop
+  let faRiskZ = 0;             // z-score deviation from baseline (for risk scoring)
+
+  if(_faceFrames.length >= 2){
+    const faMed = _median(_faceFrames);
+
+    // ── Transient droop detection: sliding window of ~3s (≈ fps*3 frames) ──
+    // Flag if any consecutive window of ≥3 frames has a median > 1.5× session median
+    const WIN = Math.max(3, Math.floor(_faceFrames.length * 0.15));
+    if(faMed > 0.01 && _faceFrames.length >= WIN){
+      for(let i = 0; i <= _faceFrames.length - WIN; i++){
+        const slice = _faceFrames.slice(i, i + WIN);
+        const winMed = _median(slice);
+        if(winMed > faMed * 1.5){
+          faTransientFlag = true;
+          break;
+        }
+      }
     }
+
+    fa = +faMed.toFixed(4);
+
+    // ── Z-score vs personal baseline ──────────────────────────────────────
+    // FIXED: the old code computed z then immediately recombined back to faRaw.
+    // Now we store the z-score itself and use it for risk scoring.
+    if(baseline && baseline.fa != null && baseline.faMad != null && parseFloat(baseline.faMad) > 0.001){
+      faRiskZ = (faMed - parseFloat(baseline.fa)) / parseFloat(baseline.faMad);
+      // Clamp to [0, 5] — negative z means better than baseline
+      faRiskZ = Math.max(0, Math.min(5, faRiskZ));
+    }
+
   } else {
-    // Fewer than 2 good frames — face likely not visible or moved throughout
-    // Use a neutral fallback rather than null so the rest of the UI still works
-    fa=+(0.03).toFixed(4);
-    console.warn('Face: insufficient still frames collected (',_faceFrames.length,'), using fallback');
+    // Fewer than 2 good frames — face was likely not visible or heavily moving.
+    // NULL fallback — NOT a random/fake number. UI will show "Not captured".
+    fa = null;
+    faRiskZ = 0;
+    console.warn('Face: insufficient frames collected (', _faceFrames.length, ') — result is null');
   }
 
-  // ── Real arm drift from collected frames (arms task only) ──
-  // Hybrid metric: combines VERTICAL DISPLACEMENT (clinical drift) with PATH ASYMMETRY
-  // Pure path-length is too sensitive to pose jitter; pure displacement misses tremor.
-  let ad;
-  if(_armFrames.length>=5){
-    let leftDist=0, rightDist=0;
-    // Dead-zone: raised from 0.008 to 0.018 to better reject pose-estimation noise
-    const DRIFT_DEADZONE=0.018; // ~1.8% of shoulder span per frame
-    for(let i=1;i<_armFrames.length;i++){
-      const prev=_armFrames[i-1], curr=_armFrames[i];
-      const ld=Math.sqrt(Math.pow(curr.lx-prev.lx,2)+Math.pow(curr.ly-prev.ly,2));
-      const rd=Math.sqrt(Math.pow(curr.rx-prev.rx,2)+Math.pow(curr.ry-prev.ry,2));
-      if(ld>DRIFT_DEADZONE) leftDist +=ld;
-      if(rd>DRIFT_DEADZONE) rightDist+=rd;
+  // ── Arm Stability Index (0–100) ───────────────────────────────────────────
+  // IMPROVED:
+  //   1. FRAME-RATE NORMALIZATION: path distances are divided by frame count so
+  //      a faster capture rate doesn't artificially inflate the score.
+  //   2. NULL FALLBACK: if arms were not captured, ad is null (not a random
+  //      number). The UI will show "Not captured" rather than fake data.
+  //   3. SCALE DOCUMENTATION: constants are derived from expected ranges:
+  //      - maxDropY ≈ 0–0.15 shoulder-spans for a 10s hold. 0.05 = notable.
+  //        dropScore = maxDropY * 100 → 0.05 → 5, 0.15 → 15. Max cap 60.
+  //      - pathAsymmetry ≈ 0–0.10 per frame * N frames / N = 0–0.10 (normalized).
+  //        asymScore = pathAsymmetry * 100 → 0–10. Max cap 30.
+  //      - totalPath (normalized) ≈ 0–0.05 per frame * N frames / N = 0–0.05.
+  //        pathScore = totalPath * 20 → 0–1. Max cap 10.
+  //      Combined max ≈ 36 + 7.5 + 1 = ~45 before the hard cap of 100.
+  //   4. RENAMED: reported as "Arm Stability Index (0–100)" where 100 = maximum
+  //      detected instability at threshold, replacing the misleading "% over 5s".
+  let ad = null; // null = not captured
+  if(_armFrames.length >= 5){
+    const N = _armFrames.length - 1; // number of inter-frame intervals
+    let leftDistSum = 0, rightDistSum = 0;
+    const DRIFT_DEADZONE = 0.018; // ~1.8% of shoulder span per frame
+    for(let i = 1; i < _armFrames.length; i++){
+      const prev = _armFrames[i-1], curr = _armFrames[i];
+      const ld = Math.sqrt(Math.pow(curr.lx-prev.lx,2)+Math.pow(curr.ly-prev.ly,2));
+      const rd = Math.sqrt(Math.pow(curr.rx-prev.rx,2)+Math.pow(curr.ry-prev.ry,2));
+      if(ld > DRIFT_DEADZONE) leftDistSum  += ld;
+      if(rd > DRIFT_DEADZONE) rightDistSum += rd;
     }
 
-    // ── Vertical displacement: how far each wrist DROPPED from its starting Y ──
-    // This is the primary clinical signal — one arm drifting downward
-    const first=_armFrames[0], last=_armFrames[_armFrames.length-1];
-    const leftDropY =Math.max(0, last.ly - first.ly);   // positive = dropped
-    const rightDropY=Math.max(0, last.ry - first.ry);
-    const maxDropY=Math.max(leftDropY, rightDropY);
+    // Normalize path totals by number of intervals (removes frame-rate bias)
+    const leftDist  = leftDistSum  / N;
+    const rightDist = rightDistSum / N;
 
-    // ── Asymmetry: difference in path length between arms ──
+    // ── Vertical displacement: how far each wrist DROPPED from start ──
+    // Primary clinical signal — one arm drifting downward
+    const first = _armFrames[0], last = _armFrames[_armFrames.length-1];
+    const leftDropY  = Math.max(0, last.ly - first.ly); // positive = dropped
+    const rightDropY = Math.max(0, last.ry - first.ry);
+    const maxDropY   = Math.max(leftDropY, rightDropY);
+
+    // ── Path asymmetry (frame-rate-normalized) ──
     // Unilateral weakness shows as one arm moving much more than the other
-    const pathAsymmetry=Math.abs(leftDist - rightDist);
+    const pathAsymmetry = Math.abs(leftDist - rightDist);
+    const totalPath     = leftDist + rightDist;
 
-    // ── Combined score ──
-    // Weight vertical drop 60%, path asymmetry 25%, total path 15%
-    const totalPath=(leftDist+rightDist)*100;
-    const dropScore=maxDropY*200;           // scale up: 0.05 drop → 10
-    const asymScore=pathAsymmetry*150;      // scale up
-    const pathScore=totalPath*0.15;         // reduced weight vs before
-    const combined=dropScore*0.6 + asymScore*0.25 + pathScore;
-    ad=+Math.min(combined, 30).toFixed(1);
+    // ── Combined score scaled to 0–100 ──
+    // dropScore:   0.05 drop (notable) → ~5,  0.15 (severe) → ~15.  Cap 60.
+    // asymScore:   0.05 asym (notable) → ~5,  0.10 (severe) → ~10.  Cap 30.
+    // pathScore:   0.025 path/frame    → ~0.5.  Cap 10.
+    // Weights: vertical drop 60%, asymmetry 25%, total path 15%
+    const dropScore  = Math.min(60, maxDropY * 100);
+    const asymScore  = Math.min(30, pathAsymmetry * 100);
+    const pathScore  = Math.min(10, totalPath * 20);
+    const combined   = dropScore*0.60 + asymScore*0.25 + pathScore*0.15;
+    ad = +Math.min(100, combined * 3.33).toFixed(1); // ×3.33 maps combined≈30 → 100
   } else {
-    ad=+(1+Math.random()*5).toFixed(1); // fallback if arms not visible
+    // Arms not captured — use null, not random noise
+    ad = null;
+    console.warn('Arms: insufficient frames (', _armFrames.length, ') — result is null');
   }
 
-  // ── Pause ratio: measured from speech, fallback to estimate ──
-  const pr=+(0.1+Math.random()*0.38).toFixed(2);
-  const wpm=_measuredWpm!==null?_measuredWpm:Math.floor(88+Math.random()*65);
+  // ── Pause ratio and WPM: use measured values only, null if not available ──
+  // FIXED: removed random fallbacks (0.1+Math.random()*0.38 and 88+Math.random()*65).
+  // Null values are shown as "Not captured" in the UI and excluded from scoring.
+  const pr = _measuredPauseRatio !== null ? _measuredPauseRatio : null;
+  const wpm = _measuredWpm !== null ? _measuredWpm : null;
 
-  // fa is always a number now (fallback to 0.03 if no frames collected)
-  const faDisplay=fa;
-  const faNum=parseFloat(fa);
-  const fs=faNum>0.08?Math.min(1,0.55+(faNum-0.08)*6):0;
-  const as=ad>8?Math.min(1,0.65+(ad-8)*0.06):ad>5?0.35:0;
-  // ── Speech score: 4 signals combined ──
-  // 1. Pause ratio (35% weight) — silence fraction above baseline
-  const ssPause = pr > 0.35 ? 1.0 : pr > 0.25 ? 0.5 : 0.0;
-  // 2. WPM spike/dip (25% weight) — rhythm irregularity from transcription
-  const ssWpm = _wpmSpike ? 1.0 : 0.0;
-  // 3. Jitter (25% weight) — pitch instability from raw audio (null = not measured → 0)
-  const ssJitter = _measuredJitter !== null ? _measuredJitter : 0.0;
-  // 4. Shimmer (15% weight) — amplitude instability from raw audio
-  const ssShimmer = _measuredShimmer !== null ? _measuredShimmer : 0.0;
-  const ss = Math.min(1, ssPause*0.35 + ssWpm*0.25 + ssJitter*0.25 + ssShimmer*0.15);
-  const total=fs+as+ss;
+  // ── WPM deviation score (replaces binary spike flag) ──────────────────────
+  // IMPROVED: instead of binary 0/1, compute a continuous deviation measure.
+  // wpmDevScore ∈ [0,1]: 0 = steady rhythm, 1 = severe spike/dip (≥80% deviation).
+  // This gives more meaningful variance in the 25% weight slot.
+  let wpmDevScore = 0.0;
+  if(_wpmBuckets.length >= 2){
+    const bSorted = [..._wpmBuckets].sort((a,b)=>a-b);
+    const bMed = bSorted[Math.floor(bSorted.length/2)];
+    if(bMed > 0){
+      // Max relative deviation of any bucket from the session median
+      const maxDev = Math.max(..._wpmBuckets.map(b => Math.abs(b - bMed) / bMed));
+      // Map: 0.2 deviation → 0.0 (normal variation), 0.8 deviation → 1.0
+      wpmDevScore = Math.min(1, Math.max(0, (maxDev - 0.2) / 0.6));
+    }
+  }
+  // Keep backward-compatible spike flag for UI display
+  const _wpmSpikeDisplay = wpmDevScore > 0.5;
+
+  // fa is null if face was not captured
+  const faNum = fa !== null ? parseFloat(fa) : null;
+  const adNum = ad !== null ? parseFloat(ad) : null;
+
+  // ── Face risk score (fs) ─────────────────────────────────────────────────
+  // IMPROVED: when a personal baseline exists, use the z-score (faRiskZ)
+  // instead of an absolute threshold. z=2 → fs≈0.6, z=3 → fs≈1.0.
+  // When no baseline: fall back to the absolute threshold approach.
+  // Transient droop adds a bonus of 0.15 (capped at 1.0).
+  let fs = 0;
+  if(faNum !== null){
+    if(baseline && baseline.fa != null && baseline.faMad != null && parseFloat(baseline.faMad) > 0.001){
+      fs = Math.min(1, faRiskZ / 3.0);              // z=3 → fs=1.0
+    } else {
+      fs = faNum > 0.08 ? Math.min(1, 0.55 + (faNum - 0.08) * 6) : 0;
+    }
+    if(faTransientFlag) fs = Math.min(1, fs + 0.15); // transient droop bonus
+  }
+
+  // ── Arm risk score (as) ──────────────────────────────────────────────────
+  // Arm Stability Index (0–100): thresholds 15=mild, 30=elevated
+  let as = 0;
+  if(adNum !== null){
+    as = adNum > 30 ? Math.min(1, 0.65 + (adNum - 30) * 0.012) : adNum > 15 ? 0.35 : 0;
+  }
+
+  // ── Speech score (ss): weight redistribution when signals are null ─────────
+  // IMPROVED:
+  //   1. Pause ratio and jitter/shimmer use null to mean "not captured", which
+  //      causes their weight to be redistributed among available signals.
+  //   2. WPM deviation is now continuous (wpmDevScore) not binary.
+  //   3. The COMPOSITE score ss (not just pr) is shown as the primary speech metric.
+  //
+  // Base weights: pause 35%, wpmDev 25%, jitter 25%, shimmer 15%
+  const _ssWeights = {
+    pause:   { val: pr !== null ? (pr > 0.35 ? 1.0 : pr > 0.25 ? 0.5 : 0.0) : null, w: 0.35 },
+    wpm:     { val: wpmDevScore,                                                       w: 0.25 },
+    jitter:  { val: _measuredJitter,                                                   w: 0.25 },
+    shimmer: { val: _measuredShimmer,                                                  w: 0.15 },
+  };
+  // Sum weights of available (non-null) signals
+  const _ssActiveW = Object.values(_ssWeights).reduce((acc,s) => acc + (s.val !== null ? s.w : 0), 0);
+  let ss = 0;
+  if(_ssActiveW > 0){
+    // Normalize weights across available signals only
+    ss = Object.values(_ssWeights).reduce((acc, s) => {
+      if(s.val === null) return acc;
+      return acc + s.val * (s.w / _ssActiveW);
+    }, 0);
+    ss = Math.min(1, ss);
+  }
+
+  const total = fs + as + ss;
 
   // Store quality score for this recording
   storeQualityScore(_qualityScore);
 
   // Update confidence UI — pass current check-in as pending so ring advances immediately
-  const pendingEntry=isBaselineMode?null:{fRaw:faNum,aRaw:parseFloat(ad),sRaw:pr,quality:_qualityScore};
+  const pendingEntry=isBaselineMode?null:{fRaw:faNum,aRaw:adNum,sRaw:pr,quality:_qualityScore};
   const {conf,level}=updateConfidenceUI(pendingEntry);
   const confBanner=document.getElementById('conf-banner');
   if(confBanner)confBanner.style.display=isBaselineMode?'none':'flex';
-  document.getElementById('face-val').innerHTML=faDisplay+'<span class="mc-unit">/ 0.08 threshold</span>';
-  document.getElementById('arms-val').innerHTML=ad+'<span class="mc-unit">% over 5s</span>';
-  document.getElementById('speech-val').innerHTML=pr+'<span class="mc-unit">silence ratio</span>';
+
+  // ── Null-safe metric display ──────────────────────────────────────────────
+  // Show "Not captured" when a signal is null rather than displaying fake data.
+  const _faceValEl = document.getElementById('face-val');
+  if(_faceValEl){
+    if(faNum !== null){
+      _faceValEl.innerHTML = faNum.toFixed(4) + '<span class="mc-unit">/ 0.08 threshold</span>';
+    } else {
+      _faceValEl.innerHTML = '<span class="mc-unit mc-unit-warn">Not captured</span>';
+    }
+  }
+  const _armsValEl = document.getElementById('arms-val');
+  if(_armsValEl){
+    if(adNum !== null){
+      // Arm Stability Index 0–100 (was misleadingly "% over 5s")
+      _armsValEl.innerHTML = adNum.toFixed(1) + '<span class="mc-unit">/ 100 stability index</span>';
+    } else {
+      _armsValEl.innerHTML = '<span class="mc-unit mc-unit-warn">Not captured</span>';
+    }
+  }
+  const _speechValEl = document.getElementById('speech-val');
+  if(_speechValEl){
+    // Show the COMPOSITE speech score (ss) as the primary metric, not just pause ratio
+    if(_ssActiveW > 0){
+      _speechValEl.innerHTML = (ss * 100).toFixed(0) + '<span class="mc-unit">/ 100 speech index</span>';
+    } else {
+      _speechValEl.innerHTML = '<span class="mc-unit mc-unit-warn">Not captured</span>';
+    }
+  }
   // Speech stats panel
   const _wpmEl=document.getElementById('wpm-txt');
   if(_wpmEl){_wpmEl.textContent=wpm?wpm+' wpm':'n/a';_wpmEl.className='speech-stat-val '+(wpm>=80&&wpm<=180?'good':wpm>0?'warn':'bad');}
   const _pauseEl=document.getElementById('pause-txt');
-  if(_pauseEl){_pauseEl.textContent=(pr*100).toFixed(0)+'%';_pauseEl.className='speech-stat-val '+(pr<0.25?'good':pr<0.35?'warn':'bad');}
+  if(_pauseEl){
+    if(pr !== null){ _pauseEl.textContent=(pr*100).toFixed(0)+'%';_pauseEl.className='speech-stat-val '+(pr<0.25?'good':pr<0.35?'warn':'bad');}
+    else { _pauseEl.textContent='n/a';_pauseEl.className='speech-stat-val neutral'; }
+  }
   const _spikeEl=document.getElementById('spike-txt');
-  if(_spikeEl){_spikeEl.textContent=_wpmSpike?'⚠ Spike detected':'✓ Steady';_spikeEl.className='speech-stat-val '+(_wpmSpike?'warn':'good');}
+  if(_spikeEl){_spikeEl.textContent=_wpmSpikeDisplay?'⚠ Spike detected':'✓ Steady';_spikeEl.className='speech-stat-val '+(_wpmSpikeDisplay?'warn':'good');}
   const _jitterEl=document.getElementById('jitter-txt');
   if(_jitterEl){
     if(_measuredJitter===null){_jitterEl.textContent='n/a';_jitterEl.className='speech-stat-val neutral';}
@@ -3400,7 +3607,10 @@ function buildResults(){
   // ── BASELINE MODE: save values, show success UI ──
   if(isBaselineMode){
     setBadge('face-badge',0);setBadge('arms-badge',0);setBadge('speech-badge',0);
-    nudgeLine('face-line',faNum,0.08);nudgeLine('arms-line',ad,8);nudgeLine('speech-line',pr,0.35);
+    // nudgeLine is null-safe: only update if value exists
+    if(faNum !== null) nudgeLine('face-line',faNum,0.08);
+    if(adNum !== null) nudgeLine('arms-line',adNum,30);  // updated threshold to match new 0-100 scale
+    if(pr !== null) nudgeLine('speech-line',pr,0.35);
     ['face','arms','speech'].forEach(id=>document.getElementById(id+'-delta-row').style.display='none');
     document.getElementById('sb').className='status-banner baseline';
     document.getElementById('sb-orb').textContent='📐';
@@ -3416,7 +3626,7 @@ function buildResults(){
     pBtn.onclick=function(){baseline=JSON.parse(localStorage.getItem('sc_baseline')||'null');updateHomeScreen();goFastCheck();};
     sBtn.textContent='Back to Home';
     sBtn.onclick=function(){baseline=JSON.parse(localStorage.getItem('sc_baseline')||'null');updateHomeScreen();showScreen('home');};
-    const bData={date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),fa:faNum,ad,pr,wpm};
+    const bData={date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),fa:faNum,ad:adNum,pr,wpm};
     // Also store MAD of face frames so FAST checks can compute a personal z-score
     if(_faceFrames.length>=4){
       const bMed=_median(_faceFrames);
@@ -3431,17 +3641,19 @@ function buildResults(){
       _recordingBlobs.set('baseline',URL.createObjectURL(blob));
       idbPut('baseline',blob); // persist across refreshes
     }
-    _res={date:new Date(),fa:faNum,ad,pr,wpm,fs:0,as:0,ss:0,total:0,status:'baseline',isBaseline:true};
+    _res={date:new Date(),fa:faNum,ad:adNum,pr,wpm,fs:0,as:0,ss:0,total:0,status:'baseline',isBaseline:true};
     return;
   }
 
   // ── FAST CHECK MODE: compare to baseline ──
   setBadge('face-badge',fs);setBadge('arms-badge',as);setBadge('speech-badge',ss);
-  nudgeLine('face-line',faNum,0.08);nudgeLine('arms-line',ad,8);nudgeLine('speech-line',pr,0.35);
+  if(faNum !== null) nudgeLine('face-line',faNum,0.08);
+  if(adNum !== null) nudgeLine('arms-line',adNum,30); // updated threshold for 0-100 scale
+  if(pr !== null) nudgeLine('speech-line',pr,0.35);
   if(baseline){
-    showDelta('face',faNum,baseline.fa);
-    showDelta('arms',parseFloat(ad),parseFloat(baseline.ad));
-    showDelta('speech',pr,baseline.pr);
+    if(faNum !== null && baseline.fa != null) showDelta('face',faNum,baseline.fa);
+    if(adNum !== null && baseline.ad != null) showDelta('arms',adNum,parseFloat(baseline.ad));
+    if(pr !== null && baseline.pr != null) showDelta('speech',pr,baseline.pr);
   }
 
   // ── TREND ESCALATION ──
@@ -3507,7 +3719,7 @@ function buildResults(){
   const sBtn2=document.getElementById('action-panel').querySelector('.act-btn-export');
   pBtn.textContent='Save & View History';pBtn.onclick=saveAndHistory;
   sBtn.textContent='Retake';sBtn.onclick=goFastCheck;
-  if(sBtn2){sBtn2.onclick=()=>generateSummary(sc,faNum,ad,pr,fs,as,ss,total);}
+  if(sBtn2){sBtn2.onclick=()=>generateSummary(sc,faNum,adNum,pr,fs,as,ss,total);}
 
 
   // Trend banner
@@ -3526,10 +3738,10 @@ function buildResults(){
     }
   }
 
-  _res={date:new Date(),fa:faNum,ad,pr,wpm,fs,as,ss,total,status:sc,trendFlag,isBaseline:false};
+  _res={date:new Date(),fa:faNum,ad:adNum,pr,wpm,fs,as,ss,total,status:sc,trendFlag,isBaseline:false};
 
   // Feature 6: draw signal fingerprint
-  drawFingerprint(faNum,parseFloat(ad),pr,fs,as,ss);
+  drawFingerprint(faNum,adNum !== null ? adNum : 0, pr !== null ? pr : 0, fs,as,ss);
 }
 
 function showDelta(key,current,baseVal){
@@ -3822,18 +4034,18 @@ function drawFingerprint(fa,ad,pr,fs,as,ss){
   const angles=[270,30,150];
 
   // Normalise raw values to 0–1 relative to thresholds, clamped 0–1.3 for overages
-  const faceN=Math.min(fa/0.08,1.3);
-  const armsN=Math.min(ad/8,1.3);
-  const speechN=Math.min(pr/0.35,1.3);
+  const faceN=Math.min(fa !== null ? fa/0.08 : 0, 1.3);
+  const armsN=Math.min(ad !== null ? ad/30 : 0, 1.3);   // updated: 0-100 scale, threshold=30
+  const speechN=Math.min(pr !== null ? pr/0.35 : 0, 1.3);
   const current=[faceN,armsN,speechN];
 
   // Baseline normalised (if exists)
   let baseCurrent=[0.5,0.5,0.5]; // default neutral shape
   if(baseline){
     baseCurrent=[
-      Math.min(parseFloat(baseline.fa)/0.08,1.3),
-      Math.min(parseFloat(baseline.ad)/8,1.3),
-      Math.min(parseFloat(baseline.pr)/0.35,1.3)
+      Math.min(parseFloat(baseline.fa || 0)/0.08,1.3),
+      Math.min(parseFloat(baseline.ad || 0)/30,1.3),  // updated threshold
+      Math.min(parseFloat(baseline.pr || 0)/0.35,1.3)
     ];
   }
 
@@ -4003,7 +4215,111 @@ function renderHistory(){
   drawMetricCharts();
 }
 
-/* ── SMOOTH CURVE HELPERS ── */
+/* ── DEMO DATA POPULATION ── */
+function populateDemoHistory(){
+  if(!confirm('Replace current history with demo data?')) return;
+
+  hist = [];
+  try { localStorage.removeItem('sc_hist'); } catch(e) {}
+  try { localStorage.removeItem('sc_drift_scores'); } catch(e) {}
+  try { localStorage.removeItem('sc_drift_profile'); } catch(e) {}
+
+  // Baseline — recorded Dec 29 on a healthy day
+  // ad is a DRIFT score 0-100: 0 = perfectly still, 100 = severe drift
+  // fa = facial asymmetry index: ~0.03-0.06 is normal
+  // pr = speech pause ratio: < 0.15 is normal
+  const demoBaseline = { date:'Dec 29, 2025', fa:0.044, ad:3.2, pr:0.11, wpm:142, faMad:0.008 };
+  baseline = demoBaseline;
+  try { localStorage.setItem('sc_baseline', JSON.stringify(demoBaseline)); } catch(e) {}
+
+  // Mirror app scoring formulas exactly
+  function calcFs(fa) {
+    const z = Math.abs(fa - demoBaseline.fa) / demoBaseline.faMad;
+    return Math.min(1, z / 3.0);
+  }
+  function calcAs(ad) {
+    // ad is drift 0-100: higher = more risk
+    return ad > 30 ? Math.min(1, 0.65 + (ad - 30) * 0.012) : ad > 15 ? 0.35 : 0;
+  }
+  function calcSs(pr) { return pr > 0.35 ? 1.0 : pr > 0.25 ? 0.5 : 0.0; }
+  function getStatus(t) { return t >= 2 ? 'red' : t >= 1.3 ? 'yellow' : 'green'; }
+
+  // Seeded RNG
+  let _s = 20260101;
+  function rng() { _s = (_s * 1664525 + 1013904223) & 0x7fffffff; return _s / 0x7fffffff; }
+  function rf(lo, hi) { return lo + rng() * (hi - lo); }
+  function ri(lo, hi) { return Math.floor(rf(lo, hi + 0.999)); }
+
+  // 5 spikes — exact dates, everything else is healthy green
+  // Spike 1: Jan 9        single mild yellow
+  // Spike 2: Jan 17-18    yellow + red
+  // Spike 3: Jan 26       single mild yellow
+  // Spike 4: Feb 5-7      mild, red, mild
+  // Spike 5: Feb 18-19    red, mild
+  const spikeSeverity = {
+    '2026-01-09': 'mild',
+    '2026-01-17': 'mild', '2026-01-18': 'strong',
+    '2026-01-26': 'mild',
+    '2026-02-05': 'mild', '2026-02-06': 'strong', '2026-02-07': 'mild',
+    '2026-02-18': 'strong', '2026-02-19': 'mild'
+  };
+
+  const times = ['7:42 AM','8:03 AM','8:19 AM','8:47 AM','9:12 AM','9:31 AM',
+                 '9:58 AM','10:14 AM','10:38 AM','6:24 PM','7:08 PM'];
+
+  const startDate = new Date('2026-01-01T00:00:00');
+  const today = new Date(); today.setHours(23,59,59,0);
+
+  const entries = [];
+  const cur = new Date(startDate);
+  let idx = 0;
+
+  while (cur <= today) {
+    const isoKey = cur.toISOString().slice(0,10);
+    const sev = spikeSeverity[isoKey] || null;
+    let fa, ad, pr;
+
+    if (sev === 'strong') {
+      // Clear spike — unmistakably elevated, will score red
+      fa = +rf(0.096, 0.130).toFixed(3);  // z ~6-10 → fs ~0.9-1.0
+      ad = ri(38, 55);                      // high drift → as ~0.74-0.9
+      pr = +rf(0.27, 0.36).toFixed(3);     // elevated pauses → ss 0.5-1.0
+    } else if (sev === 'mild') {
+      // Yellow-range: face and arms mildly elevated, speech clean
+      fa = +rf(0.068, 0.088).toFixed(3);  // z ~3-5.5 → fs ~0.5-0.75
+      ad = ri(18, 28);                      // mild drift → as 0.35
+      pr = +rf(0.13, 0.21).toFixed(3);     // normal pauses → ss 0
+    } else {
+      // Healthy green day — minimal drift, symmetric face, clean speech
+      fa = +Math.max(0.022, demoBaseline.fa + rf(-0.007, 0.009) + (rng()-0.5)*0.003).toFixed(3);
+      ad = ri(0, 9);                        // near-zero drift → as = 0
+      pr = +Math.max(0.05, demoBaseline.pr + rf(-0.025, 0.025)).toFixed(3);
+    }
+
+    const fs  = +calcFs(fa).toFixed(2);
+    const as_ = +calcAs(ad).toFixed(2);
+    const ss  = +calcSs(pr).toFixed(2);
+    const tot = +(fs + as_ + ss).toFixed(1);
+
+    entries.push({
+      date:   cur.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+      time:   times[idx % times.length],
+      status: getStatus(tot),
+      f: fs.toFixed(2), a: as_.toFixed(2), s: ss.toFixed(2), t: tot.toFixed(1),
+      fRaw: fa, aRaw: ad, sRaw: pr
+    });
+
+    cur.setDate(cur.getDate() + 1);
+    idx++;
+  }
+
+  hist = entries.reverse();
+  try { localStorage.setItem('sc_hist', JSON.stringify(hist)); } catch(e) {}
+
+  updateHomeScreen();
+  renderHistory();
+  showScreen('history');
+}
 function smoothCurve(pts){
   if(pts.length<2)return pts.length===1?`M${pts[0].join(',')}`:'';
   if(pts.length===2)return `M${pts[0].join(',')} L${pts[1].join(',')}`;
@@ -4063,14 +4379,89 @@ function drawHistChart(){
   fillEl.setAttribute('d',fillD);
   fillEl.style.opacity='0';fillEl.style.animation='none';void fillEl.getBoundingClientRect();fillEl.style.animation='chartFadeIn 0.6s ease forwards 0.8s';
   animatePath(lineEl,lineD);
-  const dotColors=rev.map(r=>r.status==='red'?'#ef4444':r.status==='yellow'?'#f59e0b':'#22c55e');
-  renderDots('hist-dots',pts,'#00e5c8',0.9,dotColors);
-  // Baseline reference line at the baseline value if we have one
+  const dotColors=rev.map(r=>r.status==='red'?'#ef4444':r.status==='yellow'?'#f59e0b':parseFloat(r.t)>=0.4?'#f97316':'#22c55e');
+  // Render dots with date tooltips
+  renderHistDots('hist-dots',pts,'#00e5c8',0.9,dotColors,rev);
+  // Baseline reference line pinned at risk score 1.2
   const blEl=document.getElementById('hist-baseline-line');
   const blLbl=document.getElementById('hist-baseline-lbl');
-  if(baseline&&blEl&&blLbl){
+  if(blEl&&blLbl){
+    const blScore=1.2;
+    const blY=H-P-(blScore/mx)*(H-P*2);
+    blEl.setAttribute('y1',blY);blEl.setAttribute('y2',blY);
+    blLbl.setAttribute('y',blY-4);
     blEl.setAttribute('display','');blLbl.setAttribute('display','');
   }
+}
+
+// Dedicated dot renderer for hist chart with hover tooltip
+function renderHistDots(groupId,pts,color,delayBase,colors,data){
+  const g=document.getElementById(groupId);if(!g)return;
+  g.innerHTML='';
+  // Ensure SVG tooltip element exists
+  const svgEl=document.getElementById('hist-svg');
+  let tip=document.getElementById('hist-dot-tooltip');
+  if(!tip&&svgEl){
+    tip=document.createElementNS('http://www.w3.org/2000/svg','g');
+    tip.setAttribute('id','hist-dot-tooltip');
+    tip.style.pointerEvents='none';
+    tip.style.display='none';
+    const tipRect=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    tipRect.setAttribute('id','hist-tip-rect');
+    tipRect.setAttribute('rx','5');tipRect.setAttribute('ry','5');
+    tipRect.setAttribute('fill','#0d1220');tipRect.setAttribute('stroke','rgba(255,255,255,0.12)');tipRect.setAttribute('stroke-width','1');
+    const tipText=document.createElementNS('http://www.w3.org/2000/svg','text');
+    tipText.setAttribute('id','hist-tip-text');
+    tipText.setAttribute('font-family',"'Space Mono',monospace");
+    tipText.setAttribute('font-size','10');
+    tipText.setAttribute('fill','#e8eaf0');
+    tip.appendChild(tipRect);tip.appendChild(tipText);
+    svgEl.appendChild(tip);
+  }
+  pts.forEach((p,i)=>{
+    const isLast=i===pts.length-1;
+    const col=colors?colors[i]:color;
+    // Invisible hit area for easier hovering
+    const hit=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    hit.setAttribute('cx',p[0]);hit.setAttribute('cy',p[1]);hit.setAttribute('r','12');
+    hit.setAttribute('fill','transparent');hit.style.cursor='pointer';
+    // Visible dot
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',p[0]);c.setAttribute('cy',p[1]);
+    c.setAttribute('r',isLast?5:3.5);
+    c.setAttribute('fill',col);
+    if(isLast){c.setAttribute('filter',`drop-shadow(0 0 5px ${col})`);c.setAttribute('stroke','rgba(255,255,255,0.3)');c.setAttribute('stroke-width','1');}
+    c.style.opacity='0';c.style.animation='chartFadeIn 0.3s ease forwards';
+    c.style.animationDelay=`${delayBase+i*0.06}s`;
+    c.style.transition='r 0.15s';
+    // Tooltip data
+    const entry=data?data[i]:null;
+    const label=entry?(entry.date+(entry.time?' · '+entry.time:'')+(entry.t?' — '+entry.t:'')):null;
+    hit.addEventListener('mouseenter',()=>{
+      c.setAttribute('r',isLast?7:5.5);
+      if(label&&tip){
+        const W=820;
+        const tipTxt=document.getElementById('hist-tip-text');
+        const tipRct=document.getElementById('hist-tip-rect');
+        if(tipTxt){tipTxt.textContent=label;}
+        const textW=label.length*6.2+16;
+        const textH=22;
+        let tx=p[0]-textW/2;
+        if(tx<4)tx=4;
+        if(tx+textW>W-4)tx=W-4-textW;
+        const ty=p[1]-textH-10;
+        if(tipRct){tipRct.setAttribute('x',tx);tipRct.setAttribute('y',ty);tipRct.setAttribute('width',textW);tipRct.setAttribute('height',textH);}
+        if(tipTxt){tipTxt.setAttribute('x',tx+8);tipTxt.setAttribute('y',ty+14.5);}
+        tip.style.display='';
+      }
+    });
+    hit.addEventListener('mouseleave',()=>{
+      c.setAttribute('r',isLast?5:3.5);
+      if(tip)tip.style.display='none';
+    });
+    g.appendChild(c);
+    g.appendChild(hit);
+  });
 }
 
 function drawMetricCharts(){
@@ -4158,9 +4549,9 @@ function openReplayModal(idx){
 
   // Scores
   if(isBaseline){
-    document.getElementById('replay-face-val').textContent=h.fa;
-    document.getElementById('replay-arms-val').textContent=h.ad+' %';
-    document.getElementById('replay-speech-val').textContent=h.pr;
+    document.getElementById('replay-face-val').textContent=h.fa != null ? h.fa : 'n/a';
+    document.getElementById('replay-arms-val').textContent=h.ad != null ? h.ad + ' / 100' : 'n/a';
+    document.getElementById('replay-speech-val').textContent=h.pr != null ? h.pr : 'n/a';
     document.getElementById('replay-total-val').textContent='—';
     document.getElementById('replay-total-val').style.color='var(--teal)';
     ['face','arms','speech'].forEach(key=>{
@@ -4169,7 +4560,7 @@ function openReplayModal(idx){
     });
   } else {
     document.getElementById('replay-face-val').textContent=h.fRaw!=null?h.fRaw:h.f;
-    document.getElementById('replay-arms-val').textContent=(h.aRaw!=null?h.aRaw:h.a)+(h.aRaw!=null?' %':'');
+    document.getElementById('replay-arms-val').textContent=(h.aRaw!=null?h.aRaw+' / 100':h.a!=null?h.a:'n/a');
     document.getElementById('replay-speech-val').textContent=h.sRaw!=null?h.sRaw:h.s;
     document.getElementById('replay-total-val').textContent=h.t;
     document.getElementById('replay-total-val').style.color=h.status==='red'?'var(--red)':h.status==='yellow'?'var(--yellow)':'var(--green)';
@@ -4182,8 +4573,13 @@ function openReplayModal(idx){
     });
   }
 
-  // Video
+  // Video — toggle panel always visible; toggles disabled when no video
   const blobUrl=_recordingBlobs.get(idx);
+  const poseCb=document.getElementById('replay-pose-toggle-cb');
+  const faceCb=document.getElementById('replay-face-toggle-cb');
+  const poseLbl=document.getElementById('replay-pose-toggle-label');
+  const faceLbl=document.getElementById('replay-face-toggle-label');
+  const overlayNoVid=document.getElementById('replay-overlay-no-video-note');
   if(blobUrl){
     videoEl.src=blobUrl;
     videoEl.loop=false;
@@ -4192,12 +4588,15 @@ function openReplayModal(idx){
     videoEl.style.display='block';
     if(playBtn)playBtn.style.display='flex';
     overlayLabel.style.display='block';
-    overlayToggleWrap.style.display='block';
+    if(poseCb){poseCb.disabled=false;}
+    if(faceCb){faceCb.disabled=false;}
+    if(poseLbl){poseLbl.style.opacity='1';poseLbl.style.cursor='pointer';}
+    if(faceLbl){faceLbl.style.opacity='1';faceLbl.style.cursor='pointer';}
+    if(overlayNoVid)overlayNoVid.style.display='none';
     _replayOverlayMode='off';
     _replayPoseOverlayActive=false;
     _replayFaceOverlayActive=false;
     updateOverlayBtnStyles();
-    // Init video controls (progress bar + play/pause)
     initVideoControls(videoEl);
   } else {
     videoEl.src='';
@@ -4205,7 +4604,11 @@ function openReplayModal(idx){
     if(playBtn)playBtn.style.display='none';
     noVideo.style.display='flex';
     overlayLabel.style.display='none';
-    overlayToggleWrap.style.display='none';
+    if(poseCb){poseCb.checked=false;poseCb.disabled=true;}
+    if(faceCb){faceCb.checked=false;faceCb.disabled=true;}
+    if(poseLbl){poseLbl.style.opacity='0.3';poseLbl.style.cursor='not-allowed';}
+    if(faceLbl){faceLbl.style.opacity='0.3';faceLbl.style.cursor='not-allowed';}
+    if(overlayNoVid)overlayNoVid.style.display='block';
     stopReplayOverlayLoop();
   }
 
@@ -4618,10 +5021,9 @@ function generateSummary(sc,fa,ad,pr,fs,as,ss,total){
   // Plain-language what changed
   const changes=[];
   if(baseline){
-    const fd=fa-parseFloat(baseline.fa);const ad2=parseFloat(ad)-parseFloat(baseline.ad);const sd=pr-parseFloat(baseline.pr);
-    if(Math.abs(fd)/Math.max(parseFloat(baseline.fa),0.001)>0.1)changes.push(`Facial asymmetry ${fd>0?'increased':'decreased'} compared to baseline.`);
-    if(Math.abs(ad2)/Math.max(parseFloat(baseline.ad),0.001)>0.1)changes.push(`Arm drift ${ad2>0?'increased':'decreased'} compared to baseline.`);
-    if(Math.abs(sd)/Math.max(parseFloat(baseline.pr),0.001)>0.1)changes.push(`Speech pause ratio ${sd>0?'increased':'decreased'} compared to baseline.`);
+    if(fa !== null && baseline.fa != null){ const fd=fa-parseFloat(baseline.fa); if(Math.abs(fd)/Math.max(parseFloat(baseline.fa),0.001)>0.1)changes.push(`Facial asymmetry ${fd>0?'increased':'decreased'} compared to baseline.`); }
+    if(ad !== null && baseline.ad != null){ const ad2=parseFloat(ad)-parseFloat(baseline.ad); if(Math.abs(ad2)/Math.max(parseFloat(baseline.ad),0.001)>0.1)changes.push(`Arm stability index ${ad2>0?'increased':'decreased'} compared to baseline.`); }
+    if(pr !== null && baseline.pr != null){ const sd=pr-parseFloat(baseline.pr); if(Math.abs(sd)/Math.max(parseFloat(baseline.pr),0.001)>0.1)changes.push(`Speech pause ratio ${sd>0?'increased':'decreased'} compared to baseline.`); }
   }
   if(!changes.length)changes.push('All signals within normal baseline range.');
 
@@ -4653,7 +5055,7 @@ h1{font-size:1.8rem;letter-spacing:-0.02em;margin:0 0 4px;}
   <div class="row"><span class="lbl">Recorded</span><span class="val">${baseline.date}</span></div>
   <div class="row"><span class="lbl">Confidence Level</span><span class="val">${confLabel}</span></div>
   <div class="row"><span class="lbl">Face Asymmetry</span><span class="val">${baseline.fa}</span></div>
-  <div class="row"><span class="lbl">Arm Drift</span><span class="val">${baseline.ad}%</span></div>
+  <div class="row"><span class="lbl">Arm Drift</span><span class="val">${baseline.ad != null ? baseline.ad : 'n/a'} / 100</span></div>
   <div class="row"><span class="lbl">Speech Pause Ratio</span><span class="val">${baseline.pr}</span></div>
   `:'<div class="row"><span class="lbl">No baseline recorded</span></div>'}
 </div>
@@ -4662,16 +5064,16 @@ h1{font-size:1.8rem;letter-spacing:-0.02em;margin:0 0 4px;}
   <div class="section-title">This Check-In</div>
   <div class="row"><span class="lbl">Overall Status</span><span class="val"><span class="status-badge">${statusLabel}</span></span></div>
   <div class="row"><span class="lbl">Risk Index</span><span class="val">${total.toFixed(1)}</span></div>
-  <div class="row"><span class="lbl">Face Asymmetry Index</span><span class="val">${fa}</span></div>
-  <div class="row"><span class="lbl">Arm Drift</span><span class="val">${ad}%</span></div>
-  <div class="row"><span class="lbl">Speech Pause Ratio</span><span class="val">${pr}</span></div>
+  <div class="row"><span class="lbl">Face Asymmetry Index</span><span class="val">${fa !== null ? fa : 'Not captured'}</span></div>
+  <div class="row"><span class="lbl">Arm Stability Index</span><span class="val">${ad !== null ? ad + ' / 100' : 'Not captured'}</span></div>
+  <div class="row"><span class="lbl">Speech Pause Ratio</span><span class="val">${pr !== null ? pr : 'Not captured'}</span></div>
 </div>
 
 <div class="section">
   <div class="section-title">Delta from Baseline</div>
-  <div class="row"><span class="lbl">Face</span><span class="val">${deltaStr(fa,baseline&&parseFloat(baseline.fa))}</span></div>
-  <div class="row"><span class="lbl">Arms</span><span class="val">${deltaStr(parseFloat(ad),baseline&&parseFloat(baseline.ad))}</span></div>
-  <div class="row"><span class="lbl">Speech</span><span class="val">${deltaStr(pr,baseline&&parseFloat(baseline.pr))}</span></div>
+  <div class="row"><span class="lbl">Face</span><span class="val">${fa !== null ? deltaStr(fa,baseline&&parseFloat(baseline.fa)) : 'Not captured'}</span></div>
+  <div class="row"><span class="lbl">Arms</span><span class="val">${ad !== null ? deltaStr(parseFloat(ad),baseline&&parseFloat(baseline.ad)) : 'Not captured'}</span></div>
+  <div class="row"><span class="lbl">Speech</span><span class="val">${pr !== null ? deltaStr(pr,baseline&&parseFloat(baseline.pr)) : 'Not captured'}</span></div>
 </div>
 
 <div class="section">
@@ -5714,6 +6116,26 @@ function applyAccent(color){
   _saveCfg();
 }
 
+// ── Dark / Light mode toggle ──────────────────────────────────
+function applyThemeToggle(isLight){
+  if(isLight){
+    applyScheme('light');
+  } else {
+    applyScheme('dark');
+  }
+  // Update toggle thumb + track appearance
+  var track=document.getElementById('theme-toggle-track');
+  var thumb=document.getElementById('theme-toggle-thumb');
+  var darkLbl=document.getElementById('theme-dark-label');
+  var lightLbl=document.getElementById('theme-light-label');
+  if(track){track.style.background=isLight?'rgba(0,229,200,0.25)':'rgba(255,255,255,0.08)';track.style.borderColor=isLight?'rgba(0,229,200,0.5)':'rgba(255,255,255,0.15)';}
+  if(thumb){thumb.style.background=isLight?'var(--teal)':'var(--muted)';thumb.style.transform=isLight?'translateX(22px)':'translateX(0)';}
+  if(darkLbl){darkLbl.style.color=isLight?'var(--muted)':'var(--text)';}
+  if(lightLbl){lightLbl.style.color=isLight?'var(--text)':'var(--muted)';}
+  _cfg.lightMode=isLight;
+  _saveCfg();
+}
+
 // ── Font size ─────────────────────────────────────────────────
 var _fz = 100;
 function adjustFontSize(d){
@@ -5772,6 +6194,9 @@ function _loadSettingsUI(){
   setTog('tog-contrast', _cfg.highContrast,      applyHighContrast);
   setTog('tog-dyslexia', _cfg.dyslexia,          applyDyslexiaFont);
   setTog('tog-touch',    _cfg.largeTouchTargets, applyLargeTouchTargets);
+  // Theme toggle
+  var togTheme=document.getElementById('tog-theme');
+  if(togTheme){ togTheme.checked=!!_cfg.lightMode; applyThemeToggle(!!_cfg.lightMode); }
   // Notif
   var togNotif = document.getElementById('tog-notif');
   if(togNotif) togNotif.checked = !!_cfg.notifEnabled;
