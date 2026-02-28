@@ -4333,7 +4333,12 @@ function populateDemoHistory(){
   hist = entries.reverse();
   try { localStorage.setItem('sc_hist', JSON.stringify(hist)); } catch(e) {}
 
+  // Store quality scores (all 1.0 for demo) so confidence reads Trusted
+  const demoQuality = Array(20).fill(1.0);
+  try { localStorage.setItem('sc_quality_scores', JSON.stringify(demoQuality)); } catch(e) {}
+
   updateHomeScreen();
+  updateConfidenceUI();
   renderHistory();
   showScreen('history');
 }
