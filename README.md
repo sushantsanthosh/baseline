@@ -1,4 +1,5 @@
 [sushantsanthosh.github.io/baseline](https://sushantsanthosh.github.io/baseline)
 
-Submission for Divergent Teams' Boston II Hackathon 2026
--Sushant Santhosh
+Health&Wellness 3rd Place @ Divergent Teams' Boston II Hackathon 2026
+
+Created by Sushant Santhosh
