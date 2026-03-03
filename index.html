@@ -822,7 +822,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .trend-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
 .trend-period-lbl{font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--teal);letter-spacing:0.08em;}
 .trend-canvas-wrap{width:100%;border-radius:8px;overflow:hidden;background:#030508;border:1px solid var(--cbord);margin-bottom:1rem;}
-.trend-canvas-wrap canvas{display:block;width:100%;height:100px;}
+.trend-canvas-wrap canvas{display:block;width:100%;height:160px;}
 .trend-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
 .trend-stat-val{font-family:'DM Serif Display',serif;font-size:1.6rem;letter-spacing:-0.04em;color:var(--text);}
 .trend-stat-lbl{font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--muted);letter-spacing:0.08em;margin-top:0.1rem;}
@@ -854,6 +854,60 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
   .heart-nav{padding:0.75rem 1.25rem;}
   .trend-stats-row{grid-template-columns:repeat(2,1fr);}
 }
+
+/* ===== DEMO MODE BADGE ===== */
+#demo-badge{display:none;font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);color:var(--yellow);padding:0.18rem 0.55rem;border-radius:100px;pointer-events:none;}
+
+/* ===== SPO2 IMPORT ===== */
+.spo2-import-btn{margin-top:0.75rem;background:transparent;border:1px solid rgba(59,130,246,0.35);color:var(--blue);padding:0.42rem 1rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;transition:all 0.2s;}
+.spo2-import-btn:hover{background:rgba(59,130,246,0.08);}
+.spo2-import-table{margin-top:1rem;width:100%;border-collapse:collapse;font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--muted);}
+.spo2-import-table th{color:rgba(255,255,255,0.3);padding:0.3rem 0.5rem;text-align:left;border-bottom:1px solid var(--cbord);font-weight:400;}
+.spo2-import-table td{padding:0.35rem 0.5rem;border-bottom:1px solid rgba(255,255,255,0.03);}
+.spo2-import-table .spo2-ok{color:var(--green);}
+.spo2-import-table .spo2-low{color:var(--yellow);}
+
+/* ===== RESULTS: WHAT DO THESE SIGNALS MEASURE ===== */
+details.result-info{margin-top:1rem;border:1px solid var(--cbord);border-radius:12px;overflow:hidden;}
+details.result-info summary{padding:0.9rem 1.2rem;cursor:pointer;font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.06em;color:var(--muted);list-style:none;display:flex;align-items:center;gap:0.6rem;user-select:none;transition:color 0.2s;}
+details.result-info summary::-webkit-details-marker{display:none;}
+details.result-info summary::before{content:'▶';color:var(--teal);font-size:0.65rem;transition:transform 0.25s;}
+details.result-info[open] summary::before{transform:rotate(90deg);}
+details.result-info[open] summary{color:var(--text);}
+.result-info-body{padding:1.2rem 1.4rem;border-top:1px solid var(--cbord);font-family:'League Spartan',sans-serif;font-size:0.95rem;color:var(--muted);line-height:1.75;}
+.result-info-body p{margin-bottom:0.85rem;}
+.result-info-body p:last-child{margin-bottom:0;}
+.result-info-body strong{color:var(--text);}
+.result-info-disclaimer{margin-top:0.9rem;padding:0.75rem 1rem;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:8px;font-family:'Space Mono',monospace;font-size:0.65rem;color:rgba(239,68,68,0.8);line-height:1.6;}
+
+/* ===== FINGERPRINT TOOLTIP ===== */
+#fp-tooltip{position:fixed;display:none;z-index:600;background:var(--surface);border:1px solid var(--cbord);border-radius:8px;padding:0.45rem 0.75rem;font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--text);pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,0.5);white-space:nowrap;}
+
+/* ===== RECORD SCREEN LIVE HEART STRIP ===== */
+#rec-heart-strip{display:none;align-items:center;gap:1.25rem;padding:0.55rem 1rem;margin-top:0.75rem;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.22);border-radius:10px;flex-wrap:wrap;}
+#rec-heart-strip .rh-dot{width:7px;height:7px;border-radius:50%;background:#ef4444;flex-shrink:0;animation:heartBeat 0.85s ease-in-out infinite;}
+#rec-heart-strip .rh-item{display:flex;align-items:baseline;gap:0.3rem;}
+#rec-heart-strip .rh-val{font-family:'DM Serif Display',serif;font-size:1.05rem;color:#ef4444;line-height:1;}
+#rec-heart-strip .rh-unit{font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted);letter-spacing:0.05em;}
+#rec-heart-strip .rh-sep{color:var(--cbord);font-size:0.8rem;}
+
+/* ===== REPLAY MODAL — HEART SECTION ===== */
+#replay-heart-section{margin-top:1.25rem;}
+.rh-section-hdr{display:flex;align-items:center;gap:0.65rem;margin-bottom:0.9rem;}
+.rh-section-title{font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
+.rh-source-pill{font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.15rem 0.55rem;border-radius:100px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#ef4444;}
+.rh-source-pill.demo{background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.3);color:var(--yellow);}
+.rh-metrics-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-bottom:0.85rem;}
+.rh-metric-card{background:var(--cb);border:1px solid var(--cbord);border-radius:12px;padding:0.8rem 1rem;border-top:2px solid rgba(239,68,68,0.4);}
+.rh-metric-lbl{font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.35rem;}
+.rh-metric-val{font-family:'DM Serif Display',serif;font-size:1.9rem;letter-spacing:-0.04em;color:var(--text);line-height:1;}
+.rh-metric-unit{font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--muted);margin-top:0.1rem;}
+.rh-ecg-wrap{background:#030508;border:1px solid var(--cbord);border-radius:8px;overflow:hidden;margin-bottom:0.75rem;position:relative;}
+.rh-ecg-wrap canvas{display:block;width:100%;height:60px;}
+.rh-ecg-paused-overlay{display:none;position:absolute;inset:0;align-items:center;justify-content:center;background:rgba(3,5,8,0.75);font-family:'Space Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:rgba(107,114,128,0.7);}
+.rh-trend-wrap{background:#030508;border:1px solid var(--cbord);border-radius:8px;overflow:hidden;}
+.rh-trend-wrap canvas{display:block;width:100%;height:110px;}
+#replay-heart-nodata{padding:1.2rem;text-align:center;font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--muted);background:var(--cb);border:1px solid var(--cbord);border-radius:12px;}
 </style>
 </head>
 <body>
@@ -1012,6 +1066,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <button class="app-nav-hist" onclick="goHistory()">📈 History</button>
       <button class="app-nav-hist" onclick="goHeart()" style="color:#ef4444;border-color:rgba(239,68,68,0.35);">♥ Heart</button>
       <button class="app-nav-hist" onclick="goSettings()">⚙️ Settings</button>
+      <span id="demo-badge">DEMO</span>
       <span id="nav-bc-pill" class="bc-pill low" tabindex="0">
         <svg class="bc-ring-svg" width="20" height="20" viewBox="0 0 20 20">
           <circle class="bc-ring-track" cx="10" cy="10" r="7"/>
@@ -1141,6 +1196,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
         <div class="rec-controls">
           <button class="btn-rec-go" id="btn-go" onclick="startRec()">▶ &nbsp;Start Recording</button>
           <button class="btn-restart" onclick="resetRec()">↺ &nbsp;Restart</button>
+        </div>
+        <!-- Live heart strip — shown during recording -->
+        <div id="rec-heart-strip">
+          <div class="rh-dot"></div>
+          <div class="rh-item"><span class="rh-val" id="rec-bpm-live">--</span><span class="rh-unit">BPM</span></div>
+          <span class="rh-sep">·</span>
+          <div class="rh-item"><span class="rh-val" id="rec-hrv-live">--</span><span class="rh-unit">HRV ms</span></div>
+          <span class="rh-sep">·</span>
+          <div class="rh-item"><span class="rh-val" id="rec-spo2-live">--</span><span class="rh-unit">SpO₂ %</span></div>
         </div>
       </div>
     </div>
@@ -1390,6 +1454,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
           <button class="act-btn-export" onclick="generateSummary('green',0,0,0,0,0,0,0)">📋 Summary</button>
         </div>
       </div>
+      <details class="result-info">
+        <summary>What do these signals measure?</summary>
+        <div class="result-info-body">
+          <p><strong>Facial Symmetry</strong> — While you hold a neutral expression, landmarks on your face are tracked frame by frame. The score reflects the left/right difference in mouth-corner and eye position. Values below 0.08 are within typical variation for a relaxed, resting face. A higher value may indicate reduced muscle control on one side.</p>
+          <p><strong>Arm Stability Index</strong> — During the 10-second arm hold, wrist positions are recorded relative to your shoulders. The score (0–100) captures vertical drift (one arm dropping), path asymmetry (one arm moving more than the other), and total path length. Scores under 15 are considered normal; above 30 is elevated.</p>
+          <p><strong>Speech Pause Ratio</strong> — While you read the passage aloud, the microphone measures the fraction of time you spend silent between words. A pause ratio above 0.25 may indicate hesitation or speech difficulty. The composite speech score also includes speaking pace rhythm (WPM deviation) and audio pitch stability (jitter/shimmer).</p>
+          <div class="result-info-disclaimer">⚠ This tool does not diagnose stroke. For sudden, severe symptoms — facial drooping, arm weakness, or slurred speech — call emergency services immediately.</div>
+        </div>
+      </details>
     </div>
   </div>
 
@@ -1423,6 +1496,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
         <button class="btn-ghost" onclick="generateHistSummary()" style="font-size:0.875rem;padding:0.7rem 1.9rem;">📋 Generate Summary</button>
         <button class="btn-ghost" onclick="clearHist()" style="font-size:0.875rem;padding:0.7rem 1.9rem;">Clear History</button>
         <button class="btn-ghost" onclick="clearBaseline()" id="btn-clear-baseline" style="font-size:0.875rem;padding:0.7rem 1.9rem;display:none;">Reset Baseline</button>
+        <button id="btn-export-history" onclick="exportHistoryJSON()" title="Export all history as JSON" style="font-size:0.875rem;padding:0.7rem 1.2rem;background:none;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.35);border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.3s;" onmouseover="this.style.borderColor='rgba(0,229,200,0.35)';this.style.color='rgba(0,229,200,0.7)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='rgba(255,255,255,0.35)';">↓ Export</button>
         <button id="btn-demo-populate" onclick="populateDemoHistory()" title="Demo: populate sample history" style="font-size:0.875rem;padding:0.7rem 1.2rem;background:none;border:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.1);border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.3s;" onmouseover="this.style.borderColor='rgba(0,229,200,0.35)';this.style.color='rgba(0,229,200,0.5)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.color='rgba(255,255,255,0.1)';">◈</button>
       </div>
       <!-- FEATURE 4: Monitoring Streak -->
@@ -1591,6 +1665,41 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
       <div id="replay-note" style="font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.06em;text-align:center;padding:0.75rem 1rem;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--cbord);">
         Video recordings are stored in memory for this session only and are not uploaded or saved to disk.
       </div>
+
+      <!-- Heart data section — populated by openReplayModal when heartData exists -->
+      <div id="replay-heart-section" style="display:none;">
+        <div class="rh-section-hdr">
+          <div class="rh-section-title">Heart Monitor · Check-In Recording</div>
+          <div class="rh-source-pill" id="rh-source-pill">LIVE</div>
+        </div>
+        <div class="rh-metrics-row">
+          <div class="rh-metric-card">
+            <div class="rh-metric-lbl">Heart Rate</div>
+            <div class="rh-metric-val" id="rh-bpm-val">--</div>
+            <div class="rh-metric-unit">BPM</div>
+          </div>
+          <div class="rh-metric-card">
+            <div class="rh-metric-lbl">HRV · RMSSD</div>
+            <div class="rh-metric-val" id="rh-hrv-val">--</div>
+            <div class="rh-metric-unit">ms</div>
+          </div>
+          <div class="rh-metric-card">
+            <div class="rh-metric-lbl">SpO₂</div>
+            <div class="rh-metric-val" id="rh-spo2-val">--</div>
+            <div class="rh-metric-unit">%</div>
+          </div>
+        </div>
+        <!-- ECG waveform — replays in sync with video -->
+        <div class="rh-ecg-wrap">
+          <canvas id="rh-ecg-canvas" height="60"></canvas>
+          <div class="rh-ecg-paused-overlay" id="rh-ecg-paused">⏸ PAUSED</div>
+        </div>
+        <!-- BPM trend — shows history up to current video time -->
+        <div class="rh-trend-wrap">
+          <canvas id="rh-trend-canvas" height="110"></canvas>
+        </div>
+        <div id="replay-heart-nodata" style="display:none;">No heart data was captured during this session.</div>
+      </div>
     </div>
   </div>
 
@@ -1691,7 +1800,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
           <div class="spo2-value" id="spo2-value">98</div>
           <div class="spo2-unit">%</div>
         </div>
-        <div class="spo2-caveat" id="spo2-caveat">Apple Watch SpO₂ is locked in HealthKit and can't be accessed by web browsers. Value shown is demo only.</div>
+        <div class="spo2-caveat" id="spo2-caveat">Apple Watch SpO₂ is locked in HealthKit and can't be accessed by web browsers. Value shown is demo only. Import from an Apple Health export to view recent readings.</div>
+        <button class="spo2-import-btn" onclick="document.getElementById('spo2-file-input').click()">⬆ Import Health Data</button>
+        <input type="file" id="spo2-file-input" accept=".xml" style="display:none" onchange="importSpo2Health(this)">
+        <div id="spo2-import-area" style="display:none;">
+          <table class="spo2-import-table">
+            <thead><tr><th>Date</th><th>SpO₂</th></tr></thead>
+            <tbody id="spo2-import-tbody"></tbody>
+          </table>
+        </div>
       </div>
 
     </div><!-- .heart-metrics-row -->
@@ -1718,7 +1835,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
         <div class="trend-period-lbl" id="trend-period-lbl">Live</div>
       </div>
       <div class="trend-canvas-wrap" style="margin-top:1rem;">
-        <canvas id="bpm-trend-canvas" height="100"></canvas>
+        <canvas id="bpm-trend-canvas" height="160"></canvas>
       </div>
       <div class="trend-stats-row">
         <div><div class="trend-stat-val" id="trend-min">--</div><div class="trend-stat-lbl">Min BPM</div></div>
@@ -2081,7 +2198,7 @@ function closeApp(){
 }
 
 /* ── SCREEN NAV ── */
-function showScreen(id){document.querySelectorAll('.app-screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');APP.scrollTop=0;}
+function showScreen(id){document.querySelectorAll('.app-screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');APP.scrollTop=0;if(id==='results')_animateResultScores();}
 function goHistory(){renderHistory();showScreen('history');}
 
 /* ── BASELINE STATE ── */
@@ -3128,6 +3245,10 @@ function stopSpeechRecognition(){
 const _recordingBlobs = new Map(); // in-memory object URL cache
 let _mediaRecorder = null;
 let _recordedChunks = [];
+// Heart recording during FAST check
+let _heartRecBuffer = [];   // [{ts, bpm, rmssd, spo2}] — one entry per second
+let _heartRecStart  = null; // Date.now() when recording began
+let _heartRecTimer  = null; // setInterval handle
 
 /* ---- IndexedDB video persistence ---- */
 const _IDB={name:"baseline_app",ver:1,store:"videos",db:null};
@@ -3550,6 +3671,24 @@ async function startRec(){
   tIdx=0;
   _faceFrames=[];_armFrames=[];_prevArmFrame=null;resetArmMedianBufs();
   _collectingFace=false;_collectingArms=false;
+  // Begin heart data capture for this session
+  _heartRecBuffer=[];
+  _heartRecStart=Date.now();
+  const _strip=document.getElementById('rec-heart-strip');
+  if(_strip)_strip.style.display='flex';
+  _heartRecTimer=setInterval(function(){
+    const ts=parseFloat(((Date.now()-_heartRecStart)/1000).toFixed(1));
+    const bpm=heartState.bpm;
+    const rmssd=heartState._computeRMSSD?heartState._computeRMSSD():null;
+    _heartRecBuffer.push({ts,bpm,rmssd,spo2:null});
+    // Update live strip
+    const bEl=document.getElementById('rec-bpm-live');
+    const hEl=document.getElementById('rec-hrv-live');
+    const sEl=document.getElementById('rec-spo2-live');
+    if(bEl)bEl.textContent=bpm!=null?bpm:'--';
+    if(hEl)hEl.textContent=rmssd!=null?Math.round(rmssd):'--';
+    if(sEl)sEl.textContent=heartState.isDemo?'98':'--';
+  },1000);
   // Start the preview loop NOW so face/pose detection runs during all tasks.
   // stopSQ() pauses the animateSQ interval — the preview loop takes over body visibility.
   stopSQ();
@@ -3626,6 +3765,10 @@ function tickTimer(cur,tot,ti){
 function endRec(){
   document.getElementById('rec-ind').classList.remove('on');
   stopSQ();
+  // Stop heart recording timer
+  if(_heartRecTimer){clearInterval(_heartRecTimer);_heartRecTimer=null;}
+  const _strip=document.getElementById('rec-heart-strip');
+  if(_strip)_strip.style.display='none';
   // Stop MediaRecorder
   if(_mediaRecorder&&_mediaRecorder.state!=='inactive'){
     _mediaRecorder.stop();
@@ -3635,6 +3778,10 @@ function endRec(){
 
 function resetRec(skipPreview){
   clearInterval(recTimer);tIdx=0;
+  if(_heartRecTimer){clearInterval(_heartRecTimer);_heartRecTimer=null;}
+  _heartRecBuffer=[];_heartRecStart=null;
+  const _rhStrip=document.getElementById('rec-heart-strip');
+  if(_rhStrip)_rhStrip.style.display='none';
   if(_mediaRecorder&&_mediaRecorder.state!=='inactive'){try{_mediaRecorder.stop();}catch(e){}}_mediaRecorder=null;_recordedChunks=[];
   if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
   stopSQ();stopPreviewLoop();_measuredWpm=null;_measuredPauseRatio=null;_wpmSpike=false;
@@ -3693,7 +3840,9 @@ function runProcessing(){
       document.getElementById('pc-'+s.id).classList.add('done');
     },s.delay);
   });
-  setTimeout(()=>{buildResults();showScreen('results');startPreviewLoop();},5000);
+  // Demo mode: inject scripted values and complete in 2s instead of 5s
+  if(_demoMode){_injectDemoInputs();}
+  setTimeout(()=>{buildResults();showScreen('results');startPreviewLoop();},_demoMode?2000:5000);
 }
 
 /* ── RESULTS ── */
@@ -4118,7 +4267,8 @@ function buildResults(){
     }
   }
 
-  _res={date:new Date(),fa:faNum,ad:adNum,pr,wpm,fs,as,ss,total,status:sc,trendFlag,isBaseline:false};
+  _res={date:new Date(),fa:faNum,ad:adNum,pr,wpm,fs,as,ss,total,status:sc,trendFlag,isBaseline:false,
+    heartData:(_heartRecBuffer.length>0?{samples:[..._heartRecBuffer],connected:!heartState.isDemo}:null)};
 
   // Feature 6: draw signal fingerprint
   drawFingerprint(faNum,adNum !== null ? adNum : 0, pr !== null ? pr : 0, fs,as,ss);
@@ -4497,7 +4647,8 @@ function saveAndHistory(){
       time:_res.date.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}),
       status:_res.status,
       f:_res.fs.toFixed(2),a:_res.as.toFixed(2),s:_res.ss.toFixed(2),t:_res.total.toFixed(1),
-      fRaw:_res.fa,aRaw:_res.ad,sRaw:_res.pr
+      fRaw:_res.fa,aRaw:_res.ad,sRaw:_res.pr,
+      heartData:_res.heartData||null
     };
     // Shift all existing blob keys up by 1 (oldest stays, new recording becomes index 0)
     if(_recordedChunks.length>0){
@@ -4517,11 +4668,19 @@ function saveAndHistory(){
       })();
     }
     hist.unshift(entry);
-    if(hist.length>100){
-      if(_recordingBlobs.has(100))URL.revokeObjectURL(_recordingBlobs.get(100));
-      _recordingBlobs.delete(100);
-      idbDel(100);
-      hist.pop();
+    // Cap at 90 entries; never remove a baseline entry (isBaseline:true)
+    if(hist.length>90){
+      // Find the oldest non-baseline entry to remove
+      let removeIdx = -1;
+      for(let _ci = hist.length-1; _ci >= 0; _ci--){
+        if(!hist[_ci].isBaseline){ removeIdx = _ci; break; }
+      }
+      if(removeIdx >= 0){
+        if(_recordingBlobs.has(removeIdx))URL.revokeObjectURL(_recordingBlobs.get(removeIdx));
+        _recordingBlobs.delete(removeIdx);
+        idbDel(removeIdx);
+        hist.splice(removeIdx, 1);
+      }
     }
     try{localStorage.setItem('sc_hist',JSON.stringify(hist.map(h=>{const c={...h};return c;})));}catch(e){}
   }
@@ -4994,12 +5153,63 @@ function openReplayModal(idx){
 
   modal.style.display='block';
   document.body.style.overflow='hidden';
+
+  // ── Heart section ────────────────────────────────────
+  var heartSection = document.getElementById('replay-heart-section');
+  var heartNoData  = document.getElementById('replay-heart-nodata');
+  replayHeart.stop(); // clean up any previous session
+
+  var hd = h.heartData || null;
+  if(hd && hd.samples && hd.samples.length > 0) {
+    heartSection.style.display='block';
+    if(heartNoData) heartNoData.style.display='none';
+    // Init after a brief tick so the canvas has layout dimensions
+    setTimeout(function(){
+      replayHeart.init(hd.samples, hd.connected);
+    }, 30);
+
+    // Wire video events
+    videoEl.addEventListener('play',       _replayHeartPlay);
+    videoEl.addEventListener('pause',      _replayHeartPause);
+    videoEl.addEventListener('ended',      _replayHeartPause);
+    videoEl.addEventListener('seeked',     _replayHeartSeek);
+    videoEl.addEventListener('timeupdate', _replayHeartTimeUpdate);
+  } else if(!isBaseline) {
+    // Entry exists but no heart data captured
+    heartSection.style.display='block';
+    document.getElementById('rh-ecg-canvas').style.display='none';
+    document.getElementById('rh-trend-canvas').style.display='none';
+    document.querySelectorAll('.rh-metrics-row,.rh-ecg-wrap,.rh-trend-wrap').forEach(function(el){el.style.display='none';});
+    if(heartNoData) heartNoData.style.display='block';
+  } else {
+    heartSection.style.display='none';
+  }
+}
+
+function _replayHeartPlay()       { replayHeart.play(); }
+function _replayHeartPause()      { replayHeart.pause(); }
+function _replayHeartSeek()       { var v=document.getElementById('replay-video'); replayHeart.seek(v.currentTime); }
+function _replayHeartTimeUpdate() {
+  var v=document.getElementById('replay-video');
+  replayHeart._syncToTime(v.currentTime);
+  replayHeart._drawTrend(v.currentTime);
 }
 
 function closeReplayModal(){
   const videoEl=document.getElementById('replay-video');
+  videoEl.removeEventListener('play',       _replayHeartPlay);
+  videoEl.removeEventListener('pause',      _replayHeartPause);
+  videoEl.removeEventListener('ended',      _replayHeartPause);
+  videoEl.removeEventListener('seeked',     _replayHeartSeek);
+  videoEl.removeEventListener('timeupdate', _replayHeartTimeUpdate);
   videoEl.onplay=null;videoEl.onpause=null;videoEl.onended=null;videoEl.ontimeupdate=null;
   videoEl.pause();videoEl.src='';
+  replayHeart.stop();
+  // Reset heart section visibility for next open
+  var hs=document.getElementById('replay-heart-section');
+  if(hs){ hs.style.display='none'; }
+  ['rh-ecg-canvas','rh-trend-canvas'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display='';});
+  document.querySelectorAll('.rh-metrics-row,.rh-ecg-wrap,.rh-trend-wrap').forEach(function(el){el.style.display='';});
   const playBtn=document.getElementById('replay-play-btn');
   if(playBtn)playBtn.style.display='none';
   document.getElementById('vp-controls').style.display='none';
@@ -6831,12 +7041,20 @@ function heartOverlayDidOpen() {
   ecgCanvas.height = 120;
   var trendCanvas = document.getElementById('bpm-trend-canvas');
   trendCanvas.width = trendCanvas.parentElement.clientWidth;
-  trendCanvas.height = 100;
+  trendCanvas.height = 160;
 
   heartECG.init(ecgCanvas);
   heartTrend.init(trendCanvas);
   heartBaseline.render();
   heartHistory.render();
+  // Show graceful degradation message for unsupported browsers
+  if (!navigator.bluetooth) {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    document.getElementById('ble-status-text').textContent = isIOS
+      ? 'Web Bluetooth is only supported in Chrome on desktop and Android. On iPhone, use the manual sync option.'
+      : 'Web Bluetooth is only supported in Chrome on desktop and Android. Please switch browsers.';
+    document.getElementById('ble-connect-btn').style.display = 'none';
+  }
   heartState.startDemo();
   heartSession.startTime = Date.now();
 }
@@ -6859,7 +7077,7 @@ var heartSession = { startTime: 0, bpmSamples: [], hrvSamples: [] };
 
 function heartSessionSave() {
   var duration = Math.round((Date.now() - heartSession.startTime) / 1000);
-  if (duration < 20 || heartSession.bpmSamples.length < 5) return;
+  if (duration < 30 || heartSession.bpmSamples.length < 10) return;
   var samples = heartSession.bpmSamples;
   var avg = Math.round(samples.reduce(function(a,b){return a+b;},0) / samples.length);
   var min = Math.min.apply(null, samples);
@@ -6885,7 +7103,12 @@ var heartBLE = {
 
   connect: function() {
     if (!navigator.bluetooth) {
-      document.getElementById('ble-status-text').textContent = 'Web Bluetooth not supported. Use Chrome or Edge.';
+      // iOS Safari and Firefox do not support Web Bluetooth
+      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      document.getElementById('ble-status-text').textContent = isIOS
+        ? 'Web Bluetooth is only supported in Chrome on desktop and Android. On iPhone, use the manual sync option.'
+        : 'Web Bluetooth is only supported in Chrome on desktop and Android. Please switch browsers.';
+      document.getElementById('ble-connect-btn').style.display = 'none';
       return;
     }
     var btn = document.getElementById('ble-connect-btn');
@@ -6894,7 +7117,10 @@ var heartBLE = {
     document.getElementById('ble-orb').classList.add('searching');
     document.getElementById('ble-status-text').textContent = 'Opening Bluetooth picker…';
 
-    navigator.bluetooth.requestDevice({ filters: [{ services: ['heart_rate'] }] })
+    // Full 128-bit UUIDs used for maximum device compatibility
+    var HR_SERVICE = '0000180d-0000-1000-8000-00805f9b34fb';
+    var HR_CHAR    = '00002a37-0000-1000-8000-00805f9b34fb';
+    navigator.bluetooth.requestDevice({ filters: [{ services: [HR_SERVICE] }] })
       .then(function(device) {
         heartBLE.device = device;
         device.addEventListener('gattserverdisconnected', function() { heartBLE._onDisconnect(); });
@@ -6902,8 +7128,8 @@ var heartBLE = {
         document.getElementById('ble-device-name').textContent = device.name || 'Unknown Device';
         return device.gatt.connect();
       })
-      .then(function(server) { return server.getPrimaryService('heart_rate'); })
-      .then(function(service) { return service.getCharacteristic('heart_rate_measurement'); })
+      .then(function(server) { return server.getPrimaryService(HR_SERVICE); })
+      .then(function(service) { return service.getCharacteristic(HR_CHAR); })
       .then(function(char) {
         heartBLE.characteristic = char;
         char.addEventListener('characteristicvaluechanged', function(e) { heartBLE._onData(e); });
@@ -6995,7 +7221,8 @@ var heartState = {
       for (var i = 0; i < rrIntervals.length; i++) {
         this.rrBuffer.push(rrIntervals[i]);
       }
-      if (this.rrBuffer.length > 20) this.rrBuffer = this.rrBuffer.slice(-20);
+      // Keep up to 64 intervals (~60s at 70 BPM) — covers the RMSSD 60-second window
+      if (this.rrBuffer.length > 64) this.rrBuffer = this.rrBuffer.slice(-64);
       this.rmssd = this._computeRMSSD();
       if (this.rmssd !== null) heartSession.hrvSamples.push(this.rmssd);
     }
@@ -7006,29 +7233,46 @@ var heartState = {
 
   _computeRMSSD: function() {
     var rr = this.rrBuffer;
+    // Require at least 3 intervals before reporting HRV
     if (rr.length < 3) return null;
-    var sumSq = 0;
+    var sumSq = 0, n = rr.length - 1;
     for (var i = 1; i < rr.length; i++) {
       var d = rr[i] - rr[i-1];
       sumSq += d * d;
     }
-    return Math.round(Math.sqrt(sumSq / (rr.length - 1)));
+    return Math.round(Math.sqrt(sumSq / n));
   },
 
   startDemo: function() {
     if (this._demoTimer) return;
     var self = this;
-    this._demoWalk = 68;
-    this._demoTimer = setInterval(function() {
-      // Random walk BPM
-      self._demoWalk += (Math.random() - 0.5) * 3;
-      self._demoWalk = Math.max(58, Math.min(82, self._demoWalk));
+    self._demoWalk = 68;
+    self._demoRR = 880; // running RR interval for correlated noise
+    self._demoSpike = 0; // countdown ticks remaining in a spike event
+    self._demoTimer = setInterval(function() {
+      // Occasional spike events: ~every 18-28s, BPM jumps to 95-130 then decays back
+      if (self._demoSpike > 0) {
+        self._demoSpike--;
+        self._demoWalk += (self._demoSpike > 0 ? 6 : -8); // ramp up then drop
+        self._demoWalk = Math.max(58, Math.min(138, self._demoWalk));
+      } else {
+        // Normal random walk
+        self._demoWalk += (Math.random() - 0.5) * 3;
+        self._demoWalk = Math.max(58, Math.min(82, self._demoWalk));
+        // ~1-in-20 chance each second to trigger a spike
+        if (Math.random() < 0.05) {
+          self._demoSpike = 5 + Math.floor(Math.random() * 5); // 5-9 ticks up, then drop
+        }
+      }
       var bpm = Math.round(self._demoWalk);
-      // Simulate 2-3 RR intervals per second based on BPM
-      var rrMs = 60000 / bpm;
+      // Correlated RR noise: σ ≈ 30ms per interval → RMSSD ≈ 42ms
+      // AR(1) process so consecutive RRs are correlated (physiologically realistic)
+      var baseRR = 60000 / bpm;
+      var noise1 = (Math.random() - 0.5) * 100; // ±50ms
+      var noise2 = 0.3 * noise1 + 0.7 * (Math.random() - 0.5) * 100;
       var rr = [
-        rrMs + (Math.random() - 0.5) * 40,
-        rrMs + (Math.random() - 0.5) * 40
+        Math.max(400, baseRR + noise1),
+        Math.max(400, baseRR + noise2)
       ];
       self.push(bpm, rr);
     }, 1000);
@@ -7174,66 +7418,201 @@ var heartTrend = {
     var H = canvas.height;
     ctx.clearRect(0, 0, W, H);
 
+    var PAD_L = 36, PAD_R = 8, PAD_T = 10, PAD_B = 20;
+    var PW = W - PAD_L - PAD_R;
+    var PH = H - PAD_T - PAD_B;
     var Y_MIN = 40, Y_MAX = 180;
-    var toY = function(bpm) { return H - (bpm - Y_MIN) / (Y_MAX - Y_MIN) * H; };
 
-    // Baseline zone
+    var toX = function(i, n) { return PAD_L + (i / Math.max(n - 1, 1)) * PW; };
+    var toY = function(bpm) { return PAD_T + (1 - (bpm - Y_MIN) / (Y_MAX - Y_MIN)) * PH; };
+
+    // === Heart rate zone bands ===
+    var ZONES = [
+      { lo: 40,  hi: 60,  fill: 'rgba(0,229,200,0.055)',  label: 'REST' },
+      { lo: 60,  hi: 100, fill: 'rgba(59,130,246,0.045)', label: 'FAT BURN' },
+      { lo: 100, hi: 140, fill: 'rgba(245,158,11,0.050)', label: 'CARDIO' },
+      { lo: 140, hi: 180, fill: 'rgba(239,68,68,0.065)',  label: 'PEAK' },
+    ];
+    ZONES.forEach(function(z) {
+      var y1 = toY(Math.min(z.hi, Y_MAX));
+      var y2 = toY(Math.max(z.lo, Y_MIN));
+      ctx.fillStyle = z.fill;
+      ctx.fillRect(PAD_L, y1, PW, y2 - y1);
+    });
+
+    // === Horizontal grid lines + BPM axis labels ===
+    ctx.font = '9px "Space Mono", monospace';
+    ctx.textAlign = 'right';
+    [60, 80, 100, 120, 140, 160].forEach(function(bpm) {
+      var y = toY(bpm);
+      ctx.beginPath();
+      ctx.setLineDash([2, 5]);
+      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+      ctx.lineWidth = 1;
+      ctx.moveTo(PAD_L, y);
+      ctx.lineTo(W - PAD_R, y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(107,114,128,0.55)';
+      ctx.fillText(String(bpm), PAD_L - 4, y + 3);
+    });
+    ctx.textAlign = 'left';
+
+    // === Personal baseline band ===
     var bl = heartBaseline.data;
     if (bl && bl.restingBPM) {
-      var blY1 = toY(bl.restingBPM + 12);
-      var blY2 = toY(bl.restingBPM - 12);
+      var blY1 = toY(bl.restingBPM + 10);
+      var blY2 = toY(bl.restingBPM - 10);
       ctx.fillStyle = 'rgba(0,229,200,0.07)';
-      ctx.fillRect(0, blY1, W, blY2 - blY1);
+      ctx.fillRect(PAD_L, blY1, PW, blY2 - blY1);
+      var blYc = toY(bl.restingBPM);
+      ctx.beginPath();
+      ctx.setLineDash([6, 4]);
+      ctx.strokeStyle = 'rgba(0,229,200,0.32)';
+      ctx.lineWidth = 1;
+      ctx.moveTo(PAD_L, blYc);
+      ctx.lineTo(W - PAD_R, blYc);
+      ctx.stroke();
+      ctx.setLineDash([]);
     }
 
+    // === No-data placeholder ===
     if (history.length < 2) {
-      ctx.fillStyle = 'rgba(107,114,128,0.4)';
-      ctx.font = '11px Space Mono, monospace';
+      ctx.fillStyle = 'rgba(107,114,128,0.38)';
+      ctx.font = '10px "Space Mono", monospace';
       ctx.textAlign = 'center';
-      ctx.fillText('Waiting for data…', W / 2, H / 2);
+      ctx.fillText('Waiting for data…', PAD_L + PW / 2, PAD_T + PH / 2);
       ctx.textAlign = 'left';
+      this._drawTimeAxis(ctx, W, H, PAD_L, PW, PAD_B);
       return;
     }
 
-    // Smooth line
+    var n = history.length;
+
+    // Helper: build bezier control points (Catmull-Rom → cubic bezier)
+    var pts = history.map(function(h, i) {
+      return { x: toX(i, n), y: toY(h.bpm) };
+    });
+
+    // === Gradient fill under the curve ===
+    var grad = ctx.createLinearGradient(0, PAD_T, 0, PAD_T + PH);
+    grad.addColorStop(0,   'rgba(239,68,68,0.38)');
+    grad.addColorStop(0.55,'rgba(239,68,68,0.10)');
+    grad.addColorStop(1,   'rgba(239,68,68,0.0)');
+
     ctx.beginPath();
-    ctx.strokeStyle = 'rgba(239,68,68,0.8)';
-    ctx.lineWidth = 2;
-    ctx.shadowColor = 'rgba(239,68,68,0.4)';
-    ctx.shadowBlur = 5;
-    for (var i = 0; i < history.length; i++) {
-      var x = i / (history.length - 1) * W;
-      var y = toY(history[i].bpm);
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (var i = 1; i < n; i++) {
+      var prev = pts[i - 1], cur = pts[i];
+      var cpx1 = prev.x + (cur.x - prev.x) / 3;
+      var cpy1 = prev.y;
+      var cpx2 = prev.x + 2 * (cur.x - prev.x) / 3;
+      var cpy2 = cur.y;
+      ctx.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, cur.x, cur.y);
     }
+    ctx.lineTo(pts[n - 1].x, PAD_T + PH);
+    ctx.lineTo(pts[0].x, PAD_T + PH);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // === Smooth stroke line ===
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (var i = 1; i < n; i++) {
+      var prev = pts[i - 1], cur = pts[i];
+      var cpx1 = prev.x + (cur.x - prev.x) / 3;
+      var cpy1 = prev.y;
+      var cpx2 = prev.x + 2 * (cur.x - prev.x) / 3;
+      var cpy2 = cur.y;
+      ctx.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, cur.x, cur.y);
+    }
+    ctx.strokeStyle = 'rgba(239,68,68,0.92)';
+    ctx.lineWidth = 2;
+    ctx.shadowColor = 'rgba(239,68,68,0.5)';
+    ctx.shadowBlur = 7;
     ctx.stroke();
     ctx.shadowBlur = 0;
 
-    // Latest dot
-    var last = history[history.length - 1];
-    var lx = W - 4;
-    var ly = toY(last.bpm);
+    // === Min / Max callout lines ===
+    var bpms = history.map(function(h) { return h.bpm; });
+    var minBpm = Math.min.apply(null, bpms);
+    var maxBpm = Math.max.apply(null, bpms);
+    var minIdx = bpms.indexOf(minBpm);
+    var maxIdx = bpms.indexOf(maxBpm);
+
+    function drawCallout(idx, bpm, color, labelSide) {
+      var cx = toX(idx, n), cy = toY(bpm);
+      ctx.beginPath();
+      ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 6;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.font = '8px "Space Mono", monospace';
+      ctx.fillStyle = color;
+      ctx.textAlign = labelSide === 'left' ? 'left' : 'right';
+      ctx.fillText(String(bpm), cx + (labelSide === 'left' ? 5 : -5), cy - 4);
+      ctx.textAlign = 'left';
+    }
+    if (minIdx !== maxIdx) {
+      drawCallout(minIdx, minBpm, 'rgba(59,130,246,0.85)', minIdx < n / 2 ? 'left' : 'right');
+      drawCallout(maxIdx, maxBpm, 'rgba(239,68,68,0.85)', maxIdx < n / 2 ? 'left' : 'right');
+    }
+
+    // === Pulsing live dot ===
+    var lx = pts[n - 1].x;
+    var ly = pts[n - 1].y;
+    var pulse = 0.5 + 0.5 * Math.sin(Date.now() / 280);
     ctx.beginPath();
-    ctx.arc(lx, ly, 4, 0, Math.PI * 2);
+    ctx.arc(lx, ly, 10 + 4 * pulse, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(239,68,68,' + (0.18 * pulse).toFixed(2) + ')';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(lx, ly, 4.5, 0, Math.PI * 2);
     ctx.fillStyle = '#ef4444';
-    ctx.shadowColor = 'rgba(239,68,68,0.7)';
-    ctx.shadowBlur = 10;
+    ctx.shadowColor = 'rgba(239,68,68,0.95)';
+    ctx.shadowBlur = 14;
     ctx.fill();
     ctx.shadowBlur = 0;
 
-    // Stats
-    var bpms = history.map(function(h) { return h.bpm; });
-    var min = Math.min.apply(null, bpms);
-    var max = Math.max.apply(null, bpms);
+    // === Current zone label (top-right inside canvas) ===
+    var curBpm = history[n - 1].bpm;
+    var curZone = curBpm < 60 ? 'REST' : curBpm < 100 ? 'FAT BURN' : curBpm < 140 ? 'CARDIO' : 'PEAK';
+    var zoneColor = curBpm < 60 ? '#00e5c8' : curBpm < 100 ? '#3b82f6' : curBpm < 140 ? '#f59e0b' : '#ef4444';
+    ctx.font = 'bold 8px "Space Mono", monospace';
+    ctx.textAlign = 'right';
+    ctx.fillStyle = zoneColor;
+    ctx.shadowColor = zoneColor;
+    ctx.shadowBlur = 6;
+    ctx.fillText(curZone, W - PAD_R - 4, PAD_T + 10);
+    ctx.shadowBlur = 0;
+    ctx.textAlign = 'left';
+
+    // === Time axis ===
+    this._drawTimeAxis(ctx, W, H, PAD_L, PW, PAD_B);
+
+    // === Stats ===
     var avg = Math.round(bpms.reduce(function(a,b){return a+b;},0) / bpms.length);
     var hrvs = history.map(function(h){return h.rmssd;}).filter(function(v){return v !== null;});
     var avgHrv = hrvs.length ? Math.round(hrvs.reduce(function(a,b){return a+b;},0)/hrvs.length) : null;
 
-    document.getElementById('trend-min').textContent = min;
+    document.getElementById('trend-min').textContent = minBpm;
     document.getElementById('trend-avg').textContent = avg;
-    document.getElementById('trend-max').textContent = max;
+    document.getElementById('trend-max').textContent = maxBpm;
     document.getElementById('trend-hrv-avg').textContent = avgHrv !== null ? avgHrv : '--';
+  },
+
+  _drawTimeAxis: function(ctx, W, H, PAD_L, PW, PAD_B) {
+    var y = H - PAD_B + 13;
+    ctx.font = '8px "Space Mono", monospace';
+    ctx.fillStyle = 'rgba(107,114,128,0.42)';
+    ctx.textAlign = 'left';  ctx.fillText('60s ago', PAD_L, y);
+    ctx.textAlign = 'center'; ctx.fillText('30s', PAD_L + PW / 2, y);
+    ctx.textAlign = 'right';  ctx.fillText('now', W - 8, y);
+    ctx.textAlign = 'left';
   },
 
   stop: function() {
@@ -7252,7 +7631,10 @@ var heartBaseline = {
   },
 
   save: function() {
-    if (!heartState.bpm) { alert('No heart rate data yet. Let the monitor run for a moment first.'); return; }
+    if (!heartState.bpm) {
+      document.getElementById('heart-baseline-content').innerHTML = '<div style="font-family:\'Space Mono\',monospace;font-size:0.72rem;color:var(--yellow);">No heart rate data yet. Let the monitor run for a moment first.</div>';
+      return;
+    }
     this.data = {
       date: new Date().toLocaleDateString(),
       restingBPM: heartState.bpm,
@@ -7367,18 +7749,624 @@ function updateHeartUI() {
 
   if (rmssd !== null) {
     document.getElementById('hrv-value').textContent = rmssd;
-    // Bar: 0–80ms range
+    // Bar: 0–80ms range (healthy RMSSD typically 20–80ms)
     var pct = Math.min(rmssd / 80 * 100, 100);
     document.getElementById('hrv-bar-fill').style.width = pct + '%';
     document.getElementById('hrv-rr-count').textContent =
       heartState.rrBuffer.length + ' RR intervals · RMSSD';
-  } else if (heartState.rrBuffer.length > 0) {
-    document.getElementById('hrv-rr-count').textContent =
-      'Collecting RR intervals (' + heartState.rrBuffer.length + '/3 min)…';
+  } else {
+    // Show collecting status — only display HRV after ≥3 RR intervals
+    document.getElementById('hrv-value').textContent = '--';
+    document.getElementById('hrv-bar-fill').style.width = '0%';
+    document.getElementById('hrv-rr-count').textContent = heartState.rrBuffer.length > 0
+      ? 'Collecting RR intervals (' + heartState.rrBuffer.length + '/3 min)…'
+      : 'Waiting for RR intervals…';
   }
 
   heartBaseline.render();
 }
+
+/* ═══════════════════════════════════════════════════════
+   TASK 3 — FAST Demo Mode
+   Activate: press D three times within 2s on screen-home
+   ═══════════════════════════════════════════════════════ */
+let _demoMode = false;
+let _demoCycle = 0;      // 0=Normal, 1=Warning, 2=Critical
+let _demoKeyBuf = [];    // timestamps of recent D presses
+
+// Demo cycle scripted values — fa/ad/pr/wpm per the spec table
+const _DEMO_CYCLES = [
+  { fa: 0.0389, leftDrop: 0.045, rightDrop: 0.040, pr: 0.16, wpm: 148 },  // green
+  { fa: 0.09422, leftDrop: 0.11,  rightDrop: 0.07,  pr: 0.29, wpm: 103 },  // yellow
+  { fa: 0.17241, leftDrop: 0.21,  rightDrop: 0.14,  pr: 0.43, wpm: 74  },  // red
+];
+
+// Listen for triple-D key press on screen-home
+document.addEventListener('keydown', function(e) {
+  if(e.key !== 'd' && e.key !== 'D') return;
+  const screen = document.getElementById('screen-home');
+  if(!screen || !screen.classList.contains('active')) return;
+  const now = Date.now();
+  _demoKeyBuf = _demoKeyBuf.filter(t => now - t < 2000); // keep last 2s
+  _demoKeyBuf.push(now);
+  if(_demoKeyBuf.length >= 3) {
+    _demoKeyBuf = [];
+    _toggleDemoMode();
+  }
+});
+
+function _toggleDemoMode() {
+  _demoMode = !_demoMode;
+  const badge = document.getElementById('demo-badge');
+  if(badge) badge.style.display = _demoMode ? 'inline-block' : 'none';
+  if(!_demoMode) _demoCycle = 0; // reset cycle on deactivate
+}
+
+// Inject scripted inputs before buildResults() is called in demo mode
+function _injectDemoInputs() {
+  const cyc = _DEMO_CYCLES[_demoCycle % 3];
+  console.warn('[DEMO MODE] Injecting scripted result — not real sensor data. Cycle:', _demoCycle % 3);
+
+  // Face frames: 80 values at target fa (median will equal fa)
+  _faceFrames = Array.from({length: 80}, function(_, i) {
+    return cyc.fa + (Math.random() - 0.5) * 0.0012;
+  });
+
+  // Arm frames: 150 frames with controlled linear drift producing target ad
+  // Uses lx/ly/rx/ry structure matching computeArmDrift output
+  _armFrames = Array.from({length: 150}, function(_, i) {
+    const t = i / 149;
+    return { lx: 0, ly: t * cyc.leftDrop, rx: 0, ry: t * cyc.rightDrop, conf: 0.95 };
+  });
+
+  // Speech inputs: set directly
+  _measuredPauseRatio = cyc.pr;
+  _measuredWpm = cyc.wpm;
+  _wpmBuckets = []; // clear buckets so wpmDevScore = 0
+  _measuredJitter = null;
+  _measuredShimmer = null;
+
+  // Advance cycle for next run
+  _demoCycle = (_demoCycle + 1) % 3;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TASK 2b — SpO2 Apple Health XML Import
+   ═══════════════════════════════════════════════════════ */
+function importSpo2Health(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(e.target.result, 'text/xml');
+      const records = Array.from(xml.querySelectorAll('Record[type="HKQuantityTypeIdentifierOxygenSaturation"]'));
+      if (!records.length) {
+        document.getElementById('spo2-caveat').textContent += ' (No SpO₂ records found in file.)';
+        return;
+      }
+      // Sort by startDate descending, take 10 most recent
+      const entries = records.map(function(r) {
+        return { date: r.getAttribute('startDate'), val: parseFloat(r.getAttribute('value')) };
+      }).filter(function(r) { return !isNaN(r.val); })
+        .sort(function(a, b) { return b.date.localeCompare(a.date); })
+        .slice(0, 10);
+
+      if (!entries.length) return;
+      // Update main SpO2 display with most recent reading
+      const latest = Math.round(entries[0].val * 100);
+      document.getElementById('spo2-value').textContent = latest;
+      document.getElementById('spo2-caveat').textContent = 'Imported from Apple Health export. Most recent: ' + entries[0].date.slice(0, 10) + '.';
+
+      // Render table
+      const tbody = document.getElementById('spo2-import-tbody');
+      tbody.innerHTML = entries.map(function(r) {
+        const pct = Math.round(r.val * 100);
+        const cls = pct < 95 ? 'spo2-low' : 'spo2-ok';
+        return '<tr><td>' + r.date.slice(0, 16) + '</td><td class="' + cls + '">' + pct + '%</td></tr>';
+      }).join('');
+      document.getElementById('spo2-import-area').style.display = 'block';
+    } catch(err) {
+      console.error('SpO2 import error:', err);
+      document.getElementById('spo2-caveat').textContent = 'Import failed — make sure you selected a valid Apple Health export.xml file.';
+    }
+    input.value = ''; // reset so the same file can be re-imported
+  };
+  reader.readAsText(file);
+}
+
+/* ═══════════════════════════════════════════════════════
+   TASK 4a — Results Score Count-up Animation
+   ═══════════════════════════════════════════════════════ */
+function _animateResultScores() {
+  if(!_res || _res.isBaseline) return; // skip animation in baseline-recording mode
+  const DURATION = 900; // ms
+  const easeOut = function(t) { return 1 - Math.pow(1 - t, 3); }; // easeOutCubic
+
+  function countUp(el, finalVal, decimals, suffix) {
+    if(!el) return;
+    // Preserve the <span> unit child element
+    const unit = el.querySelector('.mc-unit');
+    const unitHTML = unit ? unit.outerHTML : '';
+    const start = performance.now();
+    function frame(now) {
+      const t = Math.min(1, (now - start) / DURATION);
+      const v = easeOut(t) * finalVal;
+      el.innerHTML = v.toFixed(decimals) + unitHTML;
+      if(t < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // face-val: show fa numeric (or skip if null)
+  const faNum = _res.fa !== null ? parseFloat(_res.fa) : null;
+  if(faNum !== null) countUp(document.getElementById('face-val'), faNum, 4, '');
+
+  // arms-val: show ad numeric (or skip if null)
+  const adNum = _res.ad !== null ? parseFloat(_res.ad) : null;
+  if(adNum !== null) countUp(document.getElementById('arms-val'), adNum, 1, '');
+
+  // speech-val: show ss * 100
+  if(_res.ss !== null && _res.ss !== undefined) {
+    countUp(document.getElementById('speech-val'), _res.ss * 100, 0, '');
+  }
+
+  // sb-score: total risk index
+  if(_res.total !== null && _res.total !== undefined) {
+    const scoreEl = document.getElementById('sb-score');
+    if(scoreEl) {
+      const start = performance.now();
+      const finalVal = _res.total;
+      (function frame(now) {
+        const t = Math.min(1, (now - start) / DURATION);
+        scoreEl.textContent = (easeOut(t) * finalVal).toFixed(1);
+        if(t < 1) requestAnimationFrame(frame);
+      })(performance.now());
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   TASK 4c — Fingerprint Radar Tooltips
+   ═══════════════════════════════════════════════════════ */
+(function _initFpTooltips() {
+  // Tooltip hit areas: approximate bounding regions around each axis label in the 180×180 SVG
+  // Face: top (cx=90, cy=18), Arms: bottom-left (cx=27.6, cy=126), Speech: bottom-right (cx=152.4, cy=126)
+  // We listen on mousemove over the fingerprint SVG and detect proximity to each dot
+  document.addEventListener('mousemove', function(e) {
+    const svg = document.getElementById('fp-svg');
+    const tooltip = document.getElementById('fp-tooltip');
+    if(!svg || !tooltip || !_res) { if(tooltip) tooltip.style.display='none'; return; }
+    const rect = svg.getBoundingClientRect();
+    if(e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) {
+      tooltip.style.display = 'none'; return;
+    }
+    // Map mouse position to SVG coordinate space (SVG is 180×180)
+    const svgX = (e.clientX - rect.left) / rect.width * 180;
+    const svgY = (e.clientY - rect.top) / rect.height * 180;
+
+    // Axis label positions in SVG coords
+    const axes = [
+      { x: 90,    y: 11,  label: 'Face',   val: _res.fa !== null ? _res.fa.toFixed(4) + ' · threshold 0.08' : 'Not captured' },
+      { x: 16,    y: 136, label: 'Arms',   val: _res.ad !== null ? _res.ad.toFixed(1) + ' · threshold 30'  : 'Not captured' },
+      { x: 164,   y: 136, label: 'Speech', val: _res.pr !== null ? _res.pr.toFixed(2) + ' · threshold 0.35': 'Not captured' },
+    ];
+
+    const HIT = 18; // hit radius in SVG units
+    let hit = null;
+    for(let i = 0; i < axes.length; i++) {
+      const dx = svgX - axes[i].x, dy = svgY - axes[i].y;
+      if(Math.sqrt(dx*dx + dy*dy) < HIT) { hit = axes[i]; break; }
+    }
+    if(!hit) { tooltip.style.display = 'none'; return; }
+    tooltip.textContent = hit.label + ': ' + hit.val;
+    tooltip.style.display = 'block';
+    tooltip.style.left = (e.clientX + 14) + 'px';
+    tooltip.style.top  = (e.clientY - 10) + 'px';
+    // Keep tooltip inside viewport
+    const tr = tooltip.getBoundingClientRect();
+    if(tr.right > window.innerWidth - 8) tooltip.style.left = (e.clientX - tr.width - 10) + 'px';
+  });
+  document.addEventListener('mouseleave', function() {
+    const t = document.getElementById('fp-tooltip');
+    if(t) t.style.display = 'none';
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════
+   TASK 5a — Export History as JSON
+   ═══════════════════════════════════════════════════════ */
+function exportHistoryJSON() {
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    appVersion: '1.0',
+    fastHistory:    JSON.parse(localStorage.getItem('sc_hist') || '[]'),
+    fastBaseline:   JSON.parse(localStorage.getItem('sc_baseline') || 'null'),
+    heartHistory:   JSON.parse(localStorage.getItem('sc_heart_hist') || '[]'),
+    heartBaseline:  JSON.parse(localStorage.getItem('sc_heart_baseline') || 'null'),
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const dateStr = new Date().toISOString().slice(0, 10);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'baseline-export-' + dateStr + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  // Brief confirmation feedback
+  const btn = document.getElementById('btn-export-history');
+  if(btn) {
+    const orig = btn.textContent;
+    btn.textContent = '✓ Exported';
+    setTimeout(function() { btn.textContent = orig; }, 2000);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   TASK 5c — Home Screen Sparklines
+   Injected into updateHomeScreen() via patch on the
+   baseline-set-card after its innerHTML is written.
+   ═══════════════════════════════════════════════════════ */
+function _renderHomeSparklines() {
+  const entries = hist.filter(function(h) { return !h.isBaseline && h.fRaw != null; });
+  if(entries.length < 2) return;
+  const last7 = entries.slice(0, 7).reverse(); // oldest→newest
+
+  const signals = [
+    { key: 'fRaw',  color: '#00e5c8', label: 'Face',   max: 0.15 },
+    { key: 'aRaw',  color: '#a855f7', label: 'Arms',   max: 60   },
+    { key: 'sRaw',  color: '#3b82f6', label: 'Speech', max: 0.5  },
+  ];
+
+  function trendChar(vals) {
+    if(vals.length < 4) return { ch: '→', color: 'var(--muted)' };
+    const recent = vals.slice(-3).reduce(function(a,b){return a+b;},0)/3;
+    const prior  = vals.slice(0, vals.length-3).reduce(function(a,b){return a+b;},0)/Math.max(1,vals.length-3);
+    const delta  = recent - prior;
+    const thresh = prior * 0.08; // 8% change considered notable
+    if(delta > thresh)  return { ch: '↑', color: 'var(--red)' };    // worsening
+    if(delta < -thresh) return { ch: '↓', color: 'var(--teal)' };   // improving
+    return { ch: '→', color: 'var(--muted)' };
+  }
+
+  function makeSpark(vals, color, max) {
+    if(vals.length < 2) return '';
+    const W = 80, H = 24, pad = 2;
+    const pts = vals.map(function(v, i) {
+      const x = pad + (i / (vals.length-1)) * (W - pad*2);
+      const y = H - pad - (Math.min(v, max) / max) * (H - pad*2);
+      return x.toFixed(1)+','+y.toFixed(1);
+    }).join(' ');
+    return '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" style="overflow:visible;display:block;">' +
+      '<polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '</svg>';
+  }
+
+  // Inject below .bsc-scores row in the baseline-set-card
+  const scoresEl = document.querySelector('.bsc-scores');
+  if(!scoresEl) return;
+  const existing = document.getElementById('home-sparklines');
+  if(existing) existing.remove();
+
+  const container = document.createElement('div');
+  container.id = 'home-sparklines';
+  container.style.cssText = 'display:flex;gap:1.25rem;margin-top:0.9rem;padding-top:0.9rem;border-top:1px solid var(--cbord);flex-wrap:wrap;';
+
+  signals.forEach(function(sig) {
+    const vals = last7.map(function(h) { return parseFloat(h[sig.key]) || 0; });
+    const trend = trendChar(vals);
+    const html = '<div style="display:flex;flex-direction:column;gap:0.25rem;">' +
+      '<div style="font-family:\'Space Mono\',monospace;font-size:0.58rem;color:var(--muted);letter-spacing:0.08em;">' + sig.label + '</div>' +
+      makeSpark(vals, sig.color, sig.max) +
+      '<div style="font-size:0.75rem;color:'+trend.color+';">' + trend.ch + '</div>' +
+      '</div>';
+    container.insertAdjacentHTML('beforeend', html);
+  });
+
+  scoresEl.insertAdjacentElement('afterend', container);
+}
+
+// Patch updateHomeScreen to call sparklines after rendering
+const _origUpdateHomeScreen = typeof updateHomeScreen === 'function' ? updateHomeScreen : null;
+// Sparklines are triggered by a MutationObserver on the home screen div
+// so they work regardless of when updateHomeScreen sets innerHTML
+(function() {
+  const homeEl = document.getElementById('screen-home');
+  if(!homeEl) return;
+  const obs = new MutationObserver(function() {
+    // Give innerHTML a microtask to settle before reading .bsc-scores
+    requestAnimationFrame(_renderHomeSparklines);
+  });
+  obs.observe(homeEl, { childList: true, subtree: false });
+})();
+
+/* ═══════════════════════════════════════════════════════
+   REPLAY HEART ENGINE
+   Syncs ECG + BPM trend with video playback in the
+   replay modal. Driven by heartData stored in hist entries.
+   ═══════════════════════════════════════════════════════ */
+var replayHeart = {
+  samples: null,      // [{ts, bpm, rmssd, spo2}]
+  _ecgRaf: null,
+  _ecgTemplate: null, // shared with heartECG
+  _ecgPhase: 0,       // current position in PQRST template (fractional)
+  _ecgBpm: 70,
+  _ecgLastTs: 0,
+  _ecgCtx: null,
+  _ecgW: 0, _ecgH: 0,
+  _ecgBuf: null,      // Float32Array rolling waveform buffer
+  _ecgRunning: false,
+  _trendCtx: null,
+  _trendW: 0, _trendH: 0,
+
+  // ── Init ──────────────────────────────────────────────
+  init: function(samples, connected) {
+    this.samples = samples;
+    this._ecgRunning = false;
+
+    // Canvases
+    var ecgCanvas = document.getElementById('rh-ecg-canvas');
+    var trendCanvas = document.getElementById('rh-trend-canvas');
+    if(ecgCanvas) {
+      ecgCanvas.width = ecgCanvas.parentElement.clientWidth;
+      ecgCanvas.height = 60;
+      this._ecgCtx = ecgCanvas.getContext('2d');
+      this._ecgW = ecgCanvas.width;
+      this._ecgH = ecgCanvas.height;
+      this._ecgBuf = new Float32Array(this._ecgW);
+    }
+    if(trendCanvas) {
+      trendCanvas.width = trendCanvas.parentElement.clientWidth;
+      trendCanvas.height = 110;
+      this._trendCtx = trendCanvas.getContext('2d');
+      this._trendW = trendCanvas.width;
+      this._trendH = trendCanvas.height;
+    }
+
+    // Borrow PQRST template from heartECG if available
+    this._ecgTemplate = (typeof heartECG !== 'undefined' && heartECG.template) ? heartECG.template : this._buildTemplate();
+
+    // Source pill
+    var pill = document.getElementById('rh-source-pill');
+    if(pill) {
+      pill.textContent = connected ? 'WATCH' : 'DEMO';
+      pill.className = 'rh-source-pill' + (connected ? '' : ' demo');
+    }
+
+    // Initial state from first sample
+    this._syncToTime(0);
+    this._drawTrend(0);
+  },
+
+  // ── Sync to a video timestamp ─────────────────────────
+  _syncToTime: function(t) {
+    if(!this.samples || !this.samples.length) return;
+    // Find closest sample
+    var best = this.samples[0];
+    for(var i = 1; i < this.samples.length; i++) {
+      if(Math.abs(this.samples[i].ts - t) < Math.abs(best.ts - t)) best = this.samples[i];
+    }
+    var bpm = best.bpm != null ? best.bpm : 70;
+    var rmssd = best.rmssd != null ? Math.round(best.rmssd) : null;
+    var spo2 = best.spo2 != null ? best.spo2 : (heartState.isDemo ? 98 : null);
+
+    document.getElementById('rh-bpm-val').textContent = bpm;
+    document.getElementById('rh-hrv-val').textContent = rmssd != null ? rmssd : '--';
+    document.getElementById('rh-spo2-val').textContent = spo2 != null ? spo2 : '--';
+
+    this._ecgBpm = bpm;
+  },
+
+  // ── ECG animation ─────────────────────────────────────
+  _buildTemplate: function() {
+    // Simplified 5-Gaussian McSharry model (same as heartECG)
+    var N = 200;
+    var tpl = new Float32Array(N);
+    var params = [
+      {a:0.12,  b:0.25, t:-1.05},  // P
+      {a:-0.03, b:0.10, t:-0.17},  // Q
+      {a:1.0,   b:0.10, t:0.0},    // R
+      {a:-0.12, b:0.10, t:0.17},   // S
+      {a:0.28,  b:0.40, t:0.65},   // T
+    ];
+    for(var i = 0; i < N; i++) {
+      var theta = (i / N) * 2 * Math.PI - Math.PI;
+      var y = 0;
+      for(var k = 0; k < params.length; k++) {
+        var p = params[k];
+        var dt = theta - p.t;
+        // Wrap dt to [-π, π]
+        while(dt >  Math.PI) dt -= 2*Math.PI;
+        while(dt < -Math.PI) dt += 2*Math.PI;
+        y += p.a * Math.exp(-dt*dt / (2*p.b*p.b));
+      }
+      tpl[i] = y;
+    }
+    return tpl;
+  },
+
+  _ecgDraw: function() {
+    if(!this._ecgRunning) return;
+    var ctx = this._ecgCtx;
+    var W = this._ecgW, H = this._ecgH;
+    if(!ctx) return;
+
+    var now = performance.now();
+    var dt = now - (this._ecgLastTs || now);
+    this._ecgLastTs = now;
+
+    // Advance phase by (dt ms / beat interval ms) * template length
+    var beatMs = 60000 / this._ecgBpm;
+    var advance = (dt / beatMs) * this._ecgTemplate.length;
+    this._ecgPhase = (this._ecgPhase + advance) % this._ecgTemplate.length;
+
+    // Sample current template value and push into rolling buffer
+    var tplVal = this._ecgTemplate[Math.floor(this._ecgPhase)] || 0;
+    // Scroll buffer left
+    for(var i = 0; i < W - 1; i++) this._ecgBuf[i] = this._ecgBuf[i+1];
+    this._ecgBuf[W-1] = tplVal;
+
+    // Draw
+    ctx.clearRect(0, 0, W, H);
+
+    // Grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 1;
+    for(var gx = 0; gx < W; gx += 40) {
+      ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke();
+    }
+    for(var gy = 0; gy < H; gy += 20) {
+      ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke();
+    }
+
+    // Waveform
+    var mid = H * 0.5, amp = H * 0.38;
+    ctx.beginPath();
+    for(var i = 0; i < W; i++) {
+      var y = mid - this._ecgBuf[i] * amp;
+      if(i === 0) ctx.moveTo(i, y);
+      else ctx.lineTo(i, y);
+    }
+    ctx.strokeStyle = 'rgba(239,68,68,0.9)';
+    ctx.lineWidth = 1.5;
+    ctx.shadowColor = 'rgba(239,68,68,0.5)';
+    ctx.shadowBlur = 5;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    this._ecgRaf = requestAnimationFrame(this._ecgDraw.bind(this));
+  },
+
+  // ── Trend chart for samples up to time t ──────────────
+  _drawTrend: function(upToTime) {
+    var ctx = this._trendCtx;
+    if(!ctx || !this.samples) return;
+    var W = this._trendW, H = this._trendH;
+    var subset = this.samples.filter(function(s){ return s.ts <= upToTime + 0.5; });
+
+    ctx.clearRect(0, 0, W, H);
+
+    var PAD_L = 36, PAD_R = 8, PAD_T = 10, PAD_B = 20;
+    var PW = W - PAD_L - PAD_R, PH = H - PAD_T - PAD_B;
+    var Y_MIN = 40, Y_MAX = 180;
+    var totalDur = this.samples[this.samples.length - 1].ts || 30;
+
+    // Use full time axis (0 → totalDur), not just visible samples
+    var toX = function(ts) { return PAD_L + (ts / totalDur) * PW; };
+    var toY = function(bpm) { return PAD_T + (1 - (bpm - Y_MIN) / (Y_MAX - Y_MIN)) * PH; };
+
+    // Zone bands
+    var ZONES = [
+      {lo:40, hi:60,  fill:'rgba(0,229,200,0.055)'},
+      {lo:60, hi:100, fill:'rgba(59,130,246,0.045)'},
+      {lo:100,hi:140, fill:'rgba(245,158,11,0.050)'},
+      {lo:140,hi:180, fill:'rgba(239,68,68,0.065)'},
+    ];
+    ZONES.forEach(function(z){
+      ctx.fillStyle = z.fill;
+      ctx.fillRect(PAD_L, toY(Math.min(z.hi,Y_MAX)), PW, toY(Math.max(z.lo,Y_MIN)) - toY(Math.min(z.hi,Y_MAX)));
+    });
+
+    // Grid lines
+    ctx.font = '9px "Space Mono",monospace';
+    ctx.textAlign = 'right';
+    [60, 80, 100, 120, 140, 160].forEach(function(bpm){
+      var y = toY(bpm);
+      ctx.beginPath();
+      ctx.setLineDash([2,5]); ctx.strokeStyle='rgba(255,255,255,0.06)'; ctx.lineWidth=1;
+      ctx.moveTo(PAD_L,y); ctx.lineTo(W-PAD_R,y); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle='rgba(107,114,128,0.5)'; ctx.fillText(String(bpm), PAD_L-4, y+3);
+    });
+    ctx.textAlign = 'left';
+
+    // Full session ghost line (faded future)
+    if(this.samples.length >= 2) {
+      ctx.beginPath();
+      for(var i=0;i<this.samples.length;i++){
+        var s=this.samples[i], x=toX(s.ts), y=toY(s.bpm||70);
+        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.strokeStyle='rgba(239,68,68,0.15)'; ctx.lineWidth=1.5; ctx.stroke();
+    }
+
+    // Played portion — bright line
+    if(subset.length >= 2) {
+      var grad = ctx.createLinearGradient(0, PAD_T, 0, PAD_T+PH);
+      grad.addColorStop(0,'rgba(239,68,68,0.35)');
+      grad.addColorStop(1,'rgba(239,68,68,0.0)');
+
+      ctx.beginPath();
+      for(var i=0;i<subset.length;i++){
+        var s=subset[i], x=toX(s.ts), y=toY(s.bpm||70);
+        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.lineTo(toX(subset[subset.length-1].ts), PAD_T+PH);
+      ctx.lineTo(toX(subset[0].ts), PAD_T+PH);
+      ctx.closePath(); ctx.fillStyle=grad; ctx.fill();
+
+      ctx.beginPath();
+      for(var i=0;i<subset.length;i++){
+        var s=subset[i], x=toX(s.ts), y=toY(s.bpm||70);
+        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.strokeStyle='rgba(239,68,68,0.9)'; ctx.lineWidth=2;
+      ctx.shadowColor='rgba(239,68,68,0.5)'; ctx.shadowBlur=6; ctx.stroke(); ctx.shadowBlur=0;
+
+      // Playhead dot
+      var last=subset[subset.length-1];
+      var lx=toX(last.ts), ly=toY(last.bpm||70);
+      var pulse=0.5+0.5*Math.sin(Date.now()/300);
+      ctx.beginPath(); ctx.arc(lx,ly,9+3*pulse,0,Math.PI*2);
+      ctx.strokeStyle='rgba(239,68,68,'+(0.2*pulse).toFixed(2)+')'; ctx.lineWidth=1; ctx.stroke();
+      ctx.beginPath(); ctx.arc(lx,ly,4,0,Math.PI*2);
+      ctx.fillStyle='#ef4444'; ctx.shadowColor='rgba(239,68,68,0.9)'; ctx.shadowBlur=12; ctx.fill(); ctx.shadowBlur=0;
+
+      // Playhead vertical line
+      ctx.beginPath(); ctx.setLineDash([4,3]);
+      ctx.strokeStyle='rgba(239,68,68,0.25)'; ctx.lineWidth=1;
+      ctx.moveTo(lx,PAD_T); ctx.lineTo(lx,PAD_T+PH); ctx.stroke(); ctx.setLineDash([]);
+    }
+
+    // Time axis
+    ctx.font='8px "Space Mono",monospace'; ctx.fillStyle='rgba(107,114,128,0.42)';
+    ctx.textAlign='left'; ctx.fillText('0s', PAD_L, H-PAD_B+13);
+    ctx.textAlign='right'; ctx.fillText(Math.round(totalDur)+'s', W-PAD_R, H-PAD_B+13);
+    ctx.textAlign='left';
+  },
+
+  // ── Play ──────────────────────────────────────────────
+  play: function() {
+    var paused = document.getElementById('rh-ecg-paused');
+    if(paused) paused.style.display='none';
+    if(!this._ecgRunning) {
+      this._ecgRunning = true;
+      this._ecgLastTs = performance.now();
+      this._ecgDraw();
+    }
+  },
+
+  // ── Pause ─────────────────────────────────────────────
+  pause: function() {
+    this._ecgRunning = false;
+    if(this._ecgRaf){ cancelAnimationFrame(this._ecgRaf); this._ecgRaf=null; }
+    var paused = document.getElementById('rh-ecg-paused');
+    if(paused) paused.style.display='flex';
+  },
+
+  // ── Seek ──────────────────────────────────────────────
+  seek: function(t) {
+    this._syncToTime(t);
+    this._drawTrend(t);
+  },
+
+  // ── Cleanup ───────────────────────────────────────────
+  stop: function() {
+    this._ecgRunning = false;
+    if(this._ecgRaf){ cancelAnimationFrame(this._ecgRaf); this._ecgRaf=null; }
+    this.samples = null;
+  }
+};
 </script>
+<div id="fp-tooltip"></div>
 </body>
 </html>
